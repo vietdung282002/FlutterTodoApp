@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_app/button_widget.dart';
-import 'package:flutter_todo_app/colors.dart';
-import 'package:flutter_todo_app/text_widget.dart';
-import 'package:flutter_todo_app/todo_list_widget.dart';
+import 'package:flutter_todo_app/view/widget/button_widget.dart';
+import 'package:flutter_todo_app/view/colors.dart';
+import 'package:flutter_todo_app/view/widget/text_widget.dart';
+import 'package:flutter_todo_app/view/home_screen/todo_list.dart';
 import 'package:flutter_todo_app/todo_response.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -17,49 +17,49 @@ class _HomeScreenState extends State<HomeScreen> {
     TodoItem(
       category: 1,
       title: "Finish project report",
-      time: DateTime.now(),
+      time: "2024-12-02T06:17:44.783485+00:00",
       isComplete: false,
     ),
     TodoItem(
       category: 1,
       title: "Buy groceries",
-      time: DateTime.now().add(Duration(hours: 3)),
+      time: "2024-12-02T06:17:44.783485+00:00",
       isComplete: true,
     ),
     TodoItem(
       category: 2,
       title: "Complete Flutter tutorial",
-      time: DateTime.now().add(Duration(days: 1)),
+      time: "2024-12-02T06:17:44.783485+00:00",
       isComplete: false,
     ),
     TodoItem(
       category: 3,
       title: "Go for a run",
-      time: DateTime.now().add(Duration(days: 2)),
+      time: "2024-12-02T06:17:44.783485+00:00",
       isComplete: false,
     ),
     TodoItem(
       category: 1,
       title: "Finish project report",
-      time: DateTime.now(),
+      time: "2024-12-02T06:17:44.783485+00:00",
       isComplete: false,
     ),
     TodoItem(
       category: 2,
       title: "Buy groceries",
-      time: DateTime.now().add(Duration(hours: 3)),
+      time: "2024-12-02T06:17:44.783485+00:00",
       isComplete: true,
     ),
     TodoItem(
       category: 3,
       title: "Complete Flutter tutorial",
-      time: DateTime.now().add(Duration(days: 1)),
+      time: "2024-12-02T06:17:44.783485+00:00",
       isComplete: false,
     ),
     TodoItem(
       category: 3,
       title: "Go for a run",
-      time: DateTime.now().add(Duration(days: 2)),
+      time: "2024-12-17T06:17:44.783485+00:00",
       isComplete: false,
     ),
   ];
@@ -104,12 +104,18 @@ class _HomeScreenState extends State<HomeScreen> {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             color: Colors.white),
-                        child: TodoListWidget(todoList: todoList)),
+                        child: TodoList(todoList: todoList)),
                   ),
                 ),
-                ButtonWidget(
-                  screenWidth: screenWidth,
-                  text: "Add New Task",
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0),
+                  child: ButtonWidget(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/detail');
+                    },
+                    screenWidth: screenWidth,
+                    text: "Add New Task",
+                  ),
                 )
               ],
             ),

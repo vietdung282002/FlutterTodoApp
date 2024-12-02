@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_app/todo_item_widget.dart';
+import 'package:flutter_todo_app/view/widget/todo_item_widget.dart';
 import 'package:flutter_todo_app/todo_response.dart';
 import 'package:grouped_list/grouped_list.dart';
 
-class TodoListWidget extends StatelessWidget {
-  const TodoListWidget({
+class TodoList extends StatelessWidget {
+  const TodoList({
     super.key,
     required this.todoList,
   });
@@ -29,7 +29,7 @@ class TodoListWidget extends StatelessWidget {
         );
       },
       itemBuilder: (context, TodoItem todo) => Padding(
-        padding: const EdgeInsets.only(top: 12, left: 24.0, right: 12.0),
+        padding: const EdgeInsets.only(top: 12, left: 16.0, right: 12.0),
         child: TodoItemWidget(todoItem: todo),
       ),
       groupComparator: (group1, group2) => group1 == 'Pending' ? -1 : 1,
