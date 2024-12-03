@@ -3,7 +3,7 @@ import 'package:flutter_todo_app/view/widget/category_widget.dart';
 import 'package:flutter_todo_app/view/widget/check_box_widget.dart';
 import 'package:flutter_todo_app/view/colors.dart';
 import 'package:flutter_todo_app/view/widget/text_widget.dart';
-import 'package:flutter_todo_app/todo_response.dart';
+import 'package:flutter_todo_app/model/todo_response.dart';
 
 class TodoItemWidget extends StatelessWidget {
   const TodoItemWidget({super.key, required this.todoItem});
@@ -13,14 +13,16 @@ class TodoItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Navigator.pushNamed(context, '/detail', arguments: todoItem.todoId);
+      },
       child: SizedBox(
         width: 700,
         height: 70,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            _buildImageBasedOnStatus(todoItem.category, todoItem.isComplete),
+            _buildImageBasedOnStatus(todoItem.categoryId, todoItem.isComplete),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
@@ -28,7 +30,7 @@ class TodoItemWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextWidget(
-                    text: todoItem.title,
+                    text: todoItem.taskTitle,
                     textColor: textColor,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -81,7 +83,7 @@ class TodoItemWidget extends StatelessWidget {
             child: CategoryWidget(
               image: Image.asset("assets/CategoryEvent.png"),
               onTap: () {},
-              backgroundColor: taskBackground,
+              backgroundColor: eventBackground,
               borderColor: Colors.transparent,
               borderWidth: 0,
             ),
@@ -92,7 +94,7 @@ class TodoItemWidget extends StatelessWidget {
             child: CategoryWidget(
               image: Image.asset("assets/CategoryGoal.png"),
               onTap: () {},
-              backgroundColor: taskBackground,
+              backgroundColor: goalBackground,
               borderColor: Colors.transparent,
               borderWidth: 0,
             ),
@@ -114,7 +116,7 @@ class TodoItemWidget extends StatelessWidget {
           return CategoryWidget(
             image: Image.asset("assets/CategoryEvent.png"),
             onTap: () {},
-            backgroundColor: taskBackground,
+            backgroundColor: eventBackground,
             borderColor: Colors.transparent,
             borderWidth: 0,
           );
@@ -122,7 +124,7 @@ class TodoItemWidget extends StatelessWidget {
           return CategoryWidget(
             image: Image.asset("assets/CategoryGoal.png"),
             onTap: () {},
-            backgroundColor: taskBackground,
+            backgroundColor: goalBackground,
             borderColor: Colors.transparent,
             borderWidth: 0,
           );

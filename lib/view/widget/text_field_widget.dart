@@ -18,6 +18,7 @@ class TextFieldWidget extends StatelessWidget {
     this.maxLines,
     this.expands = false,
     this.keyboardType,
+    this.textEditingController,
   });
 
   final String placeholder;
@@ -33,9 +34,12 @@ class TextFieldWidget extends StatelessWidget {
   final int? maxLines;
   final bool expands;
   final TextInputType? keyboardType;
+  final TextEditingController? textEditingController;
+
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: textEditingController,
       textAlign: TextAlign.start,
       textAlignVertical: TextAlignVertical.top,
       maxLines: maxLines,

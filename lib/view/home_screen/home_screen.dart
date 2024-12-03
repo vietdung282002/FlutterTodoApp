@@ -3,7 +3,8 @@ import 'package:flutter_todo_app/view/widget/button_widget.dart';
 import 'package:flutter_todo_app/view/colors.dart';
 import 'package:flutter_todo_app/view/widget/text_widget.dart';
 import 'package:flutter_todo_app/view/home_screen/todo_list.dart';
-import 'package:flutter_todo_app/todo_response.dart';
+import 'package:flutter_todo_app/model/todo_response.dart';
+import 'package:flutter_todo_app/view_model/todo_list_view_model.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,56 +14,49 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final List<TodoItem> todoList = [
+  List<TodoItem> todoList = [
     TodoItem(
-      category: 1,
-      title: "Finish project report",
+      todoId: 1,
+      createAt: "2024-12-01T10:00:00.000Z",
+      taskTitle: "Buy groceries",
+      taskNote: "Remember to buy milk and eggs",
+      categoryId: 1,
       time: "2024-12-02T06:17:44.783485+00:00",
       isComplete: false,
+      userId: "user1",
     ),
     TodoItem(
-      category: 1,
-      title: "Buy groceries",
-      time: "2024-12-02T06:17:44.783485+00:00",
+      todoId: 2,
+      createAt: "2024-12-01T11:00:00.000Z",
+      taskTitle: "Morning workout",
+      taskNote: null,
+      categoryId: 2,
+      time: "2024-12-02T07:30:00.000Z",
       isComplete: true,
+      userId: "user2",
     ),
     TodoItem(
-      category: 2,
-      title: "Complete Flutter tutorial",
-      time: "2024-12-02T06:17:44.783485+00:00",
+      todoId: 3,
+      createAt: "2024-12-01T12:00:00.000Z",
+      taskTitle: "Project meeting",
+      taskNote: "Prepare slides for the presentation",
+      categoryId: 3,
+      time: "2024-12-03T09:00:00.000Z",
       isComplete: false,
+      userId: "user3",
     ),
     TodoItem(
-      category: 3,
-      title: "Go for a run",
-      time: "2024-12-02T06:17:44.783485+00:00",
+      todoId: 4,
+      createAt: "2024-12-01T13:00:00.000Z",
+      taskTitle: "Call with client",
+      taskNote: null,
+      categoryId: 3,
+      time: "2024-12-02T15:00:00.000Z",
       isComplete: false,
-    ),
-    TodoItem(
-      category: 1,
-      title: "Finish project report",
-      time: "2024-12-02T06:17:44.783485+00:00",
-      isComplete: false,
-    ),
-    TodoItem(
-      category: 2,
-      title: "Buy groceries",
-      time: "2024-12-02T06:17:44.783485+00:00",
-      isComplete: true,
-    ),
-    TodoItem(
-      category: 3,
-      title: "Complete Flutter tutorial",
-      time: "2024-12-02T06:17:44.783485+00:00",
-      isComplete: false,
-    ),
-    TodoItem(
-      category: 3,
-      title: "Go for a run",
-      time: "2024-12-17T06:17:44.783485+00:00",
-      isComplete: false,
+      userId: "user4",
     ),
   ];
+  final TodoListViewModel vm = TodoListViewModel();
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.only(bottom: 12.0),
                   child: ButtonWidget(
                     onTap: () {
-                      Navigator.pushNamed(context, '/detail');
+                      Navigator.pushNamed(context, '/detail', arguments: -1);
                     },
                     screenWidth: screenWidth,
                     text: "Add New Task",
