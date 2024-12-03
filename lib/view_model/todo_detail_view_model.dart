@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/model/network/api_services.dart';
 import 'package:flutter_todo_app/model/todo_response.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TodoDetailViewModel extends ChangeNotifier {
   final ApiServices _apiServices = ApiServices();
@@ -46,6 +47,23 @@ class TodoDetailViewModel extends ChangeNotifier {
     } finally {
       _isLoading = false;
       notifyListeners();
+    }
+  }
+
+  Future<void> addTodo(String taskTitle, String taskNote, String createAt,
+      String deadline) async {
+    if (_isLoading) return;
+
+    _isLoading = true;
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? deviceUdid = prefs.getString('device_udid');
+    try {
+      await _apiServices.createTodo(
+          createAt, taskTitle, taskNote, _categoryId!, deadline, deviceUdid!);
+    } catch (e) {
+      print(e);
+    } finally {
+      _isLoading = false;
     }
   }
 

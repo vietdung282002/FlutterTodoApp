@@ -41,4 +41,31 @@ class ApiServices {
       throw Exception('Failed to fetch Todo');
     }
   }
+
+  Future<http.Response> createTodo(String createAt, String taskTitle,
+      String taskNote, int categoryId, String time, String userId) async {
+    final response = await http.post(
+      ApiUrls().createTodo(),
+      headers: <String, String>{
+        'apikey': Values.apiKey,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: jsonEncode(<String, dynamic>{
+        'created_at': createAt,
+        'task_title': taskTitle,
+        'is_complete': false,
+        'task_note': taskNote,
+        'category_id': categoryId,
+        'time': time,
+        'user_id': userId
+      }),
+    );
+    if (response.statusCode != 201) {
+      throw Exception('Failed to create Todo.');
+    } else {
+      print("success");
+      return response;
+    }
+  }
 }

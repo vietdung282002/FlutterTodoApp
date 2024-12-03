@@ -36,7 +36,6 @@ class TodoItem {
 
   Map<String, dynamic> toJson() {
     return {
-      "todo_id": todoId,
       "created_at": createAt,
       "task_title": taskTitle,
       "is_complete": isComplete,

@@ -7,6 +7,7 @@ import 'package:flutter_todo_app/view/widget/category_widget.dart';
 import 'package:flutter_todo_app/view/widget/text_field_widget.dart';
 import 'package:flutter_todo_app/view/widget/text_widget.dart';
 import 'package:flutter_todo_app/view_model/todo_detail_view_model.dart';
+import 'package:flutter_todo_app/view_model/todo_list_view_model.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -37,6 +38,7 @@ class _TodoDetailState extends State<TodoDetail> {
         selectedDate = picked;
         String formattedDate = DateFormat('dd-MM-yyyy').format(picked);
         dateController.text = formattedDate;
+        print(formattedDate);
         Provider.of<TodoDetailViewModel>(context, listen: false)
             .setDate(formattedDate);
       });
@@ -59,6 +61,7 @@ class _TodoDetailState extends State<TodoDetail> {
         selectedTime = picked;
         final String formattedTime = formatTimeTo12Hour(picked);
         timeController.text = formattedTime;
+        print(formattedTime);
         Provider.of<TodoDetailViewModel>(context, listen: false)
             .setTime(formattedTime);
       });
@@ -72,6 +75,8 @@ class _TodoDetailState extends State<TodoDetail> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     final todoId = ModalRoute.of(context)?.settings.arguments as int;
     return ChangeNotifierProvider<TodoDetailViewModel>(
       create: (_) => TodoDetailViewModel()..fetchTodoDetail(todoId),
@@ -270,26 +275,37 @@ class _TodoDetailState extends State<TodoDetail> {
                                 expands: true, // and this
                                 keyboardType: TextInputType.multiline,
                               ),
-                            ))
+                            )),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 24.0, top: 24),
+                          child: ButtonWidget(
+                            onTap: () {
+                              // print(taskTitleController.text);
+                              // print(noteController.text);
+                              // print(dateController.text);
+                              // print(timeController.text);
+                              // print(viewModel.categotyId);
+                              viewModel.addTodo(
+                                  taskTitleController.text,
+                                  noteController.text,
+                                  getCurrentTime(),
+                                  formatDateTimeString(dateController.text,
+                                      timeController.text));
+                              Navigator.pop(context);
+
+                              Provider.of<TodoListViewModel>(context,
+                                      listen: false)
+                                  .fetchTodoList(refresh: true);
+                            },
+                            screenWidth: screenWidth,
+                            text: "Save",
+                          ),
+                        )
                       ],
                     ),
                   )),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 24.0),
-                child: ButtonWidget(
-                  onTap: () {
-                    print(taskTitleController.text);
-                    print(noteController.text);
-                    print(dateController.text);
-                    print(timeController.text);
-                    print(viewModel.categotyId);
-                  },
-                  screenWidth: 200,
-                  text: "Save",
-                ),
-              )
             ],
           ),
         );
