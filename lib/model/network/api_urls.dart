@@ -1,8 +1,9 @@
 import 'package:flutter_todo_app/config/values.dart';
 
 class ApiUrls {
-  Uri getTodoList() {
-    return Uri.parse(Values.baseUrls);
+  Uri getTodoList({required String userId}) {
+    Map<String, String> queryParams = {'user_id': "eq.$userId", 'select': "*"};
+    return Uri.parse(Values.baseUrls).replace(queryParameters: queryParams);
   }
 
   Uri getTodoDetail({required int todoId}) {

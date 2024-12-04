@@ -15,6 +15,7 @@ class TodoItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(todoItem.todoId);
     return GestureDetector(
       onTap: () {
         Navigator.push(

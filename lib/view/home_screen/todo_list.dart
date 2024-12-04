@@ -20,7 +20,7 @@ class TodoList extends StatelessWidget {
         child: GroupedListView<TodoItem, String>(
           physics: const AlwaysScrollableScrollPhysics(),
           elements: viewModel.listTodo,
-          groupBy: (todo) => todo.isComplete ? 'Complete' : 'Pending',
+          groupBy: (todo) => todo.isComplete ? 'Completed' : 'Pending',
           groupSeparatorBuilder: (String group) {
             if (group == 'Pending') {
               return const SizedBox.shrink();

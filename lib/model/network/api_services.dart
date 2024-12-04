@@ -6,9 +6,9 @@ import 'package:flutter_todo_app/model/todo_response.dart';
 import 'package:http/http.dart' as http;
 
 class ApiServices {
-  Future<List<TodoItem>> getTodosList() async {
+  Future<List<TodoItem>> getTodosList(String userId) async {
     final response = await http.get(
-      ApiUrls().getTodoList(),
+      ApiUrls().getTodoList(userId: userId),
       headers: <String, String>{
         'apikey': Values.apiKey,
       },

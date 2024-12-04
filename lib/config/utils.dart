@@ -1,4 +1,6 @@
+import 'package:diffutil_dart/diffutil.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_todo_app/model/todo_response.dart';
 import 'package:intl/intl.dart';
 
 String formatTimeTo12Hour(TimeOfDay time) {
@@ -34,4 +36,11 @@ String formatDateTimeString(String date, String time) {
   ).toUtc();
 
   return DateFormat("yyyy-MM-ddTHH:mm:ss'+00:00'").format(combinedDateTime);
+}
+
+void updateList(
+    List<TodoItem> oldList, List<TodoItem> newList, Function updateUi) {
+  final diff = calculateListDiff(oldList, newList);
+
+  updateUi(newList);
 }

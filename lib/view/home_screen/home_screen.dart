@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/config/utils.dart';
+import 'package:flutter_todo_app/view/detail_screen/todo_detail.dart';
 import 'package:flutter_todo_app/view/widget/button_widget.dart';
 import 'package:flutter_todo_app/view/colors.dart';
 import 'package:flutter_todo_app/view/widget/text_widget.dart';
@@ -60,7 +61,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.only(bottom: 12.0),
                   child: ButtonWidget(
                     onTap: () {
-                      Navigator.pushNamed(context, '/detail', arguments: -1);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const TodoDetail(todoId: -1),
+                        ),
+                      );
                     },
                     screenWidth: screenWidth,
                     text: "Add New Task",

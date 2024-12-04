@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/config/utils.dart';
+import 'package:flutter_todo_app/model/enum/loading_state.dart';
 import 'package:flutter_todo_app/view/colors.dart';
 import 'package:flutter_todo_app/view/widget/app_bar_widget.dart';
 import 'package:flutter_todo_app/view/widget/button_widget.dart';
@@ -104,7 +105,8 @@ class _TodoDetailChildState extends State<TodoDetailChild> {
 
     return Consumer<TodoDetailViewModel>(
       builder: (context, viewModel, child) {
-        if (viewModel.todoItem == null && viewModel.isLoading) {
+        if (viewModel.todoItem == null &&
+            viewModel.isLoading == LoadingState.loading) {
           return const SafeArea(
             child: Center(
               child: CircularProgressIndicator(),
