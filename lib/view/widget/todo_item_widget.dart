@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_todo_app/view/detail_screen/todo_detail.dart';
 import 'package:flutter_todo_app/view/widget/category_widget.dart';
 import 'package:flutter_todo_app/view/widget/check_box_widget.dart';
 import 'package:flutter_todo_app/view/colors.dart';
 import 'package:flutter_todo_app/view/widget/text_widget.dart';
 import 'package:flutter_todo_app/model/todo_response.dart';
+import 'package:flutter_todo_app/view_model/todo_list_view_model.dart';
+import 'package:provider/provider.dart';
 
 class TodoItemWidget extends StatelessWidget {
   const TodoItemWidget({super.key, required this.todoItem});
@@ -14,7 +17,14 @@ class TodoItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/detail', arguments: todoItem.todoId);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TodoDetail(
+              todoId: todoItem.todoId,
+            ),
+          ),
+        );
       },
       child: SizedBox(
         width: 700,
@@ -53,7 +63,15 @@ class TodoItemWidget extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
-            CheckBoxWidget(todoItem: todoItem),
+            Consumer<TodoListViewModel>(builder: (context, viewmodel, chil) {
+              return CheckBoxWidget(
+                todoItem: todoItem,
+                onTap: () {
+                  viewmodel.updateTodoStatus(
+                      todoItem.todoId, !todoItem.isComplete);
+                },
+              );
+            }),
             // Image.asset("assets/CheckBoxFalse.png"),
           ],
         ),

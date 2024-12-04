@@ -67,6 +67,22 @@ class TodoDetailViewModel extends ChangeNotifier {
     }
   }
 
+  Future<void> editTodo(
+      String taskTitle, String taskNote, String deadline) async {
+    if (_isLoading) return;
+
+    _isLoading = true;
+
+    try {
+      await _apiServices.updateTodo(
+          todoItem!.todoId, taskTitle, taskNote, _categoryId!, deadline);
+    } catch (e) {
+      print(e);
+    } finally {
+      _isLoading = false;
+    }
+  }
+
   void setDate(String date) {
     _date = date;
     notifyListeners();

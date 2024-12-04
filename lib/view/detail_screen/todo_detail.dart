@@ -11,14 +11,30 @@ import 'package:flutter_todo_app/view_model/todo_list_view_model.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class TodoDetail extends StatefulWidget {
-  const TodoDetail({super.key});
-
+class TodoDetail extends StatelessWidget {
+  const TodoDetail({super.key, required this.todoId});
+  final int todoId;
   @override
-  State<TodoDetail> createState() => _TodoDetailState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider<TodoDetailViewModel>(
+      create: (_) => TodoDetailViewModel(),
+      child: TodoDetailChild(
+        todoId: todoId,
+      ),
+    );
+  }
 }
 
-class _TodoDetailState extends State<TodoDetail> {
+class TodoDetailChild extends StatefulWidget {
+  const TodoDetailChild({super.key, required this.todoId});
+
+  final int todoId;
+
+  @override
+  State<TodoDetailChild> createState() => _TodoDetailChildState();
+}
+
+class _TodoDetailChildState extends State<TodoDetailChild> {
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
   TextEditingController taskTitleController = TextEditingController();
@@ -38,7 +54,6 @@ class _TodoDetailState extends State<TodoDetail> {
         selectedDate = picked;
         String formattedDate = DateFormat('dd-MM-yyyy').format(picked);
         dateController.text = formattedDate;
-        print(formattedDate);
         Provider.of<TodoDetailViewModel>(context, listen: false)
             .setDate(formattedDate);
       });
@@ -61,7 +76,6 @@ class _TodoDetailState extends State<TodoDetail> {
         selectedTime = picked;
         final String formattedTime = formatTimeTo12Hour(picked);
         timeController.text = formattedTime;
-        print(formattedTime);
         Provider.of<TodoDetailViewModel>(context, listen: false)
             .setTime(formattedTime);
       });
@@ -70,21 +84,31 @@ class _TodoDetailState extends State<TodoDetail> {
 
   @override
   void initState() {
+    Provider.of<TodoDetailViewModel>(context, listen: false)
+        .fetchTodoDetail(widget.todoId);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    taskTitleController.dispose();
+    dateController.dispose();
+    timeController.dispose();
+    noteController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-    final todoId = ModalRoute.of(context)?.settings.arguments as int;
-    return ChangeNotifierProvider<TodoDetailViewModel>(
-      create: (_) => TodoDetailViewModel()..fetchTodoDetail(todoId),
-      child:
-          Consumer<TodoDetailViewModel>(builder: (context, viewModel, child) {
+
+    return Consumer<TodoDetailViewModel>(
+      builder: (context, viewModel, child) {
         if (viewModel.todoItem == null && viewModel.isLoading) {
-          return const Center(
-            child: CircularProgressIndicator(),
+          return const SafeArea(
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
           );
         }
         if (viewModel.todoItem != null) {
@@ -95,7 +119,7 @@ class _TodoDetailState extends State<TodoDetail> {
         }
         return Scaffold(
           appBar: AppBarWidget(
-            title: viewModel.taskTitle ?? "Add New Task",
+            title: viewModel.taskTitle == null ? "Add New Task" : "Edit Task",
             titleColor: Colors.white,
             backgroundColor: backgroundColor,
             leadingWidget: IconButton(
@@ -280,17 +304,20 @@ class _TodoDetailState extends State<TodoDetail> {
                           padding: const EdgeInsets.only(bottom: 24.0, top: 24),
                           child: ButtonWidget(
                             onTap: () {
-                              // print(taskTitleController.text);
-                              // print(noteController.text);
-                              // print(dateController.text);
-                              // print(timeController.text);
-                              // print(viewModel.categotyId);
-                              viewModel.addTodo(
-                                  taskTitleController.text,
-                                  noteController.text,
-                                  getCurrentTime(),
-                                  formatDateTimeString(dateController.text,
-                                      timeController.text));
+                              if (widget.todoId == -1) {
+                                viewModel.addTodo(
+                                    taskTitleController.text,
+                                    noteController.text,
+                                    getCurrentTime(),
+                                    formatDateTimeString(dateController.text,
+                                        timeController.text));
+                              } else {
+                                viewModel.editTodo(
+                                    taskTitleController.text,
+                                    noteController.text,
+                                    formatDateTimeString(dateController.text,
+                                        timeController.text));
+                              }
                               Navigator.pop(context);
 
                               Provider.of<TodoListViewModel>(context,
@@ -309,7 +336,8 @@ class _TodoDetailState extends State<TodoDetail> {
             ],
           ),
         );
-      }),
+      },
+      child: Placeholder(),
     );
   }
 }

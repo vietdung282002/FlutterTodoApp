@@ -27,4 +27,20 @@ class TodoListViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> updateTodoStatus(int todoId, bool status) async {
+    if (_isLoading) return;
+
+    _isLoading = true;
+
+    try {
+      await _apiServices.updateTodoStatus(todoId, status);
+    } catch (e) {
+      print(e);
+    } finally {
+      _isLoading = false;
+      fetchTodoList(refresh: true);
+      notifyListeners();
+    }
+  }
 }

@@ -63,7 +63,7 @@ class _MyAppState extends State<MyApp> {
         initialRoute: '/',
         routes: {
           '/': (context) => const HomeScreen(),
-          '/detail': (context) => const TodoDetail(),
+          // '/detail': (context) => const TodoDetail(),
         },
       ),
     );

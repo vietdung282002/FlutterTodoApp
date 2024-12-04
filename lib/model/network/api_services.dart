@@ -64,7 +64,49 @@ class ApiServices {
     if (response.statusCode != 201) {
       throw Exception('Failed to create Todo.');
     } else {
-      print("success");
+      return response;
+    }
+  }
+
+  Future<http.Response> updateTodoStatus(int todoId, bool isComplete) async {
+    final response = await http.patch(
+      ApiUrls().updateTodoStatus(todoId: todoId),
+      headers: <String, String>{
+        'apikey': Values.apiKey,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: jsonEncode(<String, dynamic>{
+        'is_complete': isComplete,
+      }),
+    );
+    if (response.statusCode != 204) {
+      throw Exception('Failed to update Todo.');
+    } else {
+      return response;
+    }
+  }
+
+  Future<http.Response> updateTodo(int todoId, String taskTitle,
+      String taskNote, int categoryId, String time) async {
+    final response = await http.patch(
+      ApiUrls().updateTodo(todoId: todoId),
+      headers: <String, String>{
+        'apikey': Values.apiKey,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: jsonEncode(<String, dynamic>{
+        'task_title': taskTitle,
+        'is_complete': false,
+        'task_note': taskNote,
+        'category_id': categoryId,
+        'time': time,
+      }),
+    );
+    if (response.statusCode != 204) {
+      throw Exception('Failed to update Todo.');
+    } else {
       return response;
     }
   }

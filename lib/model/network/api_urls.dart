@@ -13,4 +13,14 @@ class ApiUrls {
   Uri createTodo() {
     return Uri.parse(Values.baseUrls);
   }
+
+  Uri updateTodo({required int todoId}) {
+    Map<String, String> queryParams = {'todo_id': "eq.$todoId"};
+    return Uri.parse(Values.baseUrls).replace(queryParameters: queryParams);
+  }
+
+  Uri updateTodoStatus({required int todoId}) {
+    Map<String, String> queryParams = {'todo_id': "eq.$todoId"};
+    return Uri.parse(Values.baseUrls).replace(queryParameters: queryParams);
+  }
 }
