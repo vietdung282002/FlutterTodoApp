@@ -344,9 +344,9 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                                   },
                                 );
                               }
-                              if (_taskTitleValidate == true &&
-                                  _timeValidate == true &&
-                                  _dateValidate == true &&
+                              if (_taskTitleValidate == false &&
+                                  _timeValidate == false &&
+                                  _dateValidate == false &&
                                   viewModel.categotyId != null) {
                                 if (widget.todoId == -1) {
                                   viewModel.addTodo(
@@ -363,10 +363,9 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                                           _timeController.text));
                                 }
                                 Navigator.pop(context);
-
                                 Provider.of<TodoListViewModel>(context,
                                         listen: false)
-                                    .fetchTodoList(refresh: true);
+                                    .updateTodo();
                               }
                             },
                             screenWidth: screenWidth,

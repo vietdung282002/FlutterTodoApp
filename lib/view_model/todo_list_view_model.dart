@@ -37,6 +37,25 @@ class TodoListViewModel extends ChangeNotifier {
     }
   }
 
+  Future<void> updateTodo() async {
+    if (_loading == LoadingState.loading) return;
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? deviceUdid = prefs.getString('device_udid');
+
+    _loading = LoadingState.loading;
+
+    try {
+      final todoListResponse = await _apiServices.getTodosList(deviceUdid!);
+      _listTodo = todoListResponse;
+      _loading = LoadingState.success;
+    } catch (e) {
+      _loading = LoadingState.failure;
+    } finally {
+      notifyListeners();
+    }
+  }
+
   Future<void> updateTodoStatus(int todoId, bool status) async {
     if (_loading == LoadingState.loading) return;
 
