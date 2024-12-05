@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/config/utils.dart';
 import 'package:flutter_todo_app/model/enum/loading_state.dart';
 import 'package:flutter_todo_app/view/colors.dart';
+import 'package:flutter_todo_app/view/widget/alert_dialog_widget.dart';
 import 'package:flutter_todo_app/view/widget/app_bar_widget.dart';
 import 'package:flutter_todo_app/view/widget/button_widget.dart';
 import 'package:flutter_todo_app/view/widget/category_widget.dart';
@@ -19,29 +21,34 @@ class TodoDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<TodoDetailViewModel>(
       create: (_) => TodoDetailViewModel(),
-      child: TodoDetailChild(
+      child: TodoDetailScreen(
         todoId: todoId,
       ),
     );
   }
 }
 
-class TodoDetailChild extends StatefulWidget {
-  const TodoDetailChild({super.key, required this.todoId});
+class TodoDetailScreen extends StatefulWidget {
+  const TodoDetailScreen({super.key, required this.todoId});
 
   final int todoId;
 
   @override
-  State<TodoDetailChild> createState() => _TodoDetailChildState();
+  State<TodoDetailScreen> createState() => _TodoDetailScreenState();
 }
 
-class _TodoDetailChildState extends State<TodoDetailChild> {
+class _TodoDetailScreenState extends State<TodoDetailScreen> {
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
-  TextEditingController taskTitleController = TextEditingController();
-  TextEditingController dateController = TextEditingController();
-  TextEditingController timeController = TextEditingController();
-  TextEditingController noteController = TextEditingController();
+
+  final TextEditingController _taskTitleController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _timeController = TextEditingController();
+  final TextEditingController _noteController = TextEditingController();
+
+  bool _taskTitleValidate = false;
+  bool _dateValidate = false;
+  bool _timeValidate = false;
 
   _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -54,7 +61,7 @@ class _TodoDetailChildState extends State<TodoDetailChild> {
       setState(() {
         selectedDate = picked;
         String formattedDate = DateFormat('dd-MM-yyyy').format(picked);
-        dateController.text = formattedDate;
+        _dateController.text = formattedDate;
         Provider.of<TodoDetailViewModel>(context, listen: false)
             .setDate(formattedDate);
       });
@@ -76,7 +83,7 @@ class _TodoDetailChildState extends State<TodoDetailChild> {
       setState(() {
         selectedTime = picked;
         final String formattedTime = formatTimeTo12Hour(picked);
-        timeController.text = formattedTime;
+        _timeController.text = formattedTime;
         Provider.of<TodoDetailViewModel>(context, listen: false)
             .setTime(formattedTime);
       });
@@ -93,46 +100,48 @@ class _TodoDetailChildState extends State<TodoDetailChild> {
   @override
   void dispose() {
     super.dispose();
-    taskTitleController.dispose();
-    dateController.dispose();
-    timeController.dispose();
-    noteController.dispose();
+    _taskTitleController.dispose();
+    _dateController.dispose();
+    _timeController.dispose();
+    _noteController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
 
-    return Consumer<TodoDetailViewModel>(
-      builder: (context, viewModel, child) {
-        if (viewModel.todoItem == null &&
-            viewModel.isLoading == LoadingState.loading) {
-          return const SafeArea(
-            child: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        }
-        if (viewModel.todoItem != null) {
-          taskTitleController.text = viewModel.taskTitle!;
-          dateController.text = viewModel.date!;
-          timeController.text = viewModel.time!;
-          noteController.text = viewModel.taskNote ?? "";
-        }
-        return Scaffold(
-          appBar: AppBarWidget(
-            title: viewModel.taskTitle == null ? "Add New Task" : "Edit Task",
-            titleColor: Colors.white,
-            backgroundColor: backgroundColor,
-            leadingWidget: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: Image.asset("assets/BackButton.png"),
-            ),
-          ),
-          backgroundColor: backgroundColor2,
-          body: Column(
+    return Scaffold(
+      appBar: AppBarWidget(
+        title: widget.todoId == -1 ? "Add Todo" : "Edit Todo",
+        titleColor: Colors.white,
+        backgroundColor: backgroundColor,
+        leadingWidget: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Image.asset("assets/BackButton.png"),
+        ),
+      ),
+      body: Consumer<TodoDetailViewModel>(
+        builder: (context, viewModel, child) {
+          if (viewModel.todoItem == null &&
+              viewModel.loading == LoadingState.loading) {
+            return const SafeArea(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+          if (viewModel.todoItem != null) {
+            _taskTitleController.text = viewModel.taskTitle!;
+            _dateController.text = viewModel.date!;
+            _timeController.text = viewModel.time!;
+            _noteController.text = viewModel.taskNote ?? "";
+          }
+          if (viewModel.loading == LoadingState.failure) {
+            return const AlertDialogWidget(content: "Fail to load todo");
+          }
+          return Column(
             children: [
               Expanded(
                 child: SingleChildScrollView(
@@ -152,7 +161,10 @@ class _TodoDetailChildState extends State<TodoDetailChild> {
                           padding: const EdgeInsets.only(top: 12.0),
                           child: TextFieldWidget(
                             placeholder: "Task Title",
-                            textEditingController: taskTitleController,
+                            textEditingController: _taskTitleController,
+                            error: _taskTitleValidate
+                                ? "Value Can't Be Empty"
+                                : null,
                           ),
                         ),
                         Padding(
@@ -236,8 +248,13 @@ class _TodoDetailChildState extends State<TodoDetailChild> {
                                         padding:
                                             const EdgeInsets.only(top: 8.0),
                                         child: TextFieldWidget(
-                                          textEditingController: dateController,
+                                          readOnly: true,
+                                          textEditingController:
+                                              _dateController,
                                           placeholder: "Date",
+                                          error: _dateValidate
+                                              ? "Value Can't Be Empty"
+                                              : null,
                                           endIcon: IconButton(
                                               onPressed: () =>
                                                   _selectDate(context),
@@ -266,7 +283,12 @@ class _TodoDetailChildState extends State<TodoDetailChild> {
                                         padding:
                                             const EdgeInsets.only(top: 8.0),
                                         child: TextFieldWidget(
-                                          textEditingController: timeController,
+                                          error: _timeValidate
+                                              ? "Value Can't Be Empty"
+                                              : null,
+                                          readOnly: true,
+                                          textEditingController:
+                                              _timeController,
                                           placeholder: "Time",
                                           endIcon: IconButton(
                                               onPressed: () =>
@@ -295,7 +317,7 @@ class _TodoDetailChildState extends State<TodoDetailChild> {
                               height:
                                   250, //     <-- TextField expands to this height.
                               child: TextFieldWidget(
-                                textEditingController: noteController,
+                                textEditingController: _noteController,
                                 placeholder: "Note",
                                 maxLines: null, // Set this
                                 expands: true, // and this
@@ -306,25 +328,46 @@ class _TodoDetailChildState extends State<TodoDetailChild> {
                           padding: const EdgeInsets.only(bottom: 24.0, top: 24),
                           child: ButtonWidget(
                             onTap: () {
-                              if (widget.todoId == -1) {
-                                viewModel.addTodo(
-                                    taskTitleController.text,
-                                    noteController.text,
-                                    getCurrentTime(),
-                                    formatDateTimeString(dateController.text,
-                                        timeController.text));
-                              } else {
-                                viewModel.editTodo(
-                                    taskTitleController.text,
-                                    noteController.text,
-                                    formatDateTimeString(dateController.text,
-                                        timeController.text));
+                              setState(() {
+                                _dateValidate = _dateController.text.isEmpty;
+                                _taskTitleValidate =
+                                    _taskTitleController.text.isEmpty;
+                                _timeValidate = _timeController.text.isEmpty;
+                              });
+                              if (viewModel.categotyId == null) {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return const AlertDialogWidget(
+                                      content: "Please select a category",
+                                    );
+                                  },
+                                );
                               }
-                              Navigator.pop(context);
+                              if (_taskTitleValidate == true &&
+                                  _timeValidate == true &&
+                                  _dateValidate == true &&
+                                  viewModel.categotyId != null) {
+                                if (widget.todoId == -1) {
+                                  viewModel.addTodo(
+                                      _taskTitleController.text,
+                                      _noteController.text,
+                                      getCurrentTime(),
+                                      formatDateTimeString(_dateController.text,
+                                          _timeController.text));
+                                } else {
+                                  viewModel.editTodo(
+                                      _taskTitleController.text,
+                                      _noteController.text,
+                                      formatDateTimeString(_dateController.text,
+                                          _timeController.text));
+                                }
+                                Navigator.pop(context);
 
-                              Provider.of<TodoListViewModel>(context,
-                                      listen: false)
-                                  .fetchTodoList(refresh: true);
+                                Provider.of<TodoListViewModel>(context,
+                                        listen: false)
+                                    .fetchTodoList(refresh: true);
+                              }
                             },
                             screenWidth: screenWidth,
                             text: "Save",
@@ -336,10 +379,9 @@ class _TodoDetailChildState extends State<TodoDetailChild> {
                 ),
               ),
             ],
-          ),
-        );
-      },
-      child: Placeholder(),
+          );
+        },
+      ),
     );
   }
 }

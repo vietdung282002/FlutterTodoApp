@@ -19,6 +19,8 @@ class TextFieldWidget extends StatelessWidget {
     this.expands = false,
     this.keyboardType,
     this.textEditingController,
+    this.error,
+    this.readOnly = false,
   });
 
   final String placeholder;
@@ -35,10 +37,13 @@ class TextFieldWidget extends StatelessWidget {
   final bool expands;
   final TextInputType? keyboardType;
   final TextEditingController? textEditingController;
+  final String? error;
+  final bool readOnly;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      readOnly: readOnly,
       controller: textEditingController,
       textAlign: TextAlign.start,
       textAlignVertical: TextAlignVertical.top,
@@ -46,6 +51,7 @@ class TextFieldWidget extends StatelessWidget {
       expands: expands,
       keyboardType: keyboardType,
       decoration: InputDecoration(
+        errorText: error,
         hintText: placeholder,
         hintStyle: GoogleFonts.inter(
           // Sử dụng font Lato từ Google Fonts

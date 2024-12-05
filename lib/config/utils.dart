@@ -40,7 +40,5 @@ String formatDateTimeString(String date, String time) {
 
 void updateList(
     List<TodoItem> oldList, List<TodoItem> newList, Function updateUi) {
-  final diff = calculateListDiff(oldList, newList);
-
   updateUi(newList);
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_todo_app/model/enum/loading_state.dart';
 import 'package:flutter_todo_app/view/widget/todo_item_widget.dart';
 import 'package:flutter_todo_app/model/todo_response.dart';
 import 'package:flutter_todo_app/view_model/todo_list_view_model.dart';
@@ -13,6 +14,9 @@ class TodoList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<TodoListViewModel>(builder: (context, viewModel, child) {
+      if (viewModel.loading == LoadingState.failure) {
+        viewModel.fetchTodoList(refresh: true);
+      }
       return RefreshIndicator(
         onRefresh: () async {
           await viewModel.fetchTodoList(refresh: true);
@@ -20,7 +24,7 @@ class TodoList extends StatelessWidget {
         child: GroupedListView<TodoItem, String>(
           physics: const AlwaysScrollableScrollPhysics(),
           elements: viewModel.listTodo,
-          groupBy: (todo) => todo.isComplete ? 'Completed' : 'Pending',
+          groupBy: (todo) => !todo.isComplete ? 'Pending' : 'Completed',
           groupSeparatorBuilder: (String group) {
             if (group == 'Pending') {
               return const SizedBox.shrink();
@@ -34,11 +38,14 @@ class TodoList extends StatelessWidget {
               ),
             );
           },
-          itemBuilder: (context, TodoItem todo) => Padding(
-            padding: const EdgeInsets.only(top: 12, left: 16.0, right: 12.0),
-            child: TodoItemWidget(todoItem: todo),
-          ),
-          groupComparator: (group1, group2) => group1 == 'Pending' ? -1 : 1,
+          itemBuilder: (context, TodoItem todo) {
+            return Padding(
+              padding: const EdgeInsets.only(top: 12, left: 16.0, right: 12.0),
+              child: TodoItemWidget(todoItem: todo),
+            );
+          },
+          // groupComparator: (group1, group2) => group1 == 'Pending' ? -1 : 1,
+          order: GroupedListOrder.DESC,
         ),
       );
     });

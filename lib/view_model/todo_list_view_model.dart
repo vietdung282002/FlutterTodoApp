@@ -8,14 +8,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 class TodoListViewModel extends ChangeNotifier {
   final ApiServices _apiServices = ApiServices();
 
-  LoadingState _isLoading = LoadingState.idle;
-  LoadingState get isLoading => _isLoading;
+  LoadingState _loading = LoadingState.idle;
+  LoadingState get loading => _loading;
 
   List<TodoItem> _listTodo = [];
   List<TodoItem> get listTodo => _listTodo;
 
   Future<void> fetchTodoList({bool refresh = false}) async {
-    if (_isLoading == LoadingState.loading) return;
+    if (_loading == LoadingState.loading) return;
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? deviceUdid = prefs.getString('device_udid');
@@ -23,34 +23,35 @@ class TodoListViewModel extends ChangeNotifier {
     if (refresh) {
       _listTodo = [];
     }
-    _isLoading = LoadingState.loading;
+    _loading = LoadingState.loading;
+
     try {
       final todoListResponse = await _apiServices.getTodosList(deviceUdid!);
 
       _listTodo.addAll(todoListResponse);
-      _isLoading = LoadingState.success;
+      _loading = LoadingState.success;
     } catch (e) {
-      _isLoading = LoadingState.failure;
+      _loading = LoadingState.failure;
     } finally {
       notifyListeners();
     }
   }
 
   Future<void> updateTodoStatus(int todoId, bool status) async {
-    if (_isLoading == LoadingState.loading) return;
+    if (_loading == LoadingState.loading) return;
 
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? deviceUdid = prefs.getString('device_udid');
+    final index = _listTodo.indexWhere((todo) => todo.todoId == todoId);
 
-    _isLoading == LoadingState.loading;
-
+    _loading == LoadingState.loading;
+    notifyListeners();
     try {
       await _apiServices.updateTodoStatus(todoId, status);
+      final todoListResponse = await _apiServices.getTodoItem(todoId);
+      _listTodo[index] = todoListResponse;
+      _loading = LoadingState.success;
     } catch (e) {
-      _isLoading = LoadingState.success;
+      _loading = LoadingState.failure;
     } finally {
-      final todoListResponse = await _apiServices.getTodosList(deviceUdid!);
-      updateTodos(todoListResponse);
       notifyListeners();
     }
   }
