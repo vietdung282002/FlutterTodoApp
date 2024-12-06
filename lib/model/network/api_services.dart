@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:flutter_todo_app/config/http_config.dart';
-import 'package:flutter_todo_app/config/values.dart';
 import 'package:flutter_todo_app/model/network/api_urls.dart';
 import 'package:flutter_todo_app/model/model_objects/todo_response.dart';
 import 'package:http/http.dart' as http;
@@ -58,8 +56,10 @@ class ApiServices {
     final body = <String, dynamic>{
       'is_complete': isComplete,
     };
-    final url = ApiUrls().updateTodoStatus(todoId: todoId);
-    final response = await HttpConfig.patch(url, headers: headers, body: body);
+    final response = await HttpConfig.patch(
+        ApiUrls().updateTodoStatus(todoId: todoId),
+        headers: headers,
+        body: body);
     if (response.statusCode != 204) {
       throw Exception('Failed to update Todo.');
     } else {
@@ -83,24 +83,16 @@ class ApiServices {
     }
   }
 
-  void printCurl({
-    required String method,
-    required Uri url,
-    Map<String, String>? headers,
-    String? body,
-  }) {
-    final curlCommand = StringBuffer('curl -X $method \'$url\'');
-
-    if (headers != null) {
-      headers.forEach((key, value) {
-        curlCommand.write(' -H \'$key: $value\'');
-      });
+  Future<http.Response> deleteTodo(
+    int todoId,
+  ) async {
+    final response = await HttpConfig.delete(
+      ApiUrls().deleteTodo(todoId: todoId),
+    );
+    if (response.statusCode != 204) {
+      throw Exception('Failed to delete Todo.');
+    } else {
+      return response;
     }
-
-    if (body != null && body.isNotEmpty) {
-      curlCommand.write(' -d \'$body\'');
-    }
-
-    print(curlCommand.toString());
   }
 }

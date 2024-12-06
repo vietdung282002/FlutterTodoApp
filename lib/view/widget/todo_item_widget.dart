@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/view/detail_screen/todo_detail.dart';
 import 'package:flutter_todo_app/view/widget/category_widget.dart';
@@ -12,10 +13,28 @@ class TodoItemWidget extends StatelessWidget {
   const TodoItemWidget({super.key, required this.todoItem});
 
   final TodoItem todoItem;
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onLongPress: () {
+        showCupertinoModalPopup<void>(
+          context: context,
+          builder: (BuildContext context) => CupertinoActionSheet(
+            message: const Text('Delete Todo'),
+            actions: <CupertinoActionSheetAction>[
+              CupertinoActionSheetAction(
+                isDestructiveAction: true,
+                onPressed: () {
+                  Navigator.pop(context);
+                  Provider.of<TodoListViewModel>(context, listen: false)
+                      .deleteTodo(todoItem.todoId!);
+                },
+                child: const Text('Delete'),
+              ),
+            ],
+          ),
+        );
+      },
       onTap: () {
         Navigator.push(
           context,
@@ -26,8 +45,9 @@ class TodoItemWidget extends StatelessWidget {
           ),
         );
       },
-      child: SizedBox(
-        width: 700,
+      child: Container(
+        color: Colors.white,
+        width: MediaQuery.of(context).size.width * 0.8,
         height: 70,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,

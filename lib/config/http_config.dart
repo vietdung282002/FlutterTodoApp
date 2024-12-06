@@ -39,4 +39,14 @@ class HttpConfig {
     return await http.patch(uri,
         headers: mergedHeaders, body: jsonEncode(body));
   }
+
+  static Future<http.Response> delete(
+    Uri apiUrls, {
+    Map<String, String>? headers,
+    Object? body,
+  }) async {
+    final uri = apiUrls;
+    final mergedHeaders = {...defaultHeaders, if (headers != null) ...headers};
+    return await http.delete(uri, headers: mergedHeaders);
+  }
 }

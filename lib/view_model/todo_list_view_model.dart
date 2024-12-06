@@ -75,6 +75,24 @@ class TodoListViewModel extends ChangeNotifier {
     }
   }
 
+  Future<void> deleteTodo(int todoId) async {
+    if (_loading == LoadingState.loading) return;
+
+    final index = _listTodo.indexWhere((todo) => todo.todoId == todoId);
+
+    _loading == LoadingState.loading;
+
+    try {
+      await _apiServices.deleteTodo(todoId);
+      _listTodo.removeAt(index);
+      _loading = LoadingState.success;
+    } catch (e) {
+      _loading = LoadingState.failure;
+    } finally {
+      notifyListeners();
+    }
+  }
+
   void updateTodos(List<TodoItem> newTodos) {
     AppUtils().updateList(_listTodo, newTodos, (updatedList) {
       _listTodo = updatedList;
