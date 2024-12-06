@@ -4,7 +4,7 @@ import 'package:flutter_todo_app/view/widget/category_widget.dart';
 import 'package:flutter_todo_app/view/widget/check_box_widget.dart';
 import 'package:flutter_todo_app/view/colors.dart';
 import 'package:flutter_todo_app/view/widget/text_widget.dart';
-import 'package:flutter_todo_app/model/todo_response.dart';
+import 'package:flutter_todo_app/model/model_objects/todo_response.dart';
 import 'package:flutter_todo_app/view_model/todo_list_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -21,7 +21,7 @@ class TodoItemWidget extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => TodoDetail(
-              todoId: todoItem.todoId,
+              todoId: todoItem.todoId!,
             ),
           ),
         );
@@ -68,7 +68,7 @@ class TodoItemWidget extends StatelessWidget {
                 todoItem: todoItem,
                 onTap: () {
                   viewmodel.updateTodoStatus(
-                      todoItem.todoId, !todoItem.isComplete);
+                      todoItem.todoId!, !todoItem.isComplete);
                 },
               );
             }),

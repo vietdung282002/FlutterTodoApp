@@ -1,13 +1,14 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_todo_app/view/home_screen/home_screen.dart';
 import 'package:flutter_todo_app/view_model/todo_list_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+void main() async {
+  await dotenv.load();
   runApp(const MyApp());
 }
 

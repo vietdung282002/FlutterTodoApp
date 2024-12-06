@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/config/utils.dart';
 import 'package:flutter_todo_app/model/enum/loading_state.dart';
@@ -82,7 +81,7 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
     if (picked != null && picked != selectedTime) {
       setState(() {
         selectedTime = picked;
-        final String formattedTime = formatTimeTo12Hour(picked);
+        final String formattedTime = AppUtils().formatTimeTo12Hour(picked);
         _timeController.text = formattedTime;
         Provider.of<TodoDetailViewModel>(context, listen: false)
             .setTime(formattedTime);
@@ -352,14 +351,15 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                                   viewModel.addTodo(
                                       _taskTitleController.text,
                                       _noteController.text,
-                                      getCurrentTime(),
-                                      formatDateTimeString(_dateController.text,
+                                      AppUtils().formatDateTimeString(
+                                          _dateController.text,
                                           _timeController.text));
                                 } else {
                                   viewModel.editTodo(
                                       _taskTitleController.text,
                                       _noteController.text,
-                                      formatDateTimeString(_dateController.text,
+                                      AppUtils().formatDateTimeString(
+                                          _dateController.text,
                                           _timeController.text));
                                 }
                                 Navigator.pop(context);

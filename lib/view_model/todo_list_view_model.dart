@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/config/utils.dart';
 import 'package:flutter_todo_app/model/enum/loading_state.dart';
 import 'package:flutter_todo_app/model/network/api_services.dart';
-import 'package:flutter_todo_app/model/todo_response.dart';
+import 'package:flutter_todo_app/model/model_objects/todo_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TodoListViewModel extends ChangeNotifier {
@@ -24,7 +24,7 @@ class TodoListViewModel extends ChangeNotifier {
       _listTodo = [];
     }
     _loading = LoadingState.loading;
-
+    notifyListeners();
     try {
       final todoListResponse = await _apiServices.getTodosList(deviceUdid!);
 
@@ -76,7 +76,7 @@ class TodoListViewModel extends ChangeNotifier {
   }
 
   void updateTodos(List<TodoItem> newTodos) {
-    updateList(_listTodo, newTodos, (updatedList) {
+    AppUtils().updateList(_listTodo, newTodos, (updatedList) {
       _listTodo = updatedList;
       notifyListeners();
     });
