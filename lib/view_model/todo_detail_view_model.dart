@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/model/enum/loading_state.dart';
 import 'package:flutter_todo_app/model/network/api_services.dart';
-import 'package:flutter_todo_app/model/todo_response.dart';
+import 'package:flutter_todo_app/model/model_objects/todo_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TodoDetailViewModel extends ChangeNotifier {
@@ -37,6 +37,7 @@ class TodoDetailViewModel extends ChangeNotifier {
 
     try {
       final todoResponse = await _apiServices.getTodoItem(todoId);
+
       _todoItem = todoResponse;
       _taskTitle = _todoItem?.taskTitle;
       _date = _todoItem?.formatDate();
@@ -52,17 +53,24 @@ class TodoDetailViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> addTodo(String taskTitle, String taskNote, String createAt,
-      String deadline) async {
+  Future<void> addTodo(
+      String taskTitle, String taskNote, String deadline) async {
     if (_loading == LoadingState.loading) return;
 
     _loading = LoadingState.loading;
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? deviceUdid = prefs.getString('device_udid');
+
+    final newTodo = TodoItem(
+        categoryId: _categoryId!,
+        time: deadline,
+        isComplete: false,
+        taskTitle: taskTitle,
+        taskNote: taskNote,
+        deviceUDID: deviceUdid!);
     try {
-      await _apiServices.createTodo(
-          createAt, taskTitle, taskNote, _categoryId!, deadline, deviceUdid!);
+      await _apiServices.createTodo(newTodo);
       _loading = LoadingState.success;
     } catch (e) {
       _loading = LoadingState.failure;
@@ -75,9 +83,19 @@ class TodoDetailViewModel extends ChangeNotifier {
 
     _loading = LoadingState.loading;
 
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? deviceUdid = prefs.getString('device_udid');
+
+    final newTodo = TodoItem(
+        todoId: _todoItem?.todoId!,
+        categoryId: _categoryId!,
+        time: deadline,
+        isComplete: false,
+        taskTitle: taskTitle,
+        taskNote: taskNote,
+        deviceUDID: deviceUdid!);
     try {
-      await _apiServices.updateTodo(
-          todoItem!.todoId, taskTitle, taskNote, _categoryId!, deadline);
+      await _apiServices.updateTodo(newTodo);
       _loading = LoadingState.success;
     } catch (e) {
       _loading = LoadingState.failure;

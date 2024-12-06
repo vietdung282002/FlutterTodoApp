@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/model/enum/loading_state.dart';
 import 'package:flutter_todo_app/view/widget/todo_item_widget.dart';
-import 'package:flutter_todo_app/model/todo_response.dart';
+import 'package:flutter_todo_app/model/model_objects/todo_response.dart';
 import 'package:flutter_todo_app/view_model/todo_list_view_model.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:provider/provider.dart';

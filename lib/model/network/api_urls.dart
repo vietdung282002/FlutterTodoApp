@@ -28,4 +28,9 @@ class ApiUrls {
     Map<String, String> queryParams = {'todo_id': "eq.$todoId"};
     return Uri.parse(Values.baseUrls).replace(queryParameters: queryParams);
   }
+
+  Uri deleteTodo({required int todoId}) {
+    Map<String, String> queryParams = {'todo_id': "eq.$todoId"};
+    return Uri.parse(Values.baseUrls).replace(queryParameters: queryParams);
+  }
 }
