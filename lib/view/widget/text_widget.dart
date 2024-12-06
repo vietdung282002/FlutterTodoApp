@@ -8,14 +8,16 @@ class TextWidget extends StatelessWidget {
     this.fontSize = 16,
     this.textColor = Colors.black,
     this.fontWeight = FontWeight.w500,
-    this.isComplete = false,
+    this.opacity = 1,
+    this.textDecoration = TextDecoration.none,
   });
 
   final String text;
   final double fontSize;
   final Color textColor;
   final FontWeight fontWeight;
-  final bool isComplete;
+  final double opacity;
+  final TextDecoration textDecoration;
 
   @override
   Widget build(BuildContext context) {
@@ -23,11 +25,10 @@ class TextWidget extends StatelessWidget {
       text,
       style: GoogleFonts.inter(
           textStyle: TextStyle(
-        color: isComplete ? textColor.withOpacity(0.5) : textColor,
+        color: textColor.withOpacity(opacity),
         fontSize: fontSize,
         fontWeight: fontWeight,
-        decoration:
-            isComplete ? TextDecoration.lineThrough : TextDecoration.none,
+        decoration: textDecoration,
       )),
       softWrap: true,
       maxLines: 1,

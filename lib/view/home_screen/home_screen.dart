@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_app/button_widget.dart';
-import 'package:flutter_todo_app/colors.dart';
-import 'package:flutter_todo_app/text_widget.dart';
-import 'package:flutter_todo_app/todo_list_widget.dart';
-import 'package:flutter_todo_app/todo_response.dart';
+import 'package:flutter_todo_app/config/utils.dart';
+import 'package:flutter_todo_app/view/detail_screen/todo_detail.dart';
+import 'package:flutter_todo_app/view/widget/button_widget.dart';
+import 'package:flutter_todo_app/view/colors.dart';
+import 'package:flutter_todo_app/view/widget/text_widget.dart';
+import 'package:flutter_todo_app/view/home_screen/todo_list.dart';
+import 'package:flutter_todo_app/view_model/todo_list_view_model.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,56 +16,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final List<TodoItem> todoList = [
-    TodoItem(
-      category: 1,
-      title: "Finish project report",
-      time: DateTime.now(),
-      isComplete: false,
-    ),
-    TodoItem(
-      category: 1,
-      title: "Buy groceries",
-      time: DateTime.now().add(Duration(hours: 3)),
-      isComplete: true,
-    ),
-    TodoItem(
-      category: 2,
-      title: "Complete Flutter tutorial",
-      time: DateTime.now().add(Duration(days: 1)),
-      isComplete: false,
-    ),
-    TodoItem(
-      category: 3,
-      title: "Go for a run",
-      time: DateTime.now().add(Duration(days: 2)),
-      isComplete: false,
-    ),
-    TodoItem(
-      category: 1,
-      title: "Finish project report",
-      time: DateTime.now(),
-      isComplete: false,
-    ),
-    TodoItem(
-      category: 2,
-      title: "Buy groceries",
-      time: DateTime.now().add(Duration(hours: 3)),
-      isComplete: true,
-    ),
-    TodoItem(
-      category: 3,
-      title: "Complete Flutter tutorial",
-      time: DateTime.now().add(Duration(days: 1)),
-      isComplete: false,
-    ),
-    TodoItem(
-      category: 3,
-      title: "Go for a run",
-      time: DateTime.now().add(Duration(days: 2)),
-      isComplete: false,
-    ),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<TodoListViewModel>(context, listen: false).fetchTodoList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,9 +38,9 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.only(left: 16, right: 16),
             child: Column(
               children: [
-                const Center(
+                Center(
                     child: TextWidget(
-                        text: "October 20, 2022",
+                        text: AppUtils().formatCurrentDate(),
                         textColor: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.w600)),
@@ -104,12 +62,23 @@ class _HomeScreenState extends State<HomeScreen> {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             color: Colors.white),
-                        child: TodoListWidget(todoList: todoList)),
+                        child: const TodoList()),
                   ),
                 ),
-                ButtonWidget(
-                  screenWidth: screenWidth,
-                  text: "Add New Task",
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0),
+                  child: ButtonWidget(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const TodoDetail(todoId: -1),
+                        ),
+                      );
+                    },
+                    screenWidth: screenWidth,
+                    text: "Add New Task",
+                  ),
                 )
               ],
             ),

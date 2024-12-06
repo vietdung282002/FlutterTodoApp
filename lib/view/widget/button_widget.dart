@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_app/colors.dart';
+import 'package:flutter_todo_app/view/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ButtonWidget extends StatelessWidget {
@@ -7,15 +7,17 @@ class ButtonWidget extends StatelessWidget {
     super.key,
     required this.screenWidth,
     required this.text,
+    required this.onTap,
   });
 
   final double screenWidth;
   final String text;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: () {},
+      onPressed: onTap,
       style: ButtonStyle(
           minimumSize: WidgetStateProperty.all<Size>(Size(screenWidth, 50)),
           padding:
