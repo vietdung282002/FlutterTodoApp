@@ -16,7 +16,7 @@ class CheckBoxWidget extends StatelessWidget {
     return IconButton(
         onPressed: onTap,
         icon: todoItem.isComplete
-            ? Image.asset("assets/CheckBoxTrue.png")
-            : Image.asset("assets/CheckBoxFalse.png"));
+            ? Image.asset("assets/check_box_true.png")
+            : Image.asset("assets/check_box_false.png"));
   }
 }

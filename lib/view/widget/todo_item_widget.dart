@@ -106,7 +106,7 @@ class TodoItemWidget extends StatelessWidget {
           return Opacity(
             opacity: 0.5,
             child: CategoryWidget(
-              image: Image.asset("assets/CategoryTask.png"),
+              image: Image.asset("assets/category_task.png"),
               onTap: () {},
               backgroundColor: taskBackground,
               borderColor: Colors.transparent,
@@ -114,12 +114,12 @@ class TodoItemWidget extends StatelessWidget {
             ),
           );
         // Opacity(
-        //     opacity: 0.5, child: Image.asset("assets/CategoryTask.png"));
+        //     opacity: 0.5, child: Image.asset("assets/category_task.png"));
         case 2:
           return Opacity(
             opacity: 0.5,
             child: CategoryWidget(
-              image: Image.asset("assets/CategoryEvent.png"),
+              image: Image.asset("assets/category_event.png"),
               onTap: () {},
               backgroundColor: eventBackground,
               borderColor: Colors.transparent,
@@ -130,7 +130,7 @@ class TodoItemWidget extends StatelessWidget {
           return Opacity(
             opacity: 0.5,
             child: CategoryWidget(
-              image: Image.asset("assets/CategoryGoal.png"),
+              image: Image.asset("assets/category_goal.png"),
               onTap: () {},
               backgroundColor: goalBackground,
               borderColor: Colors.transparent,
@@ -144,7 +144,7 @@ class TodoItemWidget extends StatelessWidget {
       switch (category) {
         case 1:
           return CategoryWidget(
-            image: Image.asset("assets/CategoryTask.png"),
+            image: Image.asset("assets/category_task.png"),
             onTap: () {},
             backgroundColor: taskBackground,
             borderColor: Colors.transparent,
@@ -152,7 +152,7 @@ class TodoItemWidget extends StatelessWidget {
           );
         case 2:
           return CategoryWidget(
-            image: Image.asset("assets/CategoryEvent.png"),
+            image: Image.asset("assets/category_event.png"),
             onTap: () {},
             backgroundColor: eventBackground,
             borderColor: Colors.transparent,
@@ -160,7 +160,7 @@ class TodoItemWidget extends StatelessWidget {
           );
         case 3:
           return CategoryWidget(
-            image: Image.asset("assets/CategoryGoal.png"),
+            image: Image.asset("assets/category_goal.png"),
             onTap: () {},
             backgroundColor: goalBackground,
             borderColor: Colors.transparent,

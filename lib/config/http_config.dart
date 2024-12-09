@@ -3,7 +3,6 @@ import 'package:flutter_todo_app/config/values.dart';
 import 'package:http/http.dart' as http;
 
 class HttpConfig {
-  static const String baseUrl = Values.baseUrls;
   static Map<String, String> defaultHeaders = {
     'Content-Type': 'application/json',
     'apikey': Values.apiKey,
