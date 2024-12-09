@@ -5,6 +5,8 @@ import 'package:flutter_todo_app/view/widget/button_widget.dart';
 import 'package:flutter_todo_app/view/colors.dart';
 import 'package:flutter_todo_app/view/widget/text_widget.dart';
 import 'package:flutter_todo_app/view/home_screen/todo_list.dart';
+import 'package:flutter_todo_app/view_model/todo_list_view_model.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,6 +16,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<TodoListViewModel>(context, listen: false).fetchTodoList();
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -32,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Center(
                     child: TextWidget(
-                        text: formatCurrentDate(),
+                        text: AppUtils().formatCurrentDate(),
                         textColor: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.w600)),

@@ -1,10 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/view/detail_screen/todo_detail.dart';
 import 'package:flutter_todo_app/view/widget/category_widget.dart';
 import 'package:flutter_todo_app/view/widget/check_box_widget.dart';
 import 'package:flutter_todo_app/view/colors.dart';
 import 'package:flutter_todo_app/view/widget/text_widget.dart';
-import 'package:flutter_todo_app/model/todo_response.dart';
+import 'package:flutter_todo_app/model/model_objects/todo_response.dart';
 import 'package:flutter_todo_app/view_model/todo_list_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -12,22 +13,41 @@ class TodoItemWidget extends StatelessWidget {
   const TodoItemWidget({super.key, required this.todoItem});
 
   final TodoItem todoItem;
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onLongPress: () {
+        showCupertinoModalPopup<void>(
+          context: context,
+          builder: (BuildContext context) => CupertinoActionSheet(
+            message: const Text('Delete Todo'),
+            actions: <CupertinoActionSheetAction>[
+              CupertinoActionSheetAction(
+                isDestructiveAction: true,
+                onPressed: () {
+                  Navigator.pop(context);
+                  Provider.of<TodoListViewModel>(context, listen: false)
+                      .deleteTodo(todoItem.todoId!);
+                },
+                child: const Text('Delete'),
+              ),
+            ],
+          ),
+        );
+      },
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => TodoDetail(
-              todoId: todoItem.todoId,
+              todoId: todoItem.todoId!,
             ),
           ),
         );
       },
-      child: SizedBox(
-        width: 700,
+      child: Container(
+        color: Colors.white,
+        width: MediaQuery.of(context).size.width * 0.8,
         height: 70,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -68,7 +88,7 @@ class TodoItemWidget extends StatelessWidget {
                 todoItem: todoItem,
                 onTap: () {
                   viewmodel.updateTodoStatus(
-                      todoItem.todoId, !todoItem.isComplete);
+                      todoItem.todoId!, !todoItem.isComplete);
                 },
               );
             }),
@@ -86,7 +106,7 @@ class TodoItemWidget extends StatelessWidget {
           return Opacity(
             opacity: 0.5,
             child: CategoryWidget(
-              image: Image.asset("assets/CategoryTask.png"),
+              image: Image.asset("assets/category_task.png"),
               onTap: () {},
               backgroundColor: taskBackground,
               borderColor: Colors.transparent,
@@ -94,12 +114,12 @@ class TodoItemWidget extends StatelessWidget {
             ),
           );
         // Opacity(
-        //     opacity: 0.5, child: Image.asset("assets/CategoryTask.png"));
+        //     opacity: 0.5, child: Image.asset("assets/category_task.png"));
         case 2:
           return Opacity(
             opacity: 0.5,
             child: CategoryWidget(
-              image: Image.asset("assets/CategoryEvent.png"),
+              image: Image.asset("assets/category_event.png"),
               onTap: () {},
               backgroundColor: eventBackground,
               borderColor: Colors.transparent,
@@ -110,7 +130,7 @@ class TodoItemWidget extends StatelessWidget {
           return Opacity(
             opacity: 0.5,
             child: CategoryWidget(
-              image: Image.asset("assets/CategoryGoal.png"),
+              image: Image.asset("assets/category_goal.png"),
               onTap: () {},
               backgroundColor: goalBackground,
               borderColor: Colors.transparent,
@@ -124,7 +144,7 @@ class TodoItemWidget extends StatelessWidget {
       switch (category) {
         case 1:
           return CategoryWidget(
-            image: Image.asset("assets/CategoryTask.png"),
+            image: Image.asset("assets/category_task.png"),
             onTap: () {},
             backgroundColor: taskBackground,
             borderColor: Colors.transparent,
@@ -132,7 +152,7 @@ class TodoItemWidget extends StatelessWidget {
           );
         case 2:
           return CategoryWidget(
-            image: Image.asset("assets/CategoryEvent.png"),
+            image: Image.asset("assets/category_event.png"),
             onTap: () {},
             backgroundColor: eventBackground,
             borderColor: Colors.transparent,
@@ -140,7 +160,7 @@ class TodoItemWidget extends StatelessWidget {
           );
         case 3:
           return CategoryWidget(
-            image: Image.asset("assets/CategoryGoal.png"),
+            image: Image.asset("assets/category_goal.png"),
             onTap: () {},
             backgroundColor: goalBackground,
             borderColor: Colors.transparent,

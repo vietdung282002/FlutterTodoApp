@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_app/model/todo_response.dart';
+import 'package:flutter_todo_app/model/model_objects/todo_response.dart';
 
 class CheckBoxWidget extends StatelessWidget {
   const CheckBoxWidget({
@@ -16,7 +16,7 @@ class CheckBoxWidget extends StatelessWidget {
     return IconButton(
         onPressed: onTap,
         icon: todoItem.isComplete
-            ? Image.asset("assets/CheckBoxTrue.png")
-            : Image.asset("assets/CheckBoxFalse.png"));
+            ? Image.asset("assets/check_box_true.png")
+            : Image.asset("assets/check_box_false.png"));
   }
 }

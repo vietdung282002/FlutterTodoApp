@@ -43,6 +43,7 @@ dependencies:
   device_info_plus: ^11.1.1
   shared_preferences: ^2.3.3
   diffutil_dart: ^4.0.1
+  flutter_dotenv: ^5.2.1
 
 dev_dependencies:
   flutter_test:
@@ -68,14 +69,8 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/CategoryEvent.png
-    - assets/CategoryGoal.png
-    - assets/CategoryTask.png
-    - assets/CheckBoxFalse.png
-    - assets/CheckBoxTrue.png
-    - assets/InputCalendar.png
-    - assets/InputClock.png
-    - assets/BackButton.png
+    - assets/
+    - .env
   
 
   # An image asset can refer to one or more resolution-specific "variants", see
