@@ -118,7 +118,7 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Image.asset("assets/BackButton.png"),
+          icon: Image.asset("assets/back_button.png"),
         ),
       ),
       body: Consumer<TodoDetailViewModel>(
@@ -181,7 +181,7 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                                 width: 30,
                               ),
                               CategoryWidget(
-                                image: Image.asset("assets/CategoryTask.png"),
+                                image: Image.asset("assets/category_task.png"),
                                 onTap: () {
                                   viewModel.setCategory(1);
                                 },
@@ -197,7 +197,7 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                                 width: 20,
                               ),
                               CategoryWidget(
-                                image: Image.asset("assets/CategoryEvent.png"),
+                                image: Image.asset("assets/category_event.png"),
                                 onTap: () {
                                   viewModel.setCategory(2);
                                 },
@@ -213,7 +213,7 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                                 width: 20,
                               ),
                               CategoryWidget(
-                                image: Image.asset("assets/CategoryGoal.png"),
+                                image: Image.asset("assets/category_goal.png"),
                                 onTap: () {
                                   viewModel.setCategory(3);
                                 },
@@ -258,7 +258,7 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                                               onPressed: () =>
                                                   _selectDate(context),
                                               icon: Image.asset(
-                                                  "assets/InputCalendar.png")),
+                                                  "assets/input_calendar.png")),
                                         ),
                                       )
                                     ],
@@ -293,7 +293,7 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                                               onPressed: () =>
                                                   _selectTime(context),
                                               icon: Image.asset(
-                                                  "assets/InputClock.png")),
+                                                  "assets/input_clock.png")),
                                         ),
                                       )
                                     ],
