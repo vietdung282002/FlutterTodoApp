@@ -13,6 +13,9 @@ class TodoDetailViewModel extends ChangeNotifier {
   LoadingState _loading = LoadingState.idle;
   LoadingState get loading => _loading;
 
+  bool _isEditted = false;
+  bool get isEditted => _isEditted;
+
   String? _taskTitle;
   String? get taskTitle => _taskTitle;
 
@@ -71,7 +74,9 @@ class TodoDetailViewModel extends ChangeNotifier {
         deviceUDID: deviceUdid!);
     try {
       await _apiServices.createTodo(newTodo);
+      _isEditted = true;
       _loading = LoadingState.success;
+      notifyListeners();
     } catch (e) {
       _loading = LoadingState.failure;
     } finally {}
@@ -94,9 +99,12 @@ class TodoDetailViewModel extends ChangeNotifier {
         taskTitle: taskTitle,
         taskNote: taskNote,
         deviceUDID: deviceUdid!);
+
     try {
       await _apiServices.updateTodo(newTodo);
+      _isEditted = true;
       _loading = LoadingState.success;
+      notifyListeners();
     } catch (e) {
       _loading = LoadingState.failure;
     } finally {}

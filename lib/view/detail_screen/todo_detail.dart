@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/config/utils.dart';
 import 'package:flutter_todo_app/model/enum/loading_state.dart';
@@ -110,277 +112,327 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      appBar: AppBarWidget(
-        title: widget.todoId == -1 ? "Add Todo" : "Edit Todo",
-        titleColor: Colors.white,
-        backgroundColor: backgroundColor,
-        leadingWidget: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Image.asset("assets/back_button.png"),
+        appBar: AppBarWidget(
+          title: widget.todoId == -1 ? "Add Todo" : "Edit Todo",
+          titleColor: Colors.white,
+          backgroundColor: backgroundColor,
+          leadingWidget: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Image.asset("assets/back_button.png"),
+          ),
         ),
-      ),
-      body: Consumer<TodoDetailViewModel>(
-        builder: (context, viewModel, child) {
-          if (viewModel.todoItem == null &&
-              viewModel.loading == LoadingState.loading) {
-            return const SafeArea(
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
-          if (viewModel.todoItem != null) {
-            _taskTitleController.text = viewModel.taskTitle!;
-            _dateController.text = viewModel.date!;
-            _timeController.text = viewModel.time!;
-            _noteController.text = viewModel.taskNote ?? "";
-          }
-          if (viewModel.loading == LoadingState.failure) {
-            return const AlertDialogWidget(content: "Fail to load todo");
-          }
-          return Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: SafeArea(
-                      child: Padding(
-                    padding: const EdgeInsets.all(24.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const TextWidget(
-                          text: "Task Title",
-                          textColor: textColor,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 12.0),
-                          child: TextFieldWidget(
-                            placeholder: "Task Title",
-                            textEditingController: _taskTitleController,
-                            error: _taskTitleValidate
-                                ? "Value Can't Be Empty"
-                                : null,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 24.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const TextWidget(
-                                text: "Category",
-                                textColor: textColor,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              const SizedBox(
-                                width: 30,
-                              ),
-                              CategoryWidget(
-                                image: Image.asset("assets/category_task.png"),
-                                onTap: () {
-                                  viewModel.setCategory(1);
-                                },
-                                backgroundColor: taskBackground,
-                                borderColor: viewModel.categotyId == null
-                                    ? Colors.white
-                                    : (viewModel.categotyId == 1
-                                        ? Colors.cyan
-                                        : Colors.white),
-                                borderWidth: 2.0,
-                              ),
-                              const SizedBox(
-                                width: 20,
-                              ),
-                              CategoryWidget(
-                                image: Image.asset("assets/category_event.png"),
-                                onTap: () {
-                                  viewModel.setCategory(2);
-                                },
-                                backgroundColor: eventBackground,
-                                borderColor: viewModel.categotyId == null
-                                    ? Colors.white
-                                    : (viewModel.categotyId == 2
-                                        ? Colors.cyan
-                                        : Colors.white),
-                                borderWidth: 2.0,
-                              ),
-                              const SizedBox(
-                                width: 20,
-                              ),
-                              CategoryWidget(
-                                image: Image.asset("assets/category_goal.png"),
-                                onTap: () {
-                                  viewModel.setCategory(3);
-                                },
-                                backgroundColor: goalBackground,
-                                borderColor: viewModel.categotyId == null
-                                    ? Colors.white
-                                    : (viewModel.categotyId == 3
-                                        ? Colors.cyan
-                                        : Colors.white),
-                                borderWidth: 2.0,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                            padding: const EdgeInsets.only(top: 24.0),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const TextWidget(
-                                        text: "Date",
-                                        textColor: textColor,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 8.0),
-                                        child: TextFieldWidget(
-                                          readOnly: true,
-                                          textEditingController:
-                                              _dateController,
-                                          placeholder: "Date",
-                                          error: _dateValidate
-                                              ? "Value Can't Be Empty"
-                                              : null,
-                                          endIcon: IconButton(
-                                              onPressed: () =>
-                                                  _selectDate(context),
-                                              icon: Image.asset(
-                                                  "assets/input_calendar.png")),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 20,
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const TextWidget(
-                                        text: "Time",
-                                        textColor: textColor,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 8.0),
-                                        child: TextFieldWidget(
-                                          error: _timeValidate
-                                              ? "Value Can't Be Empty"
-                                              : null,
-                                          readOnly: true,
-                                          textEditingController:
-                                              _timeController,
-                                          placeholder: "Time",
-                                          endIcon: IconButton(
-                                              onPressed: () =>
-                                                  _selectTime(context),
-                                              icon: Image.asset(
-                                                  "assets/input_clock.png")),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                )
-                              ],
-                            )),
-                        const Padding(
-                          padding: EdgeInsets.only(top: 24.0),
-                          child: TextWidget(
-                            text: "Note",
+        body: Stack(
+          children: [
+            Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: SafeArea(
+                        child: Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const TextWidget(
+                            text: "Task Title",
                             textColor: textColor,
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),
-                        ),
-                        Padding(
-                            padding: const EdgeInsets.only(top: 24),
-                            child: SizedBox(
-                              height:
-                                  250, //     <-- TextField expands to this height.
-                              child: TextFieldWidget(
-                                textEditingController: _noteController,
-                                placeholder: "Note",
-                                maxLines: null, // Set this
-                                expands: true, // and this
-                                keyboardType: TextInputType.multiline,
-                              ),
-                            )),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 24.0, top: 24),
-                          child: ButtonWidget(
-                            onTap: () {
-                              setState(() {
-                                _dateValidate = _dateController.text.isEmpty;
-                                _taskTitleValidate =
-                                    _taskTitleController.text.isEmpty;
-                                _timeValidate = _timeController.text.isEmpty;
-                              });
-                              if (viewModel.categotyId == null) {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return const AlertDialogWidget(
-                                      content: "Please select a category",
-                                    );
-                                  },
-                                );
+                          Padding(
+                            padding: const EdgeInsets.only(top: 12.0),
+                            child: Consumer<TodoDetailViewModel>(
+                                builder: (context, viewModel, child) {
+                              if (viewModel.todoItem != null) {
+                                _taskTitleController.text =
+                                    viewModel.taskTitle!;
                               }
-                              if (_taskTitleValidate == false &&
-                                  _timeValidate == false &&
-                                  _dateValidate == false &&
-                                  viewModel.categotyId != null) {
-                                if (widget.todoId == -1) {
-                                  viewModel.addTodo(
-                                      _taskTitleController.text,
-                                      _noteController.text,
-                                      AppUtils().formatDateTimeString(
-                                          _dateController.text,
-                                          _timeController.text));
-                                } else {
-                                  viewModel.editTodo(
-                                      _taskTitleController.text,
-                                      _noteController.text,
-                                      AppUtils().formatDateTimeString(
-                                          _dateController.text,
-                                          _timeController.text));
-                                }
-                                Navigator.pop(context);
-                                Provider.of<TodoListViewModel>(context,
-                                        listen: false)
-                                    .updateTodo();
-                              }
-                            },
-                            screenWidth: screenWidth,
-                            text: "Save",
+                              return TextFieldWidget(
+                                placeholder: "Task Title",
+                                textEditingController: _taskTitleController,
+                                error: _taskTitleValidate
+                                    ? "Value Can't Be Empty"
+                                    : null,
+                              );
+                            }),
                           ),
-                        )
-                      ],
-                    ),
-                  )),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 24.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const TextWidget(
+                                  text: "Category",
+                                  textColor: textColor,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                const SizedBox(
+                                  width: 30,
+                                ),
+                                Consumer<TodoDetailViewModel>(
+                                    builder: (context, viewModel, child) {
+                                  return CategoryWidget(
+                                    image:
+                                        Image.asset("assets/category_task.png"),
+                                    onTap: () {
+                                      viewModel.setCategory(1);
+                                    },
+                                    backgroundColor: taskBackground,
+                                    borderColor: viewModel.categotyId == null
+                                        ? Colors.white
+                                        : (viewModel.categotyId == 1
+                                            ? Colors.cyan
+                                            : Colors.white),
+                                    borderWidth: 2.0,
+                                  );
+                                }),
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                Consumer<TodoDetailViewModel>(
+                                    builder: (context, viewModel, child) {
+                                  return CategoryWidget(
+                                    image: Image.asset(
+                                        "assets/category_event.png"),
+                                    onTap: () {
+                                      viewModel.setCategory(2);
+                                    },
+                                    backgroundColor: eventBackground,
+                                    borderColor: viewModel.categotyId == null
+                                        ? Colors.white
+                                        : (viewModel.categotyId == 2
+                                            ? Colors.cyan
+                                            : Colors.white),
+                                    borderWidth: 2.0,
+                                  );
+                                }),
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                Consumer<TodoDetailViewModel>(
+                                    builder: (context, viewModel, child) {
+                                  return CategoryWidget(
+                                    image:
+                                        Image.asset("assets/category_goal.png"),
+                                    onTap: () {
+                                      viewModel.setCategory(3);
+                                    },
+                                    backgroundColor: goalBackground,
+                                    borderColor: viewModel.categotyId == null
+                                        ? Colors.white
+                                        : (viewModel.categotyId == 3
+                                            ? Colors.cyan
+                                            : Colors.white),
+                                    borderWidth: 2.0,
+                                  );
+                                }),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                              padding: const EdgeInsets.only(top: 24.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const TextWidget(
+                                          text: "Date",
+                                          textColor: textColor,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 8.0),
+                                          child: Consumer<TodoDetailViewModel>(
+                                              builder:
+                                                  (context, viewModel, child) {
+                                            if (viewModel.todoItem != null) {
+                                              _dateController.text =
+                                                  viewModel.date!;
+                                            }
+                                            return TextFieldWidget(
+                                              readOnly: true,
+                                              textEditingController:
+                                                  _dateController,
+                                              placeholder: "Date",
+                                              error: _dateValidate
+                                                  ? "Value Can't Be Empty"
+                                                  : null,
+                                              endIcon: IconButton(
+                                                  onPressed: () =>
+                                                      _selectDate(context),
+                                                  icon: Image.asset(
+                                                      "assets/input_calendar.png")),
+                                            );
+                                          }),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 20,
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const TextWidget(
+                                          text: "Time",
+                                          textColor: textColor,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 8.0),
+                                          child: Consumer<TodoDetailViewModel>(
+                                              builder:
+                                                  (context, viewModel, child) {
+                                            if (viewModel.todoItem != null) {
+                                              _timeController.text =
+                                                  viewModel.time!;
+                                            }
+                                            return TextFieldWidget(
+                                              error: _timeValidate
+                                                  ? "Value Can't Be Empty"
+                                                  : null,
+                                              readOnly: true,
+                                              textEditingController:
+                                                  _timeController,
+                                              placeholder: "Time",
+                                              endIcon: IconButton(
+                                                  onPressed: () =>
+                                                      _selectTime(context),
+                                                  icon: Image.asset(
+                                                      "assets/input_clock.png")),
+                                            );
+                                          }),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              )),
+                          const Padding(
+                            padding: EdgeInsets.only(top: 24.0),
+                            child: TextWidget(
+                              text: "Note",
+                              textColor: textColor,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Padding(
+                              padding: const EdgeInsets.only(top: 24),
+                              child: SizedBox(
+                                height:
+                                    250, //     <-- TextField expands to this height.
+                                child: Consumer<TodoDetailViewModel>(
+                                    builder: (context, viewModel, child) {
+                                  if (viewModel.todoItem != null) {
+                                    _noteController.text = viewModel.taskNote!;
+                                  }
+                                  return TextFieldWidget(
+                                    textEditingController: _noteController,
+                                    placeholder: "Note",
+                                    maxLines: null, // Set this
+                                    expands: true, // and this
+                                    keyboardType: TextInputType.multiline,
+                                  );
+                                }),
+                              )),
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(bottom: 24.0, top: 24),
+                            child: Consumer<TodoDetailViewModel>(
+                                builder: (context, viewModel, child) {
+                              return ButtonWidget(
+                                onTap: () {
+                                  setState(() {
+                                    _dateValidate =
+                                        _dateController.text.isEmpty;
+                                    _taskTitleValidate =
+                                        _taskTitleController.text.isEmpty;
+                                    _timeValidate =
+                                        _timeController.text.isEmpty;
+                                  });
+                                  if (viewModel.categotyId == null) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return const AlertDialogWidget(
+                                          content: "Please select a category",
+                                        );
+                                      },
+                                    );
+                                  }
+                                  if (_taskTitleValidate == false &&
+                                      _timeValidate == false &&
+                                      _dateValidate == false &&
+                                      viewModel.categotyId != null) {
+                                    if (widget.todoId == -1) {
+                                      viewModel.addTodo(
+                                          _taskTitleController.text,
+                                          _noteController.text,
+                                          AppUtils().formatDateTimeString(
+                                              _dateController.text,
+                                              _timeController.text));
+                                    } else {
+                                      viewModel.editTodo(
+                                          _taskTitleController.text,
+                                          _noteController.text,
+                                          AppUtils().formatDateTimeString(
+                                              _dateController.text,
+                                              _timeController.text));
+                                    }
+                                  }
+                                },
+                                screenWidth: screenWidth,
+                                text: "Save",
+                              );
+                            }),
+                          )
+                        ],
+                      ),
+                    )),
+                  ),
                 ),
-              ),
-            ],
-          );
-        },
-      ),
-    );
+              ],
+            ),
+            Consumer<TodoDetailViewModel>(builder: (context, viewModel, child) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (viewModel.isEditted == true &&
+                    viewModel.loading == LoadingState.success) {
+                  Navigator.pop(context);
+                  Provider.of<TodoListViewModel>(context, listen: false)
+                      .updateTodo();
+                }
+              });
+
+              if (viewModel.loading == LoadingState.loading) {
+                return SafeArea(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
+                    child: Container(
+                      color: Colors.black.withOpacity(0),
+                      child: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  ),
+                );
+              }
+              return const SizedBox.shrink();
+            })
+          ],
+        ));
   }
 }

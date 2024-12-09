@@ -27,7 +27,6 @@ class TodoListViewModel extends ChangeNotifier {
     notifyListeners();
     try {
       final todoListResponse = await _apiServices.getTodosList(deviceUdid!);
-
       _listTodo.addAll(todoListResponse);
       _loading = LoadingState.success;
     } catch (e) {

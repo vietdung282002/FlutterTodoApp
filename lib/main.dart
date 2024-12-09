@@ -53,7 +53,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<TodoListViewModel>(
-      create: (_) => TodoListViewModel()..fetchTodoList(),
+      create: (_) => TodoListViewModel(),
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
