@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 class AlertDialogWidget extends StatelessWidget {
   const AlertDialogWidget({super.key, required this.content});
