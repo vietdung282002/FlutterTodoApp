@@ -33,6 +33,14 @@ class _HomeScreenState extends State<HomeScreen> {
             color: backgroundColor,
             height: screenHeight * 222 / 844,
           ),
+          Positioned(
+              right: screenWidth * 0.7,
+              top: screenWidth * 0.2,
+              child: Image.asset('assets/ellipse_1.png')),
+          Positioned(
+              left: screenWidth * 0.85,
+              top: 0,
+              child: Image.asset('assets/ellipse_2.png')),
           SafeArea(
               child: Padding(
             padding: const EdgeInsets.only(left: 16, right: 16),

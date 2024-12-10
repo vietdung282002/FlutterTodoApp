@@ -46,6 +46,8 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
+  final FocusNode _taskTitleFocusNode = FocusNode();
+  final FocusNode _taskNoteFocusNode = FocusNode();
 
   bool _taskTitleValidate = false;
   bool _dateValidate = false;
@@ -95,6 +97,18 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
   void initState() {
     Provider.of<TodoDetailViewModel>(context, listen: false)
         .fetchTodoDetail(widget.todoId);
+    _taskTitleFocusNode.addListener(() {
+      if (!_taskTitleFocusNode.hasFocus) {
+        Provider.of<TodoDetailViewModel>(context, listen: false)
+            .setTaskTitle(_taskTitleController.text);
+      }
+    });
+    _taskNoteFocusNode.addListener(() {
+      if (!_taskTitleFocusNode.hasFocus) {
+        Provider.of<TodoDetailViewModel>(context, listen: false)
+            .setTaskNote(_noteController.text);
+      }
+    });
     super.initState();
   }
 
@@ -105,6 +119,7 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
     _dateController.dispose();
     _timeController.dispose();
     _noteController.dispose();
+    _taskTitleFocusNode.dispose();
   }
 
   @override
@@ -143,20 +158,23 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 12.0),
-                            child: Consumer<TodoDetailViewModel>(
-                                builder: (context, viewModel, child) {
-                              if (viewModel.todoItem != null) {
-                                _taskTitleController.text =
-                                    viewModel.taskTitle!;
-                              }
-                              return TextFieldWidget(
-                                placeholder: "Task Title",
-                                textEditingController: _taskTitleController,
-                                error: _taskTitleValidate
-                                    ? "Value Can't Be Empty"
-                                    : null,
-                              );
-                            }),
+                            child: Selector<TodoDetailViewModel, String?>(
+                              selector: (context, viewModel) =>
+                                  viewModel.taskTitle,
+                              builder: (context, taskTitle, child) {
+                                if (taskTitle != null) {
+                                  _taskTitleController.text = taskTitle;
+                                }
+                                return TextFieldWidget(
+                                  placeholder: "Task Title",
+                                  textEditingController: _taskTitleController,
+                                  error: _taskTitleValidate
+                                      ? "Value Can't Be Empty"
+                                      : null,
+                                  focusNode: _taskTitleFocusNode,
+                                );
+                              },
+                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 24.0),
@@ -341,6 +359,7 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                                     _noteController.text = viewModel.taskNote!;
                                   }
                                   return TextFieldWidget(
+                                    focusNode: _taskNoteFocusNode,
                                     textEditingController: _noteController,
                                     placeholder: "Note",
                                     maxLines: null, // Set this
@@ -411,9 +430,9 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (viewModel.isEditted == true &&
                     viewModel.loading == LoadingState.success) {
-                  Navigator.pop(context);
                   Provider.of<TodoListViewModel>(context, listen: false)
                       .updateTodo();
+                  Navigator.of(context).maybePop();
                 }
               });
 

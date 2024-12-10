@@ -110,6 +110,16 @@ class TodoDetailViewModel extends ChangeNotifier {
     } finally {}
   }
 
+  void setTaskTitle(String taskTitle) {
+    _taskTitle = taskTitle;
+    notifyListeners();
+  }
+
+  void setTaskNote(String taskNote) {
+    _taskNote = taskNote;
+    notifyListeners();
+  }
+
   void setDate(String date) {
     _date = date;
     notifyListeners();

@@ -20,7 +20,7 @@ class TodoItemWidget extends StatelessWidget {
         showCupertinoModalPopup<void>(
           context: context,
           builder: (BuildContext context) => CupertinoActionSheet(
-            message: const Text('Delete Todo'),
+            message: Text('Delete ${todoItem.taskTitle}'),
             actions: <CupertinoActionSheetAction>[
               CupertinoActionSheetAction(
                 isDestructiveAction: true,

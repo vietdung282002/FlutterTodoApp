@@ -21,6 +21,7 @@ class TextFieldWidget extends StatelessWidget {
     this.textEditingController,
     this.error,
     this.readOnly = false,
+    this.focusNode,
   });
 
   final String placeholder;
@@ -39,10 +40,12 @@ class TextFieldWidget extends StatelessWidget {
   final TextEditingController? textEditingController;
   final String? error;
   final bool readOnly;
+  final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      focusNode: focusNode,
       readOnly: readOnly,
       controller: textEditingController,
       textAlign: TextAlign.start,
