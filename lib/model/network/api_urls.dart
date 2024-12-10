@@ -5,7 +5,7 @@ class ApiUrls {
     Map<String, String> queryParams = {
       'user_id': "eq.$userId",
       'select': "*",
-      'order': 'time.desc'
+      'order': 'time.asc'
     };
     return Uri.parse(Values.baseUrls).replace(queryParameters: queryParams);
   }

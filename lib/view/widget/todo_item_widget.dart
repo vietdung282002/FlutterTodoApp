@@ -15,6 +15,7 @@ class TodoItemWidget extends StatelessWidget {
   final TodoItem todoItem;
   @override
   Widget build(BuildContext context) {
+    print(todoItem.todoId);
     return GestureDetector(
       onLongPress: () {
         showCupertinoModalPopup<void>(
@@ -92,7 +93,6 @@ class TodoItemWidget extends StatelessWidget {
                 },
               );
             }),
-            // Image.asset("assets/CheckBoxFalse.png"),
           ],
         ),
       ),

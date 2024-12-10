@@ -14,6 +14,12 @@ class TodoListViewModel extends ChangeNotifier {
   List<TodoItem> _listTodo = [];
   List<TodoItem> get listTodo => _listTodo;
 
+  List<TodoItem> get pendingTodos =>
+      _listTodo.where((todo) => !todo.isComplete).toList();
+
+  List<TodoItem> get completedTodos =>
+      _listTodo.where((todo) => todo.isComplete).toList();
+
   Future<void> fetchTodoList({bool refresh = false}) async {
     if (_loading == LoadingState.loading) return;
 
@@ -28,6 +34,7 @@ class TodoListViewModel extends ChangeNotifier {
     try {
       final todoListResponse = await _apiServices.getTodosList(deviceUdid!);
       _listTodo.addAll(todoListResponse);
+
       _loading = LoadingState.success;
     } catch (e) {
       _loading = LoadingState.failure;
@@ -59,6 +66,7 @@ class TodoListViewModel extends ChangeNotifier {
     if (_loading == LoadingState.loading) return;
 
     final index = _listTodo.indexWhere((todo) => todo.todoId == todoId);
+    if (index == -1) return;
 
     _loading == LoadingState.loading;
     notifyListeners();

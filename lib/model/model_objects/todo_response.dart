@@ -67,6 +67,26 @@ class TodoItem {
     return DateFormat('hh:mm a').format(parsedDateTime);
   }
 
+  TodoItem copyWith({
+    int? todoId,
+    String? taskTitle,
+    String? taskNote,
+    int? categoryId,
+    String? time,
+    bool? isComplete,
+    String? deviceUDID,
+  }) {
+    return TodoItem(
+      todoId: todoId ?? this.todoId,
+      taskTitle: taskTitle ?? this.taskTitle,
+      taskNote: taskNote ?? this.taskNote,
+      categoryId: categoryId ?? this.categoryId,
+      time: time ?? this.time,
+      isComplete: isComplete ?? this.isComplete,
+      deviceUDID: deviceUDID ?? this.deviceUDID,
+    );
+  }
+
   @override
   String toString() {
     return 'TodoItem(todoId: $todoId, taskTitle: $taskTitle, categoryId: $categoryId, '
