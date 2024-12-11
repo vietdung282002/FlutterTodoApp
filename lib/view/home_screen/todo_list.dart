@@ -38,18 +38,40 @@ class _TodoListState extends State<TodoList> {
             child: CustomScrollView(
               slivers: [
                 Selector<TodoListViewModel, List?>(
-                    selector: (context, viewModel) => viewModel.pendingTodos,
-                    builder: (context, pendingTodos, child) {
-                      return SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            final todo = pendingTodos?[index];
-                            return TodoItemWidget(todoItem: todo);
-                          },
-                          childCount: pendingTodos?.length,
-                        ),
-                      );
-                    }),
+                  selector: (context, viewModel) => viewModel.pendingTodos,
+                  builder: (context, pendingTodos, child) {
+                    return SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          final todo = pendingTodos?[index];
+
+                          if (todo == null) return const SizedBox.shrink();
+
+                          return Dismissible(
+                            key: Key(todo.todoId
+                                .toString()), // Ensure the key is unique
+                            direction: DismissDirection.endToStart,
+                            onDismissed: (direction) {
+                              // Trigger the deletion in the ViewModel
+                              Provider.of<TodoListViewModel>(context,
+                                      listen: false)
+                                  .deleteTodo(todo.todoId!);
+                            },
+                            background: Container(
+                              color: Colors.red,
+                              alignment: Alignment.centerRight,
+                              padding: const EdgeInsets.only(right: 20.0),
+                              child:
+                                  const Icon(Icons.delete, color: Colors.white),
+                            ),
+                            child: TodoItemWidget(todoItem: todo),
+                          );
+                        },
+                        childCount: pendingTodos?.length ?? 0,
+                      ),
+                    );
+                  },
+                ),
                 const SliverToBoxAdapter(
                     child: SectionTitle(title: "Completed")),
                 Selector<TodoListViewModel, List?>(
@@ -59,9 +81,30 @@ class _TodoListState extends State<TodoList> {
                         delegate: SliverChildBuilderDelegate(
                           (context, index) {
                             final todo = completedTodos?[index];
-                            return TodoItemWidget(todoItem: todo);
+
+                            if (todo == null) return const SizedBox.shrink();
+
+                            return Dismissible(
+                              key: Key(todo.todoId
+                                  .toString()), // Ensure the key is unique
+                              direction: DismissDirection.endToStart,
+                              onDismissed: (direction) {
+                                // Trigger the deletion in the ViewModel
+                                Provider.of<TodoListViewModel>(context,
+                                        listen: false)
+                                    .deleteTodo(todo.todoId!);
+                              },
+                              background: Container(
+                                color: Colors.red,
+                                alignment: Alignment.centerRight,
+                                padding: const EdgeInsets.only(right: 20.0),
+                                child: const Icon(Icons.delete,
+                                    color: Colors.white),
+                              ),
+                              child: TodoItemWidget(todoItem: todo),
+                            );
                           },
-                          childCount: completedTodos?.length,
+                          childCount: completedTodos?.length ?? 0,
                         ),
                       );
                     }),
