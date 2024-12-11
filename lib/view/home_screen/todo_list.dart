@@ -7,10 +7,22 @@ import 'package:flutter_todo_app/view/widget/todo_item_widget.dart';
 import 'package:flutter_todo_app/view_model/todo_list_view_model.dart';
 import 'package:provider/provider.dart';
 
-class TodoList extends StatelessWidget {
+class TodoList extends StatefulWidget {
   const TodoList({
     super.key,
   });
+
+  @override
+  State<TodoList> createState() => _TodoListState();
+}
+
+class _TodoListState extends State<TodoList> {
+  final GlobalKey<SliverAnimatedListState> pendingListKey = GlobalKey();
+  final GlobalKey<SliverAnimatedListState> completedListKey = GlobalKey();
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

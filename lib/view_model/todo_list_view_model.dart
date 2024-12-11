@@ -70,6 +70,7 @@ class TodoListViewModel extends ChangeNotifier {
 
     _loading == LoadingState.loading;
     notifyListeners();
+
     try {
       await _apiServices.updateTodoStatus(todoId, status);
       final todoListResponse = await _apiServices.getTodoItem(todoId);

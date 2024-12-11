@@ -2,11 +2,11 @@ import 'package:intl/intl.dart';
 
 class TodoItem {
   int? todoId;
-  final String taskTitle;
-  final String? taskNote;
-  final int categoryId;
-  final String time;
-  final bool isComplete;
+  String taskTitle;
+  String? taskNote;
+  int? categoryId;
+  String time;
+  bool isComplete;
   String? deviceUDID;
 
   // Constructor
@@ -28,6 +28,18 @@ class TodoItem {
       todoId: json['todo_id'] as int,
       taskNote: json['task_note'] as String,
       deviceUDID: json['user_id'] as String,
+    );
+  }
+
+  factory TodoItem.empty() {
+    return TodoItem(
+      todoId: null,
+      taskTitle: '',
+      taskNote: "",
+      categoryId: null,
+      time: '',
+      isComplete: false,
+      deviceUDID: null,
     );
   }
 

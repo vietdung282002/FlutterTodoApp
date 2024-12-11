@@ -22,6 +22,7 @@ class TextFieldWidget extends StatelessWidget {
     this.error,
     this.readOnly = false,
     this.focusNode,
+    this.onChange,
   });
 
   final String placeholder;
@@ -41,10 +42,12 @@ class TextFieldWidget extends StatelessWidget {
   final String? error;
   final bool readOnly;
   final FocusNode? focusNode;
+  final Function(String)? onChange;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      onChanged: onChange,
       focusNode: focusNode,
       readOnly: readOnly,
       controller: textEditingController,
@@ -63,6 +66,10 @@ class TextFieldWidget extends StatelessWidget {
             fontSize: placeholderSize,
             fontWeight: placeholderWeight,
           ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.red, width: enableBorderWidth),
+          borderRadius: BorderRadius.circular(enableBorderRadius),
         ),
         enabledBorder: OutlineInputBorder(
           borderSide:

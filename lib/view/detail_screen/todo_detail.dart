@@ -46,8 +46,6 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
-  final FocusNode _taskTitleFocusNode = FocusNode();
-  final FocusNode _taskNoteFocusNode = FocusNode();
 
   bool _taskTitleValidate = false;
   bool _dateValidate = false;
@@ -97,18 +95,6 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
   void initState() {
     Provider.of<TodoDetailViewModel>(context, listen: false)
         .fetchTodoDetail(widget.todoId);
-    _taskTitleFocusNode.addListener(() {
-      if (!_taskTitleFocusNode.hasFocus) {
-        Provider.of<TodoDetailViewModel>(context, listen: false)
-            .setTaskTitle(_taskTitleController.text);
-      }
-    });
-    _taskNoteFocusNode.addListener(() {
-      if (!_taskTitleFocusNode.hasFocus) {
-        Provider.of<TodoDetailViewModel>(context, listen: false)
-            .setTaskNote(_noteController.text);
-      }
-    });
     super.initState();
   }
 
@@ -119,7 +105,6 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
     _dateController.dispose();
     _timeController.dispose();
     _noteController.dispose();
-    _taskTitleFocusNode.dispose();
   }
 
   @override
@@ -160,18 +145,23 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                             padding: const EdgeInsets.only(top: 12.0),
                             child: Selector<TodoDetailViewModel, String?>(
                               selector: (context, viewModel) =>
-                                  viewModel.taskTitle,
+                                  viewModel.todoItem.taskTitle,
                               builder: (context, taskTitle, child) {
                                 if (taskTitle != null) {
                                   _taskTitleController.text = taskTitle;
                                 }
                                 return TextFieldWidget(
+                                  onChange: (text) {
+                                    Provider.of<TodoDetailViewModel>(context,
+                                            listen: false)
+                                        .setTaskTitle(text);
+                                  },
                                   placeholder: "Task Title",
                                   textEditingController: _taskTitleController,
                                   error: _taskTitleValidate
                                       ? "Value Can't Be Empty"
                                       : null,
-                                  focusNode: _taskTitleFocusNode,
+                                  // focusNode: _taskTitleFocusNode,
                                 );
                               },
                             ),
@@ -199,11 +189,13 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                                       viewModel.setCategory(1);
                                     },
                                     backgroundColor: taskBackground,
-                                    borderColor: viewModel.categotyId == null
-                                        ? Colors.white
-                                        : (viewModel.categotyId == 1
-                                            ? Colors.cyan
-                                            : Colors.white),
+                                    borderColor:
+                                        viewModel.todoItem.categoryId == null
+                                            ? Colors.white
+                                            : (viewModel.todoItem.categoryId ==
+                                                    1
+                                                ? Colors.cyan
+                                                : Colors.white),
                                     borderWidth: 2.0,
                                   );
                                 }),
@@ -219,11 +211,13 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                                       viewModel.setCategory(2);
                                     },
                                     backgroundColor: eventBackground,
-                                    borderColor: viewModel.categotyId == null
-                                        ? Colors.white
-                                        : (viewModel.categotyId == 2
-                                            ? Colors.cyan
-                                            : Colors.white),
+                                    borderColor:
+                                        viewModel.todoItem.categoryId == null
+                                            ? Colors.white
+                                            : (viewModel.todoItem.categoryId ==
+                                                    2
+                                                ? Colors.cyan
+                                                : Colors.white),
                                     borderWidth: 2.0,
                                   );
                                 }),
@@ -239,11 +233,13 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                                       viewModel.setCategory(3);
                                     },
                                     backgroundColor: goalBackground,
-                                    borderColor: viewModel.categotyId == null
-                                        ? Colors.white
-                                        : (viewModel.categotyId == 3
-                                            ? Colors.cyan
-                                            : Colors.white),
+                                    borderColor:
+                                        viewModel.todoItem.categoryId == null
+                                            ? Colors.white
+                                            : (viewModel.todoItem.categoryId ==
+                                                    3
+                                                ? Colors.cyan
+                                                : Colors.white),
                                     borderWidth: 2.0,
                                   );
                                 }),
@@ -271,10 +267,8 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                                           child: Consumer<TodoDetailViewModel>(
                                               builder:
                                                   (context, viewModel, child) {
-                                            if (viewModel.todoItem != null) {
-                                              _dateController.text =
-                                                  viewModel.date!;
-                                            }
+                                            _dateController.text =
+                                                viewModel.date!;
                                             return TextFieldWidget(
                                               readOnly: true,
                                               textEditingController:
@@ -314,10 +308,8 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                                           child: Consumer<TodoDetailViewModel>(
                                               builder:
                                                   (context, viewModel, child) {
-                                            if (viewModel.todoItem != null) {
-                                              _timeController.text =
-                                                  viewModel.time!;
-                                            }
+                                            _timeController.text =
+                                                viewModel.time!;
                                             return TextFieldWidget(
                                               error: _timeValidate
                                                   ? "Value Can't Be Empty"
@@ -355,11 +347,14 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                                     250, //     <-- TextField expands to this height.
                                 child: Consumer<TodoDetailViewModel>(
                                     builder: (context, viewModel, child) {
-                                  if (viewModel.todoItem != null) {
-                                    _noteController.text = viewModel.taskNote!;
-                                  }
+                                  _noteController.text =
+                                      viewModel.todoItem.taskNote!;
                                   return TextFieldWidget(
-                                    focusNode: _taskNoteFocusNode,
+                                    onChange: (text) {
+                                      Provider.of<TodoDetailViewModel>(context,
+                                              listen: false)
+                                          .setTaskNote(text);
+                                    },
                                     textEditingController: _noteController,
                                     placeholder: "Note",
                                     maxLines: null, // Set this
@@ -375,6 +370,9 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                                 builder: (context, viewModel, child) {
                               return ButtonWidget(
                                 onTap: () {
+                                  viewModel
+                                      .setTaskTitle(_taskTitleController.text);
+                                  viewModel.setTaskNote(_noteController.text);
                                   setState(() {
                                     _dateValidate =
                                         _dateController.text.isEmpty;
@@ -383,7 +381,7 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                                     _timeValidate =
                                         _timeController.text.isEmpty;
                                   });
-                                  if (viewModel.categotyId == null) {
+                                  if (viewModel.todoItem.categoryId == null) {
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
@@ -396,7 +394,7 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                                   if (_taskTitleValidate == false &&
                                       _timeValidate == false &&
                                       _dateValidate == false &&
-                                      viewModel.categotyId != null) {
+                                      viewModel.todoItem.categoryId != null) {
                                     if (widget.todoId == -1) {
                                       viewModel.addTodo(
                                           _taskTitleController.text,

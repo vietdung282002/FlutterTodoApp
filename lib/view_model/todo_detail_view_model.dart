@@ -7,8 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class TodoDetailViewModel extends ChangeNotifier {
   final ApiServices _apiServices = ApiServices();
 
-  TodoItem? _todoItem;
-  TodoItem? get todoItem => _todoItem;
+  TodoItem _todoItem = TodoItem.empty();
+  TodoItem get todoItem => _todoItem;
 
   LoadingState _loading = LoadingState.idle;
   LoadingState get loading => _loading;
@@ -16,20 +16,14 @@ class TodoDetailViewModel extends ChangeNotifier {
   bool _isEditted = false;
   bool get isEditted => _isEditted;
 
-  String? _taskTitle;
-  String? get taskTitle => _taskTitle;
-
   int? _categoryId;
-  int? get categotyId => _categoryId;
+  int? get categoryId => _categoryId;
 
-  String? _date;
+  String? _date = "";
   String? get date => _date;
 
-  String? _time;
+  String? _time = "";
   String? get time => _time;
-
-  String? _taskNote;
-  String? get taskNote => _taskNote;
 
   Future<void> fetchTodoDetail(int todoId) async {
     if (_loading == LoadingState.loading) return;
@@ -42,11 +36,8 @@ class TodoDetailViewModel extends ChangeNotifier {
       final todoResponse = await _apiServices.getTodoItem(todoId);
 
       _todoItem = todoResponse;
-      _taskTitle = _todoItem?.taskTitle;
-      _date = _todoItem?.formatDate();
-      _time = _todoItem?.formatTime();
-      _categoryId = todoItem?.categoryId;
-      _taskNote = _todoItem?.taskNote;
+      _date = _todoItem.formatDate();
+      _time = _todoItem.formatTime();
 
       _loading = LoadingState.success;
     } catch (e) {
@@ -66,11 +57,11 @@ class TodoDetailViewModel extends ChangeNotifier {
     final String? deviceUdid = prefs.getString('device_udid');
 
     final newTodo = TodoItem(
-        categoryId: _categoryId!,
+        categoryId: _todoItem.categoryId!,
         time: deadline,
         isComplete: false,
-        taskTitle: taskTitle,
-        taskNote: taskNote,
+        taskTitle: _todoItem.taskTitle,
+        taskNote: _todoItem.taskNote,
         deviceUDID: deviceUdid!);
     try {
       await _apiServices.createTodo(newTodo);
@@ -92,12 +83,12 @@ class TodoDetailViewModel extends ChangeNotifier {
     final String? deviceUdid = prefs.getString('device_udid');
 
     final newTodo = TodoItem(
-        todoId: _todoItem?.todoId!,
-        categoryId: _categoryId!,
+        todoId: _todoItem.todoId!,
+        categoryId: _todoItem.categoryId!,
         time: deadline,
         isComplete: false,
-        taskTitle: taskTitle,
-        taskNote: taskNote,
+        taskTitle: _todoItem.taskTitle,
+        taskNote: _todoItem.taskNote,
         deviceUDID: deviceUdid!);
 
     try {
@@ -111,12 +102,12 @@ class TodoDetailViewModel extends ChangeNotifier {
   }
 
   void setTaskTitle(String taskTitle) {
-    _taskTitle = taskTitle;
+    _todoItem.taskTitle = taskTitle;
     notifyListeners();
   }
 
   void setTaskNote(String taskNote) {
-    _taskNote = taskNote;
+    _todoItem.taskNote = taskNote;
     notifyListeners();
   }
 
@@ -131,7 +122,7 @@ class TodoDetailViewModel extends ChangeNotifier {
   }
 
   void setCategory(int categoryId) {
-    _categoryId = categoryId;
+    _todoItem.categoryId = categoryId;
     notifyListeners();
   }
 }

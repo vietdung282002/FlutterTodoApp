@@ -15,7 +15,6 @@ class TodoItemWidget extends StatelessWidget {
   final TodoItem todoItem;
   @override
   Widget build(BuildContext context) {
-    print(todoItem.todoId);
     return GestureDetector(
       onLongPress: () {
         showCupertinoModalPopup<void>(
@@ -53,7 +52,7 @@ class TodoItemWidget extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            _buildImageBasedOnStatus(todoItem.categoryId, todoItem.isComplete),
+            _buildImageBasedOnStatus(todoItem.categoryId!, todoItem.isComplete),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
