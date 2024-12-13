@@ -14,6 +14,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Create .env file
+        run: |
+            echo "API_KEY=${{ secrets.API_KEY }}" >> .env
+            echo "BASE_URL=${{ secrets.BASE_URL }}" >> .env
+
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
