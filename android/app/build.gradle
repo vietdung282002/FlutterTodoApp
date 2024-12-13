@@ -48,7 +48,7 @@ android {
         //     storePassword = keystoreProperties['storePassword']
         // }
         release {
-            storeFile file(System.getenv("STORE_FILE"))
+            storeFile System.getenv("STORE_FILE") ? file(System.getenv("STORE_FILE")) : null
             storePassword System.getenv("STORE_PASSWORD")
             keyAlias System.getenv("KEY_ALIAS")
             keyPassword System.getenv("KEY_PASSWORD")

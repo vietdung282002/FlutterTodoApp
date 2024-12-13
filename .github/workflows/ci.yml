@@ -17,7 +17,7 @@ jobs:
       - name: Decode Keystore from GitHub Secrets
         env:    
           ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64_PROD }}
-        run: echo $ANDROID_KEYSTORE_BASE64 | base64 --decode > ./android/app/keystore.jks
+        run: echo $ANDROID_KEYSTORE_BASE64 | base64 --decode > ./android/keystore.jks
         
 
       - name: Create .env file
