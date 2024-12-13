@@ -40,7 +40,9 @@ jobs:
 
       # Install dependencies
       - name: Install dependencies
-        run: flutter pub get
+        run: |
+            flutter clean
+            flutter pub get
 
       - name: Build APK
         run: flutter build apk
@@ -48,7 +50,7 @@ jobs:
           STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          STORE_FILE: ./keystore.jks
+          STORE_FILE: ./android/app/keystore.jks
 
       - name: Make gradlew executable
         run: chmod +x android/gradlew
