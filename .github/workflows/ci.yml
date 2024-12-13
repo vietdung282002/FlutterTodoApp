@@ -50,7 +50,7 @@ jobs:
           STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          STORE_FILE: ./android/app/keystore.jks
+          STORE_FILE: ./keystore.jks
 
       - name: Make gradlew executable
         run: chmod +x android/gradlew
