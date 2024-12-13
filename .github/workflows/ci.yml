@@ -14,6 +14,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Decode Keystore from GitHub Secrets
+        env:    
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64_PROD }}
+        run: echo $ANDROID_KEYSTORE_BASE64 | base64 --decode > ./android/app/keystore.jks
+        
+
       - name: Create .env file
         run: |
             echo "API_KEY=${{ secrets.API_KEY }}" >> .env
@@ -38,6 +44,11 @@ jobs:
 
       - name: Build APK
         run: flutter build apk
+        env:
+          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          STORE_FILE: ./keystore.jks
 
       # Setup Fastlane
       - name: Setup Ruby and Fastlane
