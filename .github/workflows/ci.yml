@@ -14,6 +14,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+            java-version: '17'
+            distribution: 'temurin' 
+            cache: gradle
+
       # Setup Flutter
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
