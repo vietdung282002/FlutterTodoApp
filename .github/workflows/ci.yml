@@ -50,8 +50,9 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           STORE_FILE: ./keystore.jks
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+      - name: Make gradlew executable
+        run: chmod +x android/gradlew
+        
 
       # Setup Fastlane
       - name: Setup Ruby and Fastlane
