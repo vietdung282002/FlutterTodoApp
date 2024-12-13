@@ -44,6 +44,15 @@ jobs:
             flutter clean
             flutter pub get
 
+    # Setup Fastlane
+      - name: Setup Ruby and Fastlane
+        uses: ruby/setup-ruby@v1
+        with:
+            ruby-version: '3.0'
+
+      - name: Install Fastlane
+        run: gem install fastlane
+
       - name: Build APK
         run: flutter build apk
         env:
@@ -55,20 +64,11 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x android/gradlew
         
-
-      # Setup Fastlane
-      - name: Setup Ruby and Fastlane
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.0'
-
-      - name: Install Fastlane
-        run: gem install fastlane
-
       # Decrypt google-services.json
       - name: Decrypt google-services.json
         run: |
           mkdir -p android/app
+          ls android/app
           echo "${{ secrets.GOOGLE_SERVICES_JSON }}" > android/app/google-services.json
 
       # Deploy to Firebase App Distribution
