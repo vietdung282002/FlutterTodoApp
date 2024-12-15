@@ -75,6 +75,6 @@ jobs:
       - name: Deploy to Firebase App Distribution
         run: |
           cd android
-          fastlane beta
+          bundle exec fastlane beta
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
