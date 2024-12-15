@@ -51,7 +51,9 @@ jobs:
             ruby-version: '3.0'
 
       - name: Install Fastlane
-        run: gem install fastlane
+        run: |
+          gem install fastlane
+          gem install firebase-app-distribution
 
       - name: Build APK
         run: flutter build apk
@@ -75,6 +77,6 @@ jobs:
       - name: Deploy to Firebase App Distribution
         run: |
           cd android
-          bundle exec fastlane beta
+          fastlane beta
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
