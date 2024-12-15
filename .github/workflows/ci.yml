@@ -53,7 +53,10 @@ jobs:
       - name: Install Fastlane
         run: |
           gem install fastlane
-          gem install firebase-app-distribution
+          
+      - name: Install Fastlane Firebase App Distribution plugin
+        working-directory: android
+        run: fastlane add_plugin firebase_app_distribution
 
       - name: Build APK
         run: flutter build apk
