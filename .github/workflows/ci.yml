@@ -66,8 +66,8 @@ jobs:
       #     KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       #     STORE_FILE: ./keystore.jks
 
-      - name: Make gradlew executable
-        run: chmod +x android/gradlew
+      # - name: Make gradlew executable
+      #   run: chmod +x android/gradlew
         
       # Decrypt google-services.json
       - name: Decrypt google-services.json
