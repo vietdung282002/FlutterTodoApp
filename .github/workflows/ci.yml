@@ -71,17 +71,6 @@ jobs:
       - name: Install Fastlane Firebase App Distribution plugin
         working-directory: android
         run: fastlane add_plugin firebase_app_distribution
-
-      # - name: Build APK
-      #   run: flutter build apk
-      #   env:
-      #     STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
-      #     KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-      #     KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-      #     STORE_FILE: ./keystore.jks
-
-      # - name: Make gradlew executable
-      #   run: chmod +x android/gradlew
         
       # Decrypt google-services.json
       - name: Decrypt google-services.json
