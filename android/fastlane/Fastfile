@@ -26,11 +26,11 @@ platform :android do
         task: "assemble",
         build_type: "Release"
         properties: {
-      "android.injected.signing.store.file" => "./android/app/keystore.jks",
-      "android.injected.signing.store.password" => ENV["STORE_PASSWORD"],
-      "android.injected.signing.key.alias" => ENV["KEY_ALIAS"],
-      "android.injected.signing.key.password" => ENV["KEY_PASSWORD"]
-    }
+          "android.injected.signing.store.file" => "./android/app/keystore.jks",
+          "android.injected.signing.store.password" => ENV["STORE_PASSWORD"],
+          "android.injected.signing.key.alias" => ENV["KEY_ALIAS"],
+          "android.injected.signing.key.password" => ENV["KEY_PASSWORD"]
+        }
     )
   
     firebase_app_distribution(
