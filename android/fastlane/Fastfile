@@ -18,14 +18,19 @@ default_platform(:android)
 platform :android do
 
   lane :beta do
-    gradle(
-        task: "clean"
-    )
+    # gradle(
+    #     task: "clean"
+    # )
     
-    gradle(
-        task: "assemble",
-        build_type: "Release"
-    )
+    # gradle(
+    #     task: "assemble",
+    #     build_type: "Release"
+    # )
+    # Clean build folder
+    sh "flutter clean"
+
+    # Build the APK
+    sh "flutter build apk --release"
   
     firebase_app_distribution(
         app: "1:771078424485:android:0a722b7f7ae4e2b785ca4c",

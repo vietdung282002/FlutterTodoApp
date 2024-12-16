@@ -46,11 +46,6 @@ jobs:
             distribution: 'temurin' 
             cache: gradle
 
-      - name: Generate Gradle Wrapper
-        run: |
-          cd android
-          gradle wrapper --gradle-version 7.5
-          
       # Setup Flutter
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
