@@ -22,7 +22,7 @@ jobs:
       # Configure Keystore.
       - name: Configure Keystore
         run: |
-          echo "storeFile=./android/app/keystore.jks" >> key.properties
+          echo "storeFile=./keystore.jks" >> key.properties
           echo "keyAlias=$KEY_ALIAS" >> key.properties
           echo "storePassword=$STORE_PASSWORD" >> key.properties
           echo "keyPassword=$KEY_PASSWORD" >> key.properties
