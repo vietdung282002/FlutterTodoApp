@@ -34,7 +34,7 @@ platform :android do
   
     firebase_app_distribution(
         app: "1:771078424485:android:0a722b7f7ae4e2b785ca4c",
-        firebase_cli_token: "1//0ejfPX17ozDxQCgYIARAAGA4SNwF-L9IrfBX1z5R6yPxLhrWN0POo5LK5Zvv7MeABxr1HFhpiNsnWn5pMtuRQzkFuOCIPgoZFi6U",
+        firebase_cli_token: "1//0e1U7K1GN0SYFCgYIARAAGA4SNwF-L9IrGMNUHsXltgLhq17e0sl-QTQu4r8R_y5fpIMp3fuiausct6abPK_Vq5KQUEftiEwgYIA",
         apk_path: "../build/app/outputs/flutter-apk/app-release.apk",
         groups: "testers"
     )
