@@ -25,12 +25,6 @@ platform :android do
     gradle(
         task: "assemble",
         build_type: "Release"
-        properties: {
-          android_injected_signing_store_file: "./android/app/keystore.jks",
-          android_injected_signing_store_password: ENV["STORE_PASSWORD"],
-          android_injected_signing_key_alias: ENV["KEY_ALIAS"],
-          android_injected_signing_key_password: ENV["KEY_PASSWORD"]
-        }
     )
   
     firebase_app_distribution(

@@ -18,6 +18,21 @@ jobs:
         env:    
           ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64_PROD }}
         run: echo $ANDROID_KEYSTORE_BASE64 | base64 --decode > ./android/app/keystore.jks
+
+      # Configure Keystore.
+      - name: Configure Keystore
+        run: |
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > ./android/app/keystore.jks
+          echo "storeFile=./android/app/keystore.jks" >> key.properties
+          echo "keyAlias=$KEY_ALIAS" >> key.properties
+          echo "storePassword=$STORE_PASSWORD" >> key.properties
+          echo "keyPassword=$KEY_PASSWORD" >> key.properties
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64_PROD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+        working-directory: ./android
         
 
       - name: Create .env file
@@ -79,7 +94,7 @@ jobs:
       - name: Deploy to Firebase App Distribution
         run: |
           cd android
-          fastlane beta
+          fastlane android beta
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
