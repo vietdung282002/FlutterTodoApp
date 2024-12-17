@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_todo_app/model/enum/category.dart';
 import 'package:flutter_todo_app/model/enum/loading_state.dart';
 import 'package:flutter_todo_app/model/network/api_services.dart';
 import 'package:flutter_todo_app/model/model_objects/todo_response.dart';
@@ -57,7 +58,7 @@ class TodoDetailViewModel extends ChangeNotifier {
     final String? deviceUdid = prefs.getString('device_udid');
 
     final newTodo = TodoItem(
-        categoryId: _todoItem.categoryId!,
+        category: _todoItem.category!,
         time: deadline,
         isComplete: false,
         taskTitle: _todoItem.taskTitle,
@@ -84,7 +85,7 @@ class TodoDetailViewModel extends ChangeNotifier {
 
     final newTodo = TodoItem(
         todoId: _todoItem.todoId!,
-        categoryId: _todoItem.categoryId!,
+        category: _todoItem.category!,
         time: deadline,
         isComplete: false,
         taskTitle: _todoItem.taskTitle,
@@ -121,8 +122,8 @@ class TodoDetailViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setCategory(int categoryId) {
-    _todoItem.categoryId = categoryId;
+  void setCategory(ItemCategory categoryId) {
+    _todoItem.category = categoryId;
     notifyListeners();
   }
 }

@@ -1,8 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_app/view/colors.dart';
+import 'package:flutter_todo_app/config/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class TextFieldWidget extends StatelessWidget {
+  final String placeholder;
+  final double placeholderSize;
+  final FontWeight placeholderWeight;
+  final Color enableBorderColor;
+  final double enableBorderWidth;
+  final double enableBorderRadius;
+  final Color focusedBorderColor;
+  final double focusedBorderWidth;
+  final double focusedBorderRadius;
+  final Widget? endIcon;
+  final int? maxLines;
+  final bool expands;
+  final TextInputType? keyboardType;
+  final TextEditingController? textEditingController;
+  final String? error;
+  final bool readOnly;
+  final FocusNode? focusNode;
+  final Function(String)? onChange;
+
   const TextFieldWidget({
     super.key,
     this.placeholder = "",
@@ -25,25 +44,6 @@ class TextFieldWidget extends StatelessWidget {
     this.onChange,
   });
 
-  final String placeholder;
-  final double placeholderSize;
-  final FontWeight placeholderWeight;
-  final Color enableBorderColor;
-  final double enableBorderWidth;
-  final double enableBorderRadius;
-  final Color focusedBorderColor;
-  final double focusedBorderWidth;
-  final double focusedBorderRadius;
-  final Widget? endIcon;
-  final int? maxLines;
-  final bool expands;
-  final TextInputType? keyboardType;
-  final TextEditingController? textEditingController;
-  final String? error;
-  final bool readOnly;
-  final FocusNode? focusNode;
-  final Function(String)? onChange;
-
   @override
   Widget build(BuildContext context) {
     return TextField(
@@ -57,6 +57,8 @@ class TextFieldWidget extends StatelessWidget {
       expands: expands,
       keyboardType: keyboardType,
       decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.white,
         errorText: error,
         hintText: placeholder,
         hintStyle: GoogleFonts.inter(

@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_app/view/colors.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_todo_app/config/colors.dart';
 
 class ButtonWidget extends StatelessWidget {
+  final double width;
+  final String text;
+  final TextStyle? textStyle;
+  final VoidCallback onTap;
+
   const ButtonWidget({
     super.key,
-    required this.screenWidth,
+    required this.width,
     required this.text,
     required this.onTap,
+    this.textStyle,
   });
-
-  final double screenWidth;
-  final String text;
-  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: onTap,
       style: ButtonStyle(
-          minimumSize: WidgetStateProperty.all<Size>(Size(screenWidth, 50)),
+          minimumSize: WidgetStateProperty.all<Size>(Size(width, 50)),
           padding:
               WidgetStateProperty.all<EdgeInsets>(const EdgeInsets.all(15)),
           backgroundColor: WidgetStateProperty.all<Color>(backgroundColor),
@@ -28,14 +29,7 @@ class ButtonWidget extends StatelessWidget {
               RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(50.0),
           ))),
-      child: Text(
-        text,
-        style: GoogleFonts.inter(
-            textStyle: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: Colors.white)),
-      ),
+      child: Text(text, style: textStyle),
     );
   }
 }

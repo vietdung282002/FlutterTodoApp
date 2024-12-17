@@ -2,9 +2,11 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/model/enum/loading_state.dart';
+import 'package:flutter_todo_app/view/detail_screen/todo_detail.dart';
 import 'package:flutter_todo_app/view/widget/text_widget.dart';
 import 'package:flutter_todo_app/view/widget/todo_item_widget.dart';
 import 'package:flutter_todo_app/view_model/todo_list_view_model.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class TodoList extends StatefulWidget {
@@ -17,8 +19,6 @@ class TodoList extends StatefulWidget {
 }
 
 class _TodoListState extends State<TodoList> {
-  final GlobalKey<SliverAnimatedListState> pendingListKey = GlobalKey();
-  final GlobalKey<SliverAnimatedListState> completedListKey = GlobalKey();
   @override
   void initState() {
     super.initState();
@@ -27,7 +27,7 @@ class _TodoListState extends State<TodoList> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.only(top: 8.0),
       child: Stack(
         children: [
           RefreshIndicator(
@@ -40,73 +40,23 @@ class _TodoListState extends State<TodoList> {
                 Selector<TodoListViewModel, List?>(
                   selector: (context, viewModel) => viewModel.pendingTodos,
                   builder: (context, pendingTodos, child) {
-                    return SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          final todo = pendingTodos?[index];
-
-                          if (todo == null) return const SizedBox.shrink();
-
-                          return Dismissible(
-                            key: Key(todo.todoId
-                                .toString()), // Ensure the key is unique
-                            direction: DismissDirection.endToStart,
-                            onDismissed: (direction) {
-                              // Trigger the deletion in the ViewModel
-                              Provider.of<TodoListViewModel>(context,
-                                      listen: false)
-                                  .deleteTodo(todo.todoId!);
-                            },
-                            background: Container(
-                              color: Colors.red,
-                              alignment: Alignment.centerRight,
-                              padding: const EdgeInsets.only(right: 20.0),
-                              child:
-                                  const Icon(Icons.delete, color: Colors.white),
-                            ),
-                            child: TodoItemWidget(todoItem: todo),
-                          );
-                        },
-                        childCount: pendingTodos?.length ?? 0,
-                      ),
-                    );
+                    return todoSection(pendingTodos);
                   },
                 ),
-                const SliverToBoxAdapter(
-                    child: SectionTitle(title: "Completed")),
+                SliverToBoxAdapter(
+                  child: Consumer<TodoListViewModel>(
+                      builder: (context, viewModel, child) {
+                    if (viewModel.loading == LoadingState.loading) {
+                      return const SizedBox.shrink();
+                    }
+
+                    return sectionTitle(title: "Completed");
+                  }),
+                ),
                 Selector<TodoListViewModel, List?>(
                     selector: (context, viewModel) => viewModel.completedTodos,
                     builder: (context, completedTodos, child) {
-                      return SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            final todo = completedTodos?[index];
-
-                            if (todo == null) return const SizedBox.shrink();
-
-                            return Dismissible(
-                              key: Key(todo.todoId
-                                  .toString()), // Ensure the key is unique
-                              direction: DismissDirection.endToStart,
-                              onDismissed: (direction) {
-                                // Trigger the deletion in the ViewModel
-                                Provider.of<TodoListViewModel>(context,
-                                        listen: false)
-                                    .deleteTodo(todo.todoId!);
-                              },
-                              background: Container(
-                                color: Colors.red,
-                                alignment: Alignment.centerRight,
-                                padding: const EdgeInsets.only(right: 20.0),
-                                child: const Icon(Icons.delete,
-                                    color: Colors.white),
-                              ),
-                              child: TodoItemWidget(todoItem: todo),
-                            );
-                          },
-                          childCount: completedTodos?.length ?? 0,
-                        ),
-                      );
+                      return todoSection(completedTodos);
                     }),
               ],
             ),
@@ -131,21 +81,82 @@ class _TodoListState extends State<TodoList> {
       ),
     );
   }
-}
 
-class SectionTitle extends StatelessWidget {
-  final String title;
+  Widget todoSection(List<dynamic>? todos) {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          final todo = todos?[index];
 
-  const SectionTitle({super.key, required this.title});
+          if (todo == null) return const SizedBox.shrink();
+          bool isFirst = index == 0;
+          bool isLast = index == (todos?.length ?? 1) - 1;
 
-  @override
-  Widget build(BuildContext context) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 1),
+            child: Dismissible(
+              key: Key(todo.todoId.toString()), // Ensure the key is unique
+              direction: DismissDirection.endToStart,
+              onDismissed: (direction) {
+                // Trigger the deletion in the ViewModel
+                Provider.of<TodoListViewModel>(context, listen: false)
+                    .deleteTodo(todo.todoId!);
+              },
+              background: Container(
+                color: Colors.red,
+                alignment: Alignment.centerRight,
+                padding: const EdgeInsets.only(right: 20.0),
+                child: const Icon(Icons.delete, color: Colors.white),
+              ),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TodoDetail(
+                        todoId: todo.todoId,
+                      ),
+                    ),
+                  );
+                },
+                child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft:
+                            isFirst ? const Radius.circular(16.0) : Radius.zero,
+                        topRight:
+                            isFirst ? const Radius.circular(16.0) : Radius.zero,
+                        bottomLeft:
+                            isLast ? const Radius.circular(16.0) : Radius.zero,
+                        bottomRight:
+                            isLast ? const Radius.circular(16.0) : Radius.zero,
+                      ),
+                    ),
+                    width: MediaQuery.of(context).size.width,
+                    height: 90,
+                    child: TodoItemWidget(todoItem: todo)),
+              ),
+            ),
+          );
+        },
+        childCount: todos?.length ?? 0,
+      ),
+    );
+  }
+
+  Widget sectionTitle({required String title}) {
     return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: TextWidget(
-          text: title,
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-        ));
+      padding: const EdgeInsets.all(8.0),
+      child: TextWidget(
+        text: title,
+        textStyle: GoogleFonts.inter(
+          textStyle: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
   }
 }

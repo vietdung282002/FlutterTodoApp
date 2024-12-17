@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/config/utils.dart';
 import 'package:flutter_todo_app/view/detail_screen/todo_detail.dart';
 import 'package:flutter_todo_app/view/widget/button_widget.dart';
-import 'package:flutter_todo_app/view/colors.dart';
+import 'package:flutter_todo_app/config/colors.dart';
 import 'package:flutter_todo_app/view/widget/text_widget.dart';
 import 'package:flutter_todo_app/view/home_screen/todo_list.dart';
 import 'package:flutter_todo_app/view_model/todo_list_view_model.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -27,6 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
+      backgroundColor: backgroundColor2,
       body: Stack(
         children: [
           Container(
@@ -47,30 +49,34 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               children: [
                 Center(
-                    child: TextWidget(
-                        text: AppUtils().formatCurrentDate(),
-                        textColor: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600)),
-                const Padding(
-                  padding: EdgeInsets.only(top: 24),
+                  child: TextWidget(
+                    text: AppUtils().formatCurrentDate(),
+                    textStyle: GoogleFonts.inter(
+                        textStyle: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    )),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 24),
                   child: Center(
                     child: TextWidget(
                       text: "My Todo List",
-                      textColor: Colors.white,
-                      fontSize: 30,
-                      fontWeight: FontWeight.w700,
+                      textStyle: GoogleFonts.inter(
+                          textStyle: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w700,
+                      )),
                     ),
                   ),
                 ),
-                Expanded(
+                const Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 16, bottom: 16),
-                    child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.white),
-                        child: const TodoList()),
+                    padding: EdgeInsets.only(top: 16, bottom: 16),
+                    child: TodoList(),
                   ),
                 ),
                 Padding(
@@ -84,8 +90,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       );
                     },
-                    screenWidth: screenWidth,
+                    width: screenWidth,
                     text: "Add New Task",
+                    textStyle: GoogleFonts.inter(
+                        textStyle: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white)),
                   ),
                 )
               ],

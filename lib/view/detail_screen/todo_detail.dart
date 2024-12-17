@@ -1,9 +1,9 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/config/utils.dart';
+import 'package:flutter_todo_app/model/enum/category.dart';
 import 'package:flutter_todo_app/model/enum/loading_state.dart';
-import 'package:flutter_todo_app/view/colors.dart';
+import 'package:flutter_todo_app/config/colors.dart';
 import 'package:flutter_todo_app/view/widget/alert_dialog_widget.dart';
 import 'package:flutter_todo_app/view/widget/app_bar_widget.dart';
 import 'package:flutter_todo_app/view/widget/button_widget.dart';
@@ -12,6 +12,7 @@ import 'package:flutter_todo_app/view/widget/text_field_widget.dart';
 import 'package:flutter_todo_app/view/widget/text_widget.dart';
 import 'package:flutter_todo_app/view_model/todo_detail_view_model.dart';
 import 'package:flutter_todo_app/view_model/todo_list_view_model.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -58,7 +59,7 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
       firstDate: DateTime(2000),
       lastDate: DateTime(2025),
     );
-    if (picked != null && picked != selectedDate) {
+    if (picked != null) {
       setState(() {
         selectedDate = picked;
         String formattedDate = DateFormat('dd-MM-yyyy').format(picked);
@@ -80,7 +81,7 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
         );
       },
     );
-    if (picked != null && picked != selectedTime) {
+    if (picked != null) {
       setState(() {
         selectedTime = picked;
         final String formattedTime = AppUtils().formatTimeTo12Hour(picked);
@@ -112,9 +113,15 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
+        backgroundColor: backgroundColor2,
         appBar: AppBarWidget(
           title: widget.todoId == -1 ? "Add Todo" : "Edit Todo",
-          titleColor: Colors.white,
+          textStyle: GoogleFonts.inter(
+              textStyle: const TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          )),
           backgroundColor: backgroundColor,
           leadingWidget: IconButton(
             onPressed: () {
@@ -135,12 +142,7 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const TextWidget(
-                            text: "Task Title",
-                            textColor: textColor,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
+                          textTitle(text: "Task Title"),
                           Padding(
                             padding: const EdgeInsets.only(top: 12.0),
                             child: Selector<TodoDetailViewModel, String?>(
@@ -171,78 +173,25 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                const TextWidget(
-                                  text: "Category",
-                                  textColor: textColor,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                textTitle(text: "Category"),
                                 const SizedBox(
                                   width: 30,
                                 ),
-                                Consumer<TodoDetailViewModel>(
-                                    builder: (context, viewModel, child) {
-                                  return CategoryWidget(
-                                    image:
-                                        Image.asset("assets/category_task.png"),
-                                    onTap: () {
-                                      viewModel.setCategory(1);
-                                    },
-                                    backgroundColor: taskBackground,
-                                    borderColor:
-                                        viewModel.todoItem.categoryId == null
-                                            ? Colors.white
-                                            : (viewModel.todoItem.categoryId ==
-                                                    1
-                                                ? Colors.cyan
-                                                : Colors.white),
-                                    borderWidth: 2.0,
-                                  );
-                                }),
+                                categoryPicker(
+                                  category: ItemCategory.task,
+                                ),
                                 const SizedBox(
                                   width: 20,
                                 ),
-                                Consumer<TodoDetailViewModel>(
-                                    builder: (context, viewModel, child) {
-                                  return CategoryWidget(
-                                    image: Image.asset(
-                                        "assets/category_event.png"),
-                                    onTap: () {
-                                      viewModel.setCategory(2);
-                                    },
-                                    backgroundColor: eventBackground,
-                                    borderColor:
-                                        viewModel.todoItem.categoryId == null
-                                            ? Colors.white
-                                            : (viewModel.todoItem.categoryId ==
-                                                    2
-                                                ? Colors.cyan
-                                                : Colors.white),
-                                    borderWidth: 2.0,
-                                  );
-                                }),
+                                categoryPicker(
+                                  category: ItemCategory.event,
+                                ),
                                 const SizedBox(
                                   width: 20,
                                 ),
-                                Consumer<TodoDetailViewModel>(
-                                    builder: (context, viewModel, child) {
-                                  return CategoryWidget(
-                                    image:
-                                        Image.asset("assets/category_goal.png"),
-                                    onTap: () {
-                                      viewModel.setCategory(3);
-                                    },
-                                    backgroundColor: goalBackground,
-                                    borderColor:
-                                        viewModel.todoItem.categoryId == null
-                                            ? Colors.white
-                                            : (viewModel.todoItem.categoryId ==
-                                                    3
-                                                ? Colors.cyan
-                                                : Colors.white),
-                                    borderWidth: 2.0,
-                                  );
-                                }),
+                                categoryPicker(
+                                  category: ItemCategory.goal,
+                                ),
                               ],
                             ),
                           ),
@@ -255,12 +204,7 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        const TextWidget(
-                                          text: "Date",
-                                          textColor: textColor,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                        textTitle(text: "Date"),
                                         Padding(
                                           padding:
                                               const EdgeInsets.only(top: 8.0),
@@ -296,12 +240,7 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        const TextWidget(
-                                          text: "Time",
-                                          textColor: textColor,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                        textTitle(text: "Time"),
                                         Padding(
                                           padding:
                                               const EdgeInsets.only(top: 8.0),
@@ -331,14 +270,9 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                                   )
                                 ],
                               )),
-                          const Padding(
-                            padding: EdgeInsets.only(top: 24.0),
-                            child: TextWidget(
-                              text: "Note",
-                              textColor: textColor,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                            ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 24.0),
+                            child: textTitle(text: "Note"),
                           ),
                           Padding(
                               padding: const EdgeInsets.only(top: 24),
@@ -381,7 +315,7 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                                     _timeValidate =
                                         _timeController.text.isEmpty;
                                   });
-                                  if (viewModel.todoItem.categoryId == null) {
+                                  if (viewModel.todoItem.category == null) {
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
@@ -394,7 +328,7 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                                   if (_taskTitleValidate == false &&
                                       _timeValidate == false &&
                                       _dateValidate == false &&
-                                      viewModel.todoItem.categoryId != null) {
+                                      viewModel.todoItem.category != null) {
                                     if (widget.todoId == -1) {
                                       viewModel.addTodo(
                                           _taskTitleController.text,
@@ -412,8 +346,13 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                                     }
                                   }
                                 },
-                                screenWidth: screenWidth,
+                                width: screenWidth,
                                 text: "Save",
+                                textStyle: GoogleFonts.inter(
+                                    textStyle: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white)),
                               );
                             }),
                           )
@@ -451,5 +390,39 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
             })
           ],
         ));
+  }
+
+  Widget textTitle({required String text}) {
+    return TextWidget(
+      text: text,
+      textStyle: GoogleFonts.inter(
+          textStyle: const TextStyle(
+        color: textColor,
+        fontSize: 14,
+        fontWeight: FontWeight.w600,
+      )),
+    );
+  }
+
+  Widget categoryPicker({
+    required ItemCategory category,
+  }) {
+    return Consumer<TodoDetailViewModel>(
+      builder: (context, viewModel, child) {
+        return CategoryWidget(
+          image: Image.asset(category.icon),
+          onTap: () {
+            viewModel.setCategory(category);
+          },
+          backgroundColor: category.backgroundColor,
+          borderColor: viewModel.todoItem.category == null
+              ? Colors.white
+              : (viewModel.todoItem.category == category
+                  ? Colors.cyan
+                  : Colors.white),
+          borderWidth: 2.0,
+        );
+      },
+    );
   }
 }

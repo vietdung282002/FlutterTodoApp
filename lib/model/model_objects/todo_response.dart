@@ -1,27 +1,29 @@
+import 'package:flutter_todo_app/model/enum/category.dart';
 import 'package:intl/intl.dart';
 
 class TodoItem {
   int? todoId;
   String taskTitle;
   String? taskNote;
-  int? categoryId;
+  ItemCategory? category;
   String time;
   bool isComplete;
   String? deviceUDID;
 
   // Constructor
-  TodoItem(
-      {required this.categoryId,
-      required this.time,
-      required this.isComplete,
-      this.todoId,
-      required this.taskTitle,
-      required this.taskNote,
-      this.deviceUDID});
+  TodoItem({
+    required this.category,
+    required this.time,
+    required this.isComplete,
+    this.todoId,
+    required this.taskTitle,
+    required this.taskNote,
+    this.deviceUDID,
+  });
 
   factory TodoItem.fromJson(Map<String, dynamic> json) {
     return TodoItem(
-      categoryId: json['category_id'] as int,
+      category: CategoryExtension.setCategory(json['category_id'] as int),
       taskTitle: json['task_title'] as String,
       time: json['time'] as String,
       isComplete: json['is_complete'] as bool,
@@ -36,7 +38,7 @@ class TodoItem {
       todoId: null,
       taskTitle: '',
       taskNote: "",
-      categoryId: null,
+      category: null,
       time: '',
       isComplete: false,
       deviceUDID: null,
@@ -48,7 +50,7 @@ class TodoItem {
       "task_title": taskTitle,
       "is_complete": isComplete,
       "task_note": taskNote ?? "",
-      "category_id": categoryId,
+      "category_id": category?.toInt,
       "time": time,
       "user_id": deviceUDID,
     };
@@ -83,7 +85,7 @@ class TodoItem {
     int? todoId,
     String? taskTitle,
     String? taskNote,
-    int? categoryId,
+    required ItemCategory category,
     String? time,
     bool? isComplete,
     String? deviceUDID,
@@ -92,7 +94,7 @@ class TodoItem {
       todoId: todoId ?? this.todoId,
       taskTitle: taskTitle ?? this.taskTitle,
       taskNote: taskNote ?? this.taskNote,
-      categoryId: categoryId ?? this.categoryId,
+      category: category,
       time: time ?? this.time,
       isComplete: isComplete ?? this.isComplete,
       deviceUDID: deviceUDID ?? this.deviceUDID,
@@ -101,7 +103,7 @@ class TodoItem {
 
   @override
   String toString() {
-    return 'TodoItem(todoId: $todoId, taskTitle: $taskTitle, categoryId: $categoryId, '
+    return 'TodoItem(todoId: $todoId, taskTitle: $taskTitle, categoryId: $category, '
         'time: ${formatDateTime()}, isComplete: $isComplete, '
         'taskNote: ${taskNote ?? "No Note"}, userId: $deviceUDID)';
   }
