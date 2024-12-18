@@ -1,13 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_todo_app/config/shared_preferences_helper.dart';
+import 'package:flutter_todo_app/config/values.dart';
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_todo_app/view/home_screen/home_screen.dart';
-import 'package:flutter_todo_app/view/login_screen/login_screen.dart';
-import 'package:flutter_todo_app/view_model/todo_list_view_model.dart';
-import 'package:provider/provider.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_todo_app/view/home_screen/todo_list_view_model.dart';
+import 'package:flutter_todo_app/view/splash_screen/splash_screen.dart';
+import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -28,12 +28,13 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   Future<void> getUDIDAndSave() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final prefsHelper = SharedPreferencesHelper();
 
-    final String? action = prefs.getString('device_udid');
-    if (action == null) {
+    String? deviceUDID;
+
+    deviceUDID = await prefsHelper.getString(Values.udid);
+    if (deviceUDID == null) {
       final deviceInfo = DeviceInfoPlugin();
-      String deviceUDID;
 
       if (Platform.isAndroid) {
         // Android device
@@ -46,7 +47,7 @@ class _MyAppState extends State<MyApp> {
       } else {
         deviceUDID = "Unsupported Platform";
       }
-      await prefs.setString('device_udid', deviceUDID);
+      await prefsHelper.saveString(Values.udid, deviceUDID);
     }
   }
 
@@ -59,15 +60,19 @@ class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<TodoListViewModel>(
-      create: (_) => TodoListViewModel(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<TodoListViewModel>(
+          create: (_) => TodoListViewModel(),
+        ),
+      ],
       child: MaterialApp(
         theme: ThemeData(
           useMaterial3: true,
         ),
         initialRoute: '/',
         routes: {
-          '/': (context) => const HomeScreen(),
+          '/': (context) => const SplashScreen(),
         },
       ),
     );

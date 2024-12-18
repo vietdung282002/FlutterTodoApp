@@ -5,7 +5,7 @@ import 'package:flutter_todo_app/model/enum/loading_state.dart';
 import 'package:flutter_todo_app/view/detail_screen/todo_detail.dart';
 import 'package:flutter_todo_app/view/widget/text_widget.dart';
 import 'package:flutter_todo_app/view/widget/todo_item_widget.dart';
-import 'package:flutter_todo_app/view_model/todo_list_view_model.dart';
+import 'package:flutter_todo_app/view/home_screen/todo_list_view_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 

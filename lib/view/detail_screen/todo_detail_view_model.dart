@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_todo_app/config/values.dart';
 import 'package:flutter_todo_app/model/enum/category.dart';
 import 'package:flutter_todo_app/model/enum/loading_state.dart';
 import 'package:flutter_todo_app/model/network/api_services.dart';
@@ -55,7 +56,7 @@ class TodoDetailViewModel extends ChangeNotifier {
     _loading = LoadingState.loading;
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? deviceUdid = prefs.getString('device_udid');
+    final String? deviceUdid = prefs.getString(Values.udid);
 
     final newTodo = TodoItem(
         category: _todoItem.category!,
@@ -81,16 +82,17 @@ class TodoDetailViewModel extends ChangeNotifier {
     _loading = LoadingState.loading;
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? deviceUdid = prefs.getString('device_udid');
+    final String? deviceUdid = prefs.getString(Values.udid);
 
     final newTodo = TodoItem(
-        todoId: _todoItem.todoId!,
-        category: _todoItem.category!,
-        time: deadline,
-        isComplete: false,
-        taskTitle: _todoItem.taskTitle,
-        taskNote: _todoItem.taskNote,
-        deviceUDID: deviceUdid!);
+      todoId: _todoItem.todoId!,
+      category: _todoItem.category!,
+      time: deadline,
+      isComplete: false,
+      taskTitle: _todoItem.taskTitle,
+      taskNote: _todoItem.taskNote,
+      deviceUDID: deviceUdid!,
+    );
 
     try {
       await _apiServices.updateTodo(newTodo);

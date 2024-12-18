@@ -5,7 +5,7 @@ import 'package:flutter_todo_app/view/widget/check_box_widget.dart';
 import 'package:flutter_todo_app/config/colors.dart';
 import 'package:flutter_todo_app/view/widget/text_widget.dart';
 import 'package:flutter_todo_app/model/model_objects/todo_response.dart';
-import 'package:flutter_todo_app/view_model/todo_list_view_model.dart';
+import 'package:flutter_todo_app/view/home_screen/todo_list_view_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 

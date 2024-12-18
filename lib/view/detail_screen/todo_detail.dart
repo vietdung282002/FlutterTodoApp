@@ -10,8 +10,8 @@ import 'package:flutter_todo_app/view/widget/button_widget.dart';
 import 'package:flutter_todo_app/view/widget/category_widget.dart';
 import 'package:flutter_todo_app/view/widget/text_field_widget.dart';
 import 'package:flutter_todo_app/view/widget/text_widget.dart';
-import 'package:flutter_todo_app/view_model/todo_detail_view_model.dart';
-import 'package:flutter_todo_app/view_model/todo_list_view_model.dart';
+import 'package:flutter_todo_app/view/detail_screen/todo_detail_view_model.dart';
+import 'package:flutter_todo_app/view/home_screen/todo_list_view_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -31,7 +31,10 @@ class TodoDetail extends StatelessWidget {
 }
 
 class TodoDetailScreen extends StatefulWidget {
-  const TodoDetailScreen({super.key, required this.todoId});
+  const TodoDetailScreen({
+    super.key,
+    required this.todoId,
+  });
 
   final int todoId;
 
@@ -163,7 +166,6 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                                   error: _taskTitleValidate
                                       ? "Value Can't Be Empty"
                                       : null,
-                                  // focusNode: _taskTitleFocusNode,
                                 );
                               },
                             ),
@@ -378,7 +380,7 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
                     child: Container(
-                      color: Colors.black.withOpacity(0),
+                      color: Colors.transparent,
                       child: const Center(
                         child: CircularProgressIndicator(),
                       ),
@@ -396,11 +398,12 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
     return TextWidget(
       text: text,
       textStyle: GoogleFonts.inter(
-          textStyle: const TextStyle(
-        color: textColor,
-        fontSize: 14,
-        fontWeight: FontWeight.w600,
-      )),
+        textStyle: const TextStyle(
+          color: textColor,
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
     );
   }
 

@@ -1,10 +1,45 @@
 import 'dart:convert';
 import 'package:flutter_todo_app/config/http_config.dart';
+import 'package:flutter_todo_app/config/values.dart';
+import 'package:flutter_todo_app/model/model_objects/authentication_request.dart';
+import 'package:flutter_todo_app/model/model_objects/authentication_response.dart';
 import 'package:flutter_todo_app/model/network/api_urls.dart';
 import 'package:flutter_todo_app/model/model_objects/todo_response.dart';
 import 'package:http/http.dart' as http;
 
 class ApiServices {
+  Future<AuthenticationResponse> signUp(
+      AuthenticationRequest authRequest) async {
+    final headers = <String, String>{
+      'apikey': Values.apiKey,
+      'Content-Type': 'application/json'
+    };
+    final response = await HttpConfig.post(ApiUrls().signUp(),
+        headers: headers, body: authRequest.toJson());
+    if (response.statusCode != 200) {
+      throw Exception('Failed to Sign up.');
+    } else {
+      dynamic jsonData = json.decode(response.body);
+      return AuthenticationResponse.fromJson(jsonData);
+    }
+  }
+
+  Future<AuthenticationResponse> login(
+      AuthenticationRequest authRequest) async {
+    final headers = <String, String>{
+      'apikey': Values.apiKey,
+      'Content-Type': 'application/json'
+    };
+    final response = await HttpConfig.post(ApiUrls().login(),
+        headers: headers, body: authRequest.toJson());
+    if (response.statusCode != 200) {
+      throw Exception('Failed to Login.');
+    } else {
+      dynamic jsonData = json.decode(response.body);
+      return AuthenticationResponse.fromJson(jsonData);
+    }
+  }
+
   Future<List<TodoItem>> getTodosList(String deviceUDID) async {
     final response =
         await HttpConfig.get(ApiUrls().getTodoList(udid: deviceUDID));

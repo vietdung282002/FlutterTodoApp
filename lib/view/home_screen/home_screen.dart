@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/config/utils.dart';
 import 'package:flutter_todo_app/view/detail_screen/todo_detail.dart';
+import 'package:flutter_todo_app/view/home_screen/todo_list_view_model.dart';
 import 'package:flutter_todo_app/view/widget/button_widget.dart';
 import 'package:flutter_todo_app/config/colors.dart';
 import 'package:flutter_todo_app/view/widget/text_widget.dart';
 import 'package:flutter_todo_app/view/home_screen/todo_list.dart';
-import 'package:flutter_todo_app/view_model/todo_list_view_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 

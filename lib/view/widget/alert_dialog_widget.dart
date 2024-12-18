@@ -12,7 +12,7 @@ class AlertDialogWidget extends StatelessWidget {
         CupertinoDialogAction(
           isDefaultAction: true,
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.of(context).pop();
           },
           child: const Text('OK'),
         ),

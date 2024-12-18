@@ -3,9 +3,9 @@ import 'package:flutter_todo_app/config/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class TextFieldWidget extends StatelessWidget {
-  final String placeholder;
-  final double placeholderSize;
-  final FontWeight placeholderWeight;
+  final String? placeholder;
+  final double? placeholderSize;
+  final FontWeight? placeholderWeight;
   final Color enableBorderColor;
   final double enableBorderWidth;
   final double enableBorderRadius;
@@ -20,6 +20,7 @@ class TextFieldWidget extends StatelessWidget {
   final String? error;
   final bool readOnly;
   final FocusNode? focusNode;
+  final bool obscureText;
   final Function(String)? onChange;
 
   const TextFieldWidget({
@@ -42,11 +43,13 @@ class TextFieldWidget extends StatelessWidget {
     this.readOnly = false,
     this.focusNode,
     this.onChange,
+    this.obscureText = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      obscureText: obscureText,
       onChanged: onChange,
       focusNode: focusNode,
       readOnly: readOnly,
