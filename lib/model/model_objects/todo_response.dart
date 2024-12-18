@@ -29,7 +29,7 @@ class TodoItem {
       isComplete: json['is_complete'] as bool,
       todoId: json['todo_id'] as int,
       taskNote: json['task_note'] as String,
-      deviceUDID: json['user_id'] as String,
+      deviceUDID: json['udid'] as String,
     );
   }
 
@@ -52,7 +52,7 @@ class TodoItem {
       "task_note": taskNote ?? "",
       "category_id": category?.toInt,
       "time": time,
-      "user_id": deviceUDID,
+      "udid": deviceUDID,
     };
   }
 
@@ -105,6 +105,6 @@ class TodoItem {
   String toString() {
     return 'TodoItem(todoId: $todoId, taskTitle: $taskTitle, categoryId: $category, '
         'time: ${formatDateTime()}, isComplete: $isComplete, '
-        'taskNote: ${taskNote ?? "No Note"}, userId: $deviceUDID)';
+        'taskNote: ${taskNote ?? "No Note"}, udid: $deviceUDID)';
   }
 }

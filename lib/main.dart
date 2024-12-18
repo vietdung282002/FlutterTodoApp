@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_todo_app/view/home_screen/home_screen.dart';
+import 'package:flutter_todo_app/view/login_screen/login_screen.dart';
 import 'package:flutter_todo_app/view_model/todo_list_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -14,8 +15,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
-  await dotenv.load();
+  // await dotenv.load();
   runApp(const MyApp());
 }
 
@@ -62,9 +62,7 @@ class _MyAppState extends State<MyApp> {
     return ChangeNotifierProvider<TodoListViewModel>(
       create: (_) => TodoListViewModel(),
       child: MaterialApp(
-        title: 'Flutter Demo',
         theme: ThemeData(
-          // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
         initialRoute: '/',

@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 class ApiServices {
   Future<List<TodoItem>> getTodosList(String deviceUDID) async {
     final response =
-        await HttpConfig.get(ApiUrls().getTodoList(userId: deviceUDID));
+        await HttpConfig.get(ApiUrls().getTodoList(udid: deviceUDID));
     if (response.statusCode == 200) {
       List<dynamic> jsonData = json.decode(response.body);
       return jsonData.map((data) => TodoItem.fromJson(data)).toList();
