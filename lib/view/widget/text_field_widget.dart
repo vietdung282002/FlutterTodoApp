@@ -1,8 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_app/view/colors.dart';
+import 'package:flutter_todo_app/config/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class TextFieldWidget extends StatelessWidget {
+  final String? placeholder;
+  final double? placeholderSize;
+  final FontWeight? placeholderWeight;
+  final Color enableBorderColor;
+  final double enableBorderWidth;
+  final double enableBorderRadius;
+  final Color focusedBorderColor;
+  final double focusedBorderWidth;
+  final double focusedBorderRadius;
+  final Widget? endIcon;
+  final int? maxLines;
+  final bool expands;
+  final TextInputType? keyboardType;
+  final TextEditingController? textEditingController;
+  final String? error;
+  final bool readOnly;
+  final FocusNode? focusNode;
+  final bool obscureText;
+  final Function(String)? onChange;
+
   const TextFieldWidget({
     super.key,
     this.placeholder = "",
@@ -21,28 +41,17 @@ class TextFieldWidget extends StatelessWidget {
     this.textEditingController,
     this.error,
     this.readOnly = false,
+    this.focusNode,
+    this.onChange,
+    this.obscureText = false,
   });
-
-  final String placeholder;
-  final double placeholderSize;
-  final FontWeight placeholderWeight;
-  final Color enableBorderColor;
-  final double enableBorderWidth;
-  final double enableBorderRadius;
-  final Color focusedBorderColor;
-  final double focusedBorderWidth;
-  final double focusedBorderRadius;
-  final Widget? endIcon;
-  final int? maxLines;
-  final bool expands;
-  final TextInputType? keyboardType;
-  final TextEditingController? textEditingController;
-  final String? error;
-  final bool readOnly;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      obscureText: obscureText,
+      onChanged: onChange,
+      focusNode: focusNode,
       readOnly: readOnly,
       controller: textEditingController,
       textAlign: TextAlign.start,
@@ -51,6 +60,8 @@ class TextFieldWidget extends StatelessWidget {
       expands: expands,
       keyboardType: keyboardType,
       decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.white,
         errorText: error,
         hintText: placeholder,
         hintStyle: GoogleFonts.inter(
@@ -60,6 +71,14 @@ class TextFieldWidget extends StatelessWidget {
             fontSize: placeholderSize,
             fontWeight: placeholderWeight,
           ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.red, width: enableBorderWidth),
+          borderRadius: BorderRadius.circular(enableBorderRadius),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.red, width: enableBorderWidth),
+          borderRadius: BorderRadius.circular(enableBorderRadius),
         ),
         enabledBorder: OutlineInputBorder(
           borderSide:
