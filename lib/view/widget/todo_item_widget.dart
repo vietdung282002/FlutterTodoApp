@@ -30,42 +30,46 @@ class TodoItemWidget extends StatelessWidget {
                 TextWidget(
                   text: todoItem.taskTitle,
                   textStyle: GoogleFonts.inter(
-                      textStyle: TextStyle(
-                    color: todoItem.isComplete
-                        ? textColor.withOpacity(0.5)
-                        : textColor.withOpacity(1),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    decoration: todoItem.isComplete
-                        ? TextDecoration.lineThrough
-                        : TextDecoration.none,
-                  )),
+                    textStyle: TextStyle(
+                      color: todoItem.isComplete
+                          ? textColor.withOpacity(0.5)
+                          : textColor.withOpacity(1),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      decoration: todoItem.isComplete
+                          ? TextDecoration.lineThrough
+                          : TextDecoration.none,
+                    ),
+                  ),
                 ),
                 TextWidget(
                   text: todoItem.formatDateTime(),
                   textStyle: GoogleFonts.inter(
-                      textStyle: TextStyle(
-                    color: textColor.withOpacity(0.7),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    decoration: todoItem.isComplete
-                        ? TextDecoration.lineThrough
-                        : TextDecoration.none,
-                  )),
+                    textStyle: TextStyle(
+                      color: textColor.withOpacity(0.7),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      decoration: todoItem.isComplete
+                          ? TextDecoration.lineThrough
+                          : TextDecoration.none,
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
           const SizedBox(width: 8),
-          Consumer<TodoListViewModel>(builder: (context, viewmodel, chil) {
-            return CheckBoxWidget(
-              todoItem: todoItem,
-              onTap: () {
-                viewmodel.updateTodoStatus(
-                    todoItem.todoId!, !todoItem.isComplete);
-              },
-            );
-          }),
+          Consumer<TodoListViewModel>(
+            builder: (context, viewmodel, chil) {
+              return CheckBoxWidget(
+                todoItem: todoItem,
+                onTap: () {
+                  viewmodel.updateTodoStatus(
+                      todoItem.todoId!, !todoItem.isComplete);
+                },
+              );
+            },
+          ),
         ],
       ),
     );

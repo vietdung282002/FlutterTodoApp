@@ -33,7 +33,7 @@ class TodoDetailViewModel extends ChangeNotifier {
     if (todoId == -1) return;
 
     _loading = LoadingState.loading;
-
+    notifyListeners();
     try {
       final todoResponse = await _apiServices.getTodoItem(todoId);
 
@@ -54,7 +54,7 @@ class TodoDetailViewModel extends ChangeNotifier {
     if (_loading == LoadingState.loading) return;
 
     _loading = LoadingState.loading;
-
+    notifyListeners();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? deviceUdid = prefs.getString(Values.udid);
 
@@ -80,7 +80,7 @@ class TodoDetailViewModel extends ChangeNotifier {
     if (_loading == LoadingState.loading) return;
 
     _loading = LoadingState.loading;
-
+    notifyListeners();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? deviceUdid = prefs.getString(Values.udid);
 

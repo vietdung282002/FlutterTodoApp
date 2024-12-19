@@ -45,41 +45,45 @@ class _TodoListState extends State<TodoList> {
                 ),
                 SliverToBoxAdapter(
                   child: Consumer<TodoListViewModel>(
-                      builder: (context, viewModel, child) {
-                    if (viewModel.loading != LoadingState.loading &&
-                        viewModel.listTodo.isNotEmpty) {
-                      return sectionTitle(title: "Completed");
-                    }
-                    if (viewModel.loading == LoadingState.loading) {
+                    builder: (context, viewModel, child) {
+                      if (viewModel.loading != LoadingState.loading &&
+                          viewModel.listTodo.isNotEmpty) {
+                        return sectionTitle(title: "Completed");
+                      }
+                      if (viewModel.loading == LoadingState.loading) {
+                        return const SizedBox.shrink();
+                      }
                       return const SizedBox.shrink();
-                    }
-                    return const SizedBox.shrink();
-                  }),
+                    },
+                  ),
                 ),
                 Selector<TodoListViewModel, List?>(
-                    selector: (context, viewModel) => viewModel.completedTodos,
-                    builder: (context, completedTodos, child) {
-                      return todoSection(completedTodos);
-                    }),
+                  selector: (context, viewModel) => viewModel.completedTodos,
+                  builder: (context, completedTodos, child) {
+                    return todoSection(completedTodos);
+                  },
+                ),
               ],
             ),
           ),
-          Consumer<TodoListViewModel>(builder: (context, viewModel, child) {
-            if (viewModel.loading == LoadingState.loading) {
-              return SafeArea(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 0.0, sigmaY: 0.0),
-                  child: Container(
-                    color: Colors.transparent,
-                    child: const Center(
-                      child: CircularProgressIndicator(),
+          Consumer<TodoListViewModel>(
+            builder: (context, viewModel, child) {
+              if (viewModel.loading == LoadingState.loading) {
+                return SafeArea(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 0.0, sigmaY: 0.0),
+                    child: Container(
+                      color: Colors.transparent,
+                      child: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
                     ),
                   ),
-                ),
-              );
-            }
-            return const SizedBox.shrink();
-          })
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          )
         ],
       ),
     );

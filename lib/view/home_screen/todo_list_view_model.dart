@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_app/config/utils.dart';
 import 'package:flutter_todo_app/config/values.dart';
 import 'package:flutter_todo_app/model/enum/loading_state.dart';
 import 'package:flutter_todo_app/model/network/api_services.dart';
@@ -100,12 +99,5 @@ class TodoListViewModel extends ChangeNotifier {
     } finally {
       notifyListeners();
     }
-  }
-
-  void updateTodos(List<TodoItem> newTodos) {
-    AppUtils().updateList(_listTodo, newTodos, (updatedList) {
-      _listTodo = updatedList;
-      notifyListeners();
-    });
   }
 }

@@ -63,13 +63,15 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
       lastDate: DateTime(2025),
     );
     if (picked != null) {
-      setState(() {
-        selectedDate = picked;
-        String formattedDate = DateFormat('dd-MM-yyyy').format(picked);
-        _dateController.text = formattedDate;
-        Provider.of<TodoDetailViewModel>(context, listen: false)
-            .setDate(formattedDate);
-      });
+      setState(
+        () {
+          selectedDate = picked;
+          String formattedDate = DateFormat('dd-MM-yyyy').format(picked);
+          _dateController.text = formattedDate;
+          Provider.of<TodoDetailViewModel>(context, listen: false)
+              .setDate(formattedDate);
+        },
+      );
     }
   }
 
@@ -85,13 +87,15 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
       },
     );
     if (picked != null) {
-      setState(() {
-        selectedTime = picked;
-        final String formattedTime = AppUtils().formatTimeTo12Hour(picked);
-        _timeController.text = formattedTime;
-        Provider.of<TodoDetailViewModel>(context, listen: false)
-            .setTime(formattedTime);
-      });
+      setState(
+        () {
+          selectedTime = picked;
+          final String formattedTime = AppUtils().formatTimeTo12Hour(picked);
+          _timeController.text = formattedTime;
+          Provider.of<TodoDetailViewModel>(context, listen: false)
+              .setTime(formattedTime);
+        },
+      );
     }
   }
 
@@ -116,31 +120,31 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-        backgroundColor: backgroundColor2,
-        appBar: AppBarWidget(
-          title: widget.todoId == -1 ? "Add Todo" : "Edit Todo",
-          textStyle: GoogleFonts.inter(
-              textStyle: const TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          )),
-          backgroundColor: backgroundColor,
-          leadingWidget: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Image.asset("assets/back_button.png"),
-          ),
+      backgroundColor: backgroundColor2,
+      appBar: AppBarWidget(
+        title: widget.todoId == -1 ? "Add Todo" : "Edit Todo",
+        textStyle: GoogleFonts.inter(
+            textStyle: const TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+        )),
+        backgroundColor: backgroundColor,
+        leadingWidget: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Image.asset("assets/back_button.png"),
         ),
-        body: Stack(
-          children: [
-            Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: SafeArea(
-                        child: Padding(
+      ),
+      body: Stack(
+        children: [
+          Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: SafeArea(
+                    child: Padding(
                       padding: const EdgeInsets.all(24.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -211,25 +215,26 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                                           padding:
                                               const EdgeInsets.only(top: 8.0),
                                           child: Consumer<TodoDetailViewModel>(
-                                              builder:
-                                                  (context, viewModel, child) {
-                                            _dateController.text =
-                                                viewModel.date!;
-                                            return TextFieldWidget(
-                                              readOnly: true,
-                                              textEditingController:
-                                                  _dateController,
-                                              placeholder: "Date",
-                                              error: _dateValidate
-                                                  ? "Value Can't Be Empty"
-                                                  : null,
-                                              endIcon: IconButton(
-                                                  onPressed: () =>
-                                                      _selectDate(context),
-                                                  icon: Image.asset(
-                                                      "assets/input_calendar.png")),
-                                            );
-                                          }),
+                                            builder:
+                                                (context, viewModel, child) {
+                                              _dateController.text =
+                                                  viewModel.date!;
+                                              return TextFieldWidget(
+                                                readOnly: true,
+                                                textEditingController:
+                                                    _dateController,
+                                                placeholder: "Date",
+                                                error: _dateValidate
+                                                    ? "Value Can't Be Empty"
+                                                    : null,
+                                                endIcon: IconButton(
+                                                    onPressed: () =>
+                                                        _selectDate(context),
+                                                    icon: Image.asset(
+                                                        "assets/input_calendar.png")),
+                                              );
+                                            },
+                                          ),
                                         )
                                       ],
                                     ),
@@ -277,12 +282,12 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                             child: textTitle(text: "Note"),
                           ),
                           Padding(
-                              padding: const EdgeInsets.only(top: 24),
-                              child: SizedBox(
-                                height:
-                                    250, //     <-- TextField expands to this height.
-                                child: Consumer<TodoDetailViewModel>(
-                                    builder: (context, viewModel, child) {
+                            padding: const EdgeInsets.only(top: 24),
+                            child: SizedBox(
+                              height:
+                                  250, //     <-- TextField expands to this height.
+                              child: Consumer<TodoDetailViewModel>(
+                                builder: (context, viewModel, child) {
                                   _noteController.text =
                                       viewModel.todoItem.taskNote!;
                                   return TextFieldWidget(
@@ -297,101 +302,110 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                                     expands: true, // and this
                                     keyboardType: TextInputType.multiline,
                                   );
-                                }),
-                              )),
+                                },
+                              ),
+                            ),
+                          ),
                           Padding(
                             padding:
                                 const EdgeInsets.only(bottom: 24.0, top: 24),
                             child: Consumer<TodoDetailViewModel>(
-                                builder: (context, viewModel, child) {
-                              return ButtonWidget(
-                                onTap: () {
-                                  viewModel
-                                      .setTaskTitle(_taskTitleController.text);
-                                  viewModel.setTaskNote(_noteController.text);
-                                  setState(() {
-                                    _dateValidate =
-                                        _dateController.text.isEmpty;
-                                    _taskTitleValidate =
-                                        _taskTitleController.text.isEmpty;
-                                    _timeValidate =
-                                        _timeController.text.isEmpty;
-                                  });
-                                  if (viewModel.todoItem.category == null) {
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return const AlertDialogWidget(
-                                          content: "Please select a category",
-                                        );
+                              builder: (context, viewModel, child) {
+                                return ButtonWidget(
+                                  onTap: () {
+                                    viewModel.setTaskTitle(
+                                        _taskTitleController.text);
+                                    viewModel.setTaskNote(_noteController.text);
+                                    setState(
+                                      () {
+                                        _dateValidate =
+                                            _dateController.text.isEmpty;
+                                        _taskTitleValidate =
+                                            _taskTitleController.text.isEmpty;
+                                        _timeValidate =
+                                            _timeController.text.isEmpty;
                                       },
                                     );
-                                  }
-                                  if (_taskTitleValidate == false &&
-                                      _timeValidate == false &&
-                                      _dateValidate == false &&
-                                      viewModel.todoItem.category != null) {
-                                    if (widget.todoId == -1) {
-                                      viewModel.addTodo(
-                                          _taskTitleController.text,
-                                          _noteController.text,
-                                          AppUtils().formatDateTimeString(
-                                              _dateController.text,
-                                              _timeController.text));
-                                    } else {
-                                      viewModel.editTodo(
-                                          _taskTitleController.text,
-                                          _noteController.text,
-                                          AppUtils().formatDateTimeString(
-                                              _dateController.text,
-                                              _timeController.text));
+                                    if (viewModel.todoItem.category == null) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return const AlertDialogWidget(
+                                            content: "Please select a category",
+                                          );
+                                        },
+                                      );
                                     }
-                                  }
-                                },
-                                width: screenWidth,
-                                text: "Save",
-                                textStyle: GoogleFonts.inter(
-                                    textStyle: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.white)),
-                              );
-                            }),
+                                    if (_taskTitleValidate == false &&
+                                        _timeValidate == false &&
+                                        _dateValidate == false &&
+                                        viewModel.todoItem.category != null) {
+                                      if (widget.todoId == -1) {
+                                        viewModel.addTodo(
+                                            _taskTitleController.text,
+                                            _noteController.text,
+                                            AppUtils().formatDateTimeString(
+                                                _dateController.text,
+                                                _timeController.text));
+                                      } else {
+                                        viewModel.editTodo(
+                                            _taskTitleController.text,
+                                            _noteController.text,
+                                            AppUtils().formatDateTimeString(
+                                                _dateController.text,
+                                                _timeController.text));
+                                      }
+                                    }
+                                  },
+                                  width: screenWidth,
+                                  text: "Save",
+                                  textStyle: GoogleFonts.inter(
+                                      textStyle: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.white)),
+                                );
+                              },
+                            ),
                           )
                         ],
                       ),
-                    )),
+                    ),
                   ),
                 ),
-              ],
-            ),
-            Consumer<TodoDetailViewModel>(builder: (context, viewModel, child) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
+              ),
+            ],
+          ),
+          Consumer<TodoDetailViewModel>(builder: (context, viewModel, child) {
+            WidgetsBinding.instance.addPostFrameCallback(
+              (_) {
                 if (viewModel.isEditted == true &&
                     viewModel.loading == LoadingState.success) {
                   Provider.of<TodoListViewModel>(context, listen: false)
                       .updateTodo();
                   Navigator.of(context).maybePop();
                 }
-              });
+              },
+            );
 
-              if (viewModel.loading == LoadingState.loading) {
-                return SafeArea(
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
-                    child: Container(
-                      color: Colors.transparent,
-                      child: const Center(
-                        child: CircularProgressIndicator(),
-                      ),
+            if (viewModel.loading == LoadingState.loading) {
+              return SafeArea(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
+                  child: Container(
+                    color: Colors.transparent,
+                    child: const Center(
+                      child: CircularProgressIndicator(),
                     ),
                   ),
-                );
-              }
-              return const SizedBox.shrink();
-            })
-          ],
-        ));
+                ),
+              );
+            }
+            return const SizedBox.shrink();
+          })
+        ],
+      ),
+    );
   }
 
   Widget textTitle({required String text}) {

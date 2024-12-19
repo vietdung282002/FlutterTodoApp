@@ -20,15 +20,16 @@ class ButtonWidget extends StatelessWidget {
     return TextButton(
       onPressed: onTap,
       style: ButtonStyle(
-          minimumSize: WidgetStateProperty.all<Size>(Size(width, 50)),
-          padding:
-              WidgetStateProperty.all<EdgeInsets>(const EdgeInsets.all(15)),
-          backgroundColor: WidgetStateProperty.all<Color>(backgroundColor),
-          foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
-          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
+        minimumSize: WidgetStateProperty.all<Size>(Size(width, 50)),
+        padding: WidgetStateProperty.all<EdgeInsets>(const EdgeInsets.all(15)),
+        backgroundColor: WidgetStateProperty.all<Color>(backgroundColor),
+        foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(50.0),
-          ))),
+          ),
+        ),
+      ),
       child: Text(text, style: textStyle),
     );
   }

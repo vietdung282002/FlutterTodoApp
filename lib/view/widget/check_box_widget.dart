@@ -14,9 +14,10 @@ class CheckBoxWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-        onPressed: onTap,
-        icon: todoItem.isComplete
-            ? Image.asset("assets/check_box_true.png")
-            : Image.asset("assets/check_box_false.png"));
+      onPressed: onTap,
+      icon: todoItem.isComplete
+          ? Image.asset("assets/check_box_true.png")
+          : Image.asset("assets/check_box_false.png"),
+    );
   }
 }

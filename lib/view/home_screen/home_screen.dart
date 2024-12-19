@@ -44,64 +44,65 @@ class _HomeScreenState extends State<HomeScreen> {
               top: 0,
               child: Image.asset('assets/ellipse_2.png')),
           SafeArea(
-              child: Padding(
-            padding: const EdgeInsets.only(left: 16, right: 16),
-            child: Column(
-              children: [
-                Center(
-                  child: TextWidget(
-                    text: AppUtils().formatCurrentDate(),
-                    textStyle: GoogleFonts.inter(
-                        textStyle: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    )),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 24),
-                  child: Center(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16, right: 16),
+              child: Column(
+                children: [
+                  Center(
                     child: TextWidget(
-                      text: "My Todo List",
+                      text: AppUtils().formatCurrentDate(),
                       textStyle: GoogleFonts.inter(
                           textStyle: const TextStyle(
                         color: Colors.white,
-                        fontSize: 30,
-                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
                       )),
                     ),
                   ),
-                ),
-                const Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 16, bottom: 16),
-                    child: TodoList(),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 24),
+                    child: Center(
+                      child: TextWidget(
+                        text: "My Todo List",
+                        textStyle: GoogleFonts.inter(
+                            textStyle: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 30,
+                          fontWeight: FontWeight.w700,
+                        )),
+                      ),
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 12.0),
-                  child: ButtonWidget(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const TodoDetail(todoId: -1),
-                        ),
-                      );
-                    },
-                    width: screenWidth,
-                    text: "Add New Task",
-                    textStyle: GoogleFonts.inter(
-                        textStyle: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white)),
+                  const Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 16, bottom: 16),
+                      child: TodoList(),
+                    ),
                   ),
-                )
-              ],
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 12.0),
+                    child: ButtonWidget(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const TodoDetail(todoId: -1),
+                          ),
+                        );
+                      },
+                      width: screenWidth,
+                      text: "Add New Task",
+                      textStyle: GoogleFonts.inter(
+                          textStyle: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white)),
+                    ),
+                  )
+                ],
+              ),
             ),
-          ))
+          )
         ],
       ),
     );

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_app/model/model_objects/todo_response.dart';
 import 'package:intl/intl.dart';
 
 class AppUtils {
@@ -36,10 +35,5 @@ class AppUtils {
     ).toUtc();
 
     return DateFormat("yyyy-MM-ddTHH:mm:ss'+00:00'").format(combinedDateTime);
-  }
-
-  void updateList(
-      List<TodoItem> oldList, List<TodoItem> newList, Function updateUi) {
-    updateUi(newList);
   }
 }

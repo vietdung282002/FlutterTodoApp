@@ -112,25 +112,26 @@ class _LogInScreenState extends State<LogInScreen> {
                           top: 12.0,
                         ),
                         child: Selector<LogInViewModel, String?>(
-                            selector: (context, viewModel) => viewModel.gmail,
-                            builder: (context, gmail, child) {
-                              if (gmail != null) {
-                                _gmailController.text = gmail;
-                              }
-                              return TextFieldWidget(
-                                maxLines: 1,
-                                onChange: (text) {
-                                  Provider.of<LogInViewModel>(context,
-                                          listen: false)
-                                      .setGmail(text);
-                                },
-                                placeholder: "abc@gmail.com",
-                                textEditingController: _gmailController,
-                                error: _gmailValidate
-                                    ? "Gmail Can't Be Empty"
-                                    : null,
-                              );
-                            }),
+                          selector: (context, viewModel) => viewModel.gmail,
+                          builder: (context, gmail, child) {
+                            if (gmail != null) {
+                              _gmailController.text = gmail;
+                            }
+                            return TextFieldWidget(
+                              maxLines: 1,
+                              onChange: (text) {
+                                Provider.of<LogInViewModel>(context,
+                                        listen: false)
+                                    .setGmail(text);
+                              },
+                              placeholder: "abc@gmail.com",
+                              textEditingController: _gmailController,
+                              error: _gmailValidate
+                                  ? "Gmail Can't Be Empty"
+                                  : null,
+                            );
+                          },
+                        ),
                       ),
                       const SizedBox(
                         height: 20,
@@ -150,59 +151,63 @@ class _LogInScreenState extends State<LogInScreen> {
                           top: 12.0,
                         ),
                         child: Selector<LogInViewModel, String?>(
-                            selector: (context, viewModel) =>
-                                viewModel.password,
-                            builder: (context, password, child) {
-                              if (password != null) {
-                                _passwordController.text = password;
-                              }
-                              return TextFieldWidget(
-                                obscureText: true,
-                                maxLines: 1,
-                                onChange: (text) {
-                                  Provider.of<LogInViewModel>(context,
-                                          listen: false)
-                                      .setPassword(text);
-                                },
-                                placeholder: "Password",
-                                textEditingController: _passwordController,
-                                error: _passwordValidate
-                                    ? "Password Can't Be Empty"
-                                    : null,
-                              );
-                            }),
+                          selector: (context, viewModel) => viewModel.password,
+                          builder: (context, password, child) {
+                            if (password != null) {
+                              _passwordController.text = password;
+                            }
+                            return TextFieldWidget(
+                              obscureText: true,
+                              maxLines: 1,
+                              onChange: (text) {
+                                Provider.of<LogInViewModel>(context,
+                                        listen: false)
+                                    .setPassword(text);
+                              },
+                              placeholder: "Password",
+                              textEditingController: _passwordController,
+                              error: _passwordValidate
+                                  ? "Password Can't Be Empty"
+                                  : null,
+                            );
+                          },
+                        ),
                       ),
                       const SizedBox(
                         height: 30,
                       ),
                       Center(
                         child: Consumer<LogInViewModel>(
-                            builder: (context, viewModel, child) {
-                          return ButtonWidget(
-                            width: screenWidth * 0.7,
-                            text: "Sign in",
-                            onTap: () {
-                              setState(() {
-                                _gmailValidate = _gmailController.text.isEmpty;
-                                _passwordValidate =
-                                    _passwordController.text.isEmpty;
-                              });
+                          builder: (context, viewModel, child) {
+                            return ButtonWidget(
+                              width: screenWidth * 0.7,
+                              text: "Sign in",
+                              onTap: () {
+                                setState(
+                                  () {
+                                    _gmailValidate =
+                                        _gmailController.text.isEmpty;
+                                    _passwordValidate =
+                                        _passwordController.text.isEmpty;
+                                  },
+                                );
 
-                              if (_gmailValidate != false ||
-                                  _passwordValidate != false) {
-                              } else {
-                                viewModel.logIn();
-                              }
-                            },
-                            textStyle: GoogleFonts.inter(
-                              textStyle: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white,
+                                if (_gmailValidate != false ||
+                                    _passwordValidate != false) {
+                                } else {
+                                  viewModel.logIn();
+                                }
+                              },
+                              textStyle: GoogleFonts.inter(
+                                textStyle: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
-                          );
-                        }),
+                            );
+                          },
+                        ),
                       ),
                       const SizedBox(
                         height: 30,
@@ -248,43 +253,48 @@ class _LogInScreenState extends State<LogInScreen> {
               ),
             ),
           ),
-          Consumer<LogInViewModel>(builder: (context, viewModel, child) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (viewModel.loading == LoadingState.failure &&
-                  viewModel.isLoggedIn == LoggedInStatus.loggedOut) {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return const AlertDialogWidget(
-                      content: "Failed to login",
+          Consumer<LogInViewModel>(
+            builder: (context, viewModel, child) {
+              WidgetsBinding.instance.addPostFrameCallback(
+                (_) {
+                  if (viewModel.loading == LoadingState.failure &&
+                      viewModel.isLoggedIn == LoggedInStatus.loggedOut) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return const AlertDialogWidget(
+                          content: "Failed to login",
+                        );
+                      },
                     );
-                  },
-                );
-              }
-              if (viewModel.isLoggedIn == LoggedInStatus.loggedIn) {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen()),
-                );
-              }
-            });
-            if (viewModel.loading == LoadingState.failure &&
-                viewModel.isLoggedIn == LoggedInStatus.loggedOut) {}
-            if (viewModel.loading == LoadingState.loading) {
-              return SafeArea(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
-                  child: Container(
-                    color: Colors.transparent,
-                    child: const Center(
-                      child: CircularProgressIndicator(),
+                  }
+                  if (viewModel.isLoggedIn == LoggedInStatus.loggedIn) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const HomeScreen()),
+                    );
+                  }
+                },
+              );
+              if (viewModel.loading == LoadingState.failure &&
+                  viewModel.isLoggedIn == LoggedInStatus.loggedOut) {}
+              if (viewModel.loading == LoadingState.loading) {
+                return SafeArea(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
+                    child: Container(
+                      color: Colors.transparent,
+                      child: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
                     ),
                   ),
-                ),
-              );
-            }
-            return const SizedBox.shrink();
-          })
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          )
         ],
       ),
     );

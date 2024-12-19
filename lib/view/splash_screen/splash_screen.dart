@@ -15,13 +15,16 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 3), () {
-      // Navigate to the main screen after 3 seconds
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const LogIn()),
-      );
-    });
+    Timer(
+      const Duration(seconds: 3),
+      () {
+        // Navigate to the main screen after 3 seconds
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LogIn()),
+        );
+      },
+    );
   }
 
   @override

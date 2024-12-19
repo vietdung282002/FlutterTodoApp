@@ -21,12 +21,13 @@ class CategoryWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(0),
       decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: backgroundColor,
-          border: Border.all(
-            color: borderColor,
-            width: borderWidth,
-          )),
+        shape: BoxShape.circle,
+        color: backgroundColor,
+        border: Border.all(
+          color: borderColor,
+          width: borderWidth,
+        ),
+      ),
       child: IconButton(
         onPressed: onTap,
         icon: image,
