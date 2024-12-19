@@ -1,0 +1,91 @@
+name: Firebase Deploy
+
+on:
+  push:
+    branches:
+      - main 
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Decode Keystore from GitHub Secrets
+        env:    
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64_PROD }}
+        run: echo $ANDROID_KEYSTORE_BASE64 | base64 --decode > ./android/app/keystore.jks
+
+      # Configure Keystore.
+      - name: Configure Keystore
+        run: |
+          echo "storeFile=./keystore.jks" >> key.properties
+          echo "keyAlias=$KEY_ALIAS" >> key.properties
+          echo "storePassword=$STORE_PASSWORD" >> key.properties
+          echo "keyPassword=$KEY_PASSWORD" >> key.properties
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64_PROD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+        working-directory: ./android
+        
+
+      - name: Create .env file
+        run: |
+            echo "API_KEY=${{ secrets.API_KEY }}" >> .env
+            echo "BASE_URL=${{ secrets.BASE_URL }}" >> .env
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+            java-version: '17'
+            distribution: 'temurin' 
+            cache: gradle
+
+      # Setup Flutter
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.27.0'
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+            flutter clean
+            flutter pub get
+
+    # Setup Fastlane
+      - name: Setup Ruby and Fastlane
+        uses: ruby/setup-ruby@v1
+        with:
+            ruby-version: '3.0'
+
+      - name: Install Fastlane
+        run: |
+          gem install fastlane
+          
+      - name: Install Fastlane Firebase App Distribution plugin
+        working-directory: android
+        run: fastlane add_plugin firebase_app_distribution
+        
+      # Decrypt google-services.json
+      - name: Decrypt google-services.json
+        run: |
+          mkdir -p android/app
+          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > android/app/google-services.json
+
+      # Deploy to Firebase App Distribution
+      - name: Deploy to Firebase App Distribution
+        run: |
+          cd android
+          fastlane android beta
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          STORE_FILE: ./keystore.jks
