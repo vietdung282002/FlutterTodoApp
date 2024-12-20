@@ -1,154 +1,95 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_app/view/detail_screen/todo_detail.dart';
+import 'package:flutter_todo_app/model/enum/category.dart';
 import 'package:flutter_todo_app/view/widget/category_widget.dart';
 import 'package:flutter_todo_app/view/widget/check_box_widget.dart';
-import 'package:flutter_todo_app/view/colors.dart';
+import 'package:flutter_todo_app/config/colors.dart';
 import 'package:flutter_todo_app/view/widget/text_widget.dart';
-import 'package:flutter_todo_app/model/todo_response.dart';
-import 'package:flutter_todo_app/view_model/todo_list_view_model.dart';
+import 'package:flutter_todo_app/model/model_objects/todo_item.dart';
+import 'package:flutter_todo_app/view/home_screen/home_view_model.dart';
 import 'package:provider/provider.dart';
 
 class TodoItemWidget extends StatelessWidget {
   const TodoItemWidget({super.key, required this.todoItem});
 
   final TodoItem todoItem;
-
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => TodoDetail(
-              todoId: todoItem.todoId,
-            ),
-          ),
-        );
-      },
-      child: SizedBox(
-        width: 700,
-        height: 70,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            _buildImageBasedOnStatus(todoItem.categoryId, todoItem.isComplete),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextWidget(
-                    text: todoItem.taskTitle,
-                    textColor: textColor,
+    return Padding(
+      padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          _buildImageBasedOnStatus(todoItem.category!, todoItem.isComplete),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextWidget(
+                  text: todoItem.taskTitle,
+                  textStyle: TextStyle(
+                    color: todoItem.isComplete
+                        ? textColor.withOpacity(0.5)
+                        : textColor.withOpacity(1),
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    textDecoration: todoItem.isComplete
+                    decoration: todoItem.isComplete
                         ? TextDecoration.lineThrough
                         : TextDecoration.none,
-                    opacity: todoItem.isComplete ? 0.5 : 1,
                   ),
-                  TextWidget(
-                    text: todoItem.formatDateTime(),
-                    textColor: textColor,
+                ),
+                TextWidget(
+                  text: todoItem.formatDateTime(),
+                  textStyle: TextStyle(
+                    color: textColor.withOpacity(0.7),
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    textDecoration: todoItem.isComplete
+                    decoration: todoItem.isComplete
                         ? TextDecoration.lineThrough
                         : TextDecoration.none,
-                    opacity: 0.7,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            const SizedBox(width: 8),
-            Consumer<TodoListViewModel>(builder: (context, viewmodel, chil) {
+          ),
+          const SizedBox(width: 8),
+          Consumer<HomeViewModel>(
+            builder: (context, viewmodel, chil) {
               return CheckBoxWidget(
                 todoItem: todoItem,
                 onTap: () {
                   viewmodel.updateTodoStatus(
-                      todoItem.todoId, !todoItem.isComplete);
+                      todoItem.todoId!, !todoItem.isComplete);
                 },
               );
-            }),
-            // Image.asset("assets/CheckBoxFalse.png"),
-          ],
-        ),
+            },
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildImageBasedOnStatus(int category, bool isComplete) {
+  Widget _buildImageBasedOnStatus(ItemCategory category, bool isComplete) {
     if (isComplete) {
-      switch (category) {
-        case 1:
-          return Opacity(
-            opacity: 0.5,
-            child: CategoryWidget(
-              image: Image.asset("assets/CategoryTask.png"),
-              onTap: () {},
-              backgroundColor: taskBackground,
-              borderColor: Colors.transparent,
-              borderWidth: 0,
-            ),
-          );
-        // Opacity(
-        //     opacity: 0.5, child: Image.asset("assets/CategoryTask.png"));
-        case 2:
-          return Opacity(
-            opacity: 0.5,
-            child: CategoryWidget(
-              image: Image.asset("assets/CategoryEvent.png"),
-              onTap: () {},
-              backgroundColor: eventBackground,
-              borderColor: Colors.transparent,
-              borderWidth: 0,
-            ),
-          );
-        case 3:
-          return Opacity(
-            opacity: 0.5,
-            child: CategoryWidget(
-              image: Image.asset("assets/CategoryGoal.png"),
-              onTap: () {},
-              backgroundColor: goalBackground,
-              borderColor: Colors.transparent,
-              borderWidth: 0,
-            ),
-          );
-        default:
-          return const SizedBox.shrink();
-      }
+      return Opacity(
+        opacity: 0.5,
+        child: CategoryWidget(
+          image: Image.asset(category.icon),
+          onTap: () {},
+          backgroundColor: category.backgroundColor,
+          borderColor: Colors.transparent,
+          borderWidth: 0,
+        ),
+      );
     } else {
-      switch (category) {
-        case 1:
-          return CategoryWidget(
-            image: Image.asset("assets/CategoryTask.png"),
-            onTap: () {},
-            backgroundColor: taskBackground,
-            borderColor: Colors.transparent,
-            borderWidth: 0,
-          );
-        case 2:
-          return CategoryWidget(
-            image: Image.asset("assets/CategoryEvent.png"),
-            onTap: () {},
-            backgroundColor: eventBackground,
-            borderColor: Colors.transparent,
-            borderWidth: 0,
-          );
-        case 3:
-          return CategoryWidget(
-            image: Image.asset("assets/CategoryGoal.png"),
-            onTap: () {},
-            backgroundColor: goalBackground,
-            borderColor: Colors.transparent,
-            borderWidth: 0,
-          );
-        default:
-          return const SizedBox.shrink();
-      }
+      return CategoryWidget(
+        image: Image.asset(category.icon),
+        onTap: () {},
+        backgroundColor: category.backgroundColor,
+        borderColor: Colors.transparent,
+        borderWidth: 0,
+      );
     }
   }
 }

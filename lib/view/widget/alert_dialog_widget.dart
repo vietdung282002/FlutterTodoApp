@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 class AlertDialogWidget extends StatelessWidget {
   const AlertDialogWidget({super.key, required this.content});
@@ -13,7 +12,7 @@ class AlertDialogWidget extends StatelessWidget {
         CupertinoDialogAction(
           isDefaultAction: true,
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.of(context).pop();
           },
           child: const Text('OK'),
         ),

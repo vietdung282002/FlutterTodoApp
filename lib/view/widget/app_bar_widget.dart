@@ -1,24 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
-  final String title;
-  final Color? titleColor;
+  final String? title;
+  final TextStyle? textStyle;
   final Color? backgroundColor;
-  final double? textSize;
-  final FontWeight? fontWeight;
   final List<Widget>? actionWidget;
   final Widget? leadingWidget;
 
-  const AppBarWidget(
-      {super.key,
-      required this.title,
-      this.titleColor = Colors.black,
-      this.backgroundColor = Colors.white,
-      this.textSize = 16,
-      this.fontWeight = FontWeight.w600,
-      this.actionWidget,
-      this.leadingWidget});
+  const AppBarWidget({
+    super.key,
+    this.title = "",
+    this.backgroundColor = Colors.white,
+    this.actionWidget,
+    this.leadingWidget,
+    this.textStyle,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -30,12 +26,8 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
       title: Column(
         children: [
           Text(
-            title,
-            style: GoogleFonts.inter(
-                textStyle: TextStyle(
-                    color: titleColor,
-                    fontSize: textSize,
-                    fontWeight: fontWeight)),
+            title ?? "",
+            style: textStyle,
           ),
         ],
       ),
