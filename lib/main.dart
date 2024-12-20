@@ -5,9 +5,8 @@ import 'package:flutter_todo_app/config/values.dart';
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_todo_app/view/home_screen/todo_list_view_model.dart';
 import 'package:flutter_todo_app/view/splash_screen/splash_screen.dart';
-import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -60,21 +59,15 @@ class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<TodoListViewModel>(
-          create: (_) => TodoListViewModel(),
-        ),
-      ],
-      child: MaterialApp(
-        theme: ThemeData(
-          useMaterial3: true,
-        ),
-        initialRoute: '/',
-        routes: {
-          '/': (context) => const SplashScreen(),
-        },
+    return MaterialApp(
+      theme: ThemeData(
+        useMaterial3: true,
+        fontFamily: GoogleFonts.inter().fontFamily,
       ),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const SplashScreen(),
+      },
     );
   }
 }

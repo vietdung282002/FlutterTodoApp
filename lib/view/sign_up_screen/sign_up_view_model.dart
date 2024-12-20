@@ -3,7 +3,7 @@ import 'package:flutter_todo_app/config/shared_preferences_helper.dart';
 import 'package:flutter_todo_app/config/values.dart';
 import 'package:flutter_todo_app/model/enum/loading_state.dart';
 import 'package:flutter_todo_app/model/enum/logged_in_status.dart';
-import 'package:flutter_todo_app/model/model_objects/authentication_request.dart';
+import 'package:flutter_todo_app/model/model_objects/authentication_body.dart';
 import 'package:flutter_todo_app/model/network/api_services.dart';
 
 class SignUpViewModel extends ChangeNotifier {
@@ -30,7 +30,7 @@ class SignUpViewModel extends ChangeNotifier {
 
     final prefsHelper = SharedPreferencesHelper();
 
-    final authenticationRequest = AuthenticationRequest(
+    final authenticationRequest = AuthenticationBody(
       email: gmail,
       password: password,
     );

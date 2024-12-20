@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/config/colors.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class TextFieldWidget extends StatelessWidget {
   final String? placeholder;
@@ -64,13 +63,10 @@ class TextFieldWidget extends StatelessWidget {
         fillColor: Colors.white,
         errorText: error,
         hintText: placeholder,
-        hintStyle: GoogleFonts.inter(
-          // Sử dụng font Lato từ Google Fonts
-          textStyle: TextStyle(
-            color: textColor.withOpacity(0.7),
-            fontSize: placeholderSize,
-            fontWeight: placeholderWeight,
-          ),
+        hintStyle: TextStyle(
+          color: textColor.withOpacity(0.7),
+          fontSize: placeholderSize,
+          fontWeight: placeholderWeight,
         ),
         errorBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.red, width: enableBorderWidth),

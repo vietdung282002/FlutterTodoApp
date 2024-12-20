@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_todo_app/config/shared_preferences_helper.dart';
 import 'package:flutter_todo_app/config/values.dart';
 import 'package:flutter_todo_app/model/enum/category.dart';
 import 'package:flutter_todo_app/model/enum/loading_state.dart';
 import 'package:flutter_todo_app/model/network/api_services.dart';
-import 'package:flutter_todo_app/model/model_objects/todo_response.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_todo_app/model/model_objects/todo_item.dart';
 
 class TodoDetailViewModel extends ChangeNotifier {
   final ApiServices _apiServices = ApiServices();
@@ -33,7 +33,6 @@ class TodoDetailViewModel extends ChangeNotifier {
     if (todoId == -1) return;
 
     _loading = LoadingState.loading;
-    notifyListeners();
     try {
       final todoResponse = await _apiServices.getTodoItem(todoId);
 
@@ -55,16 +54,20 @@ class TodoDetailViewModel extends ChangeNotifier {
 
     _loading = LoadingState.loading;
     notifyListeners();
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? deviceUdid = prefs.getString(Values.udid);
+
+    final prefs = SharedPreferencesHelper();
+    final String? deviceUdid = await prefs.getString(Values.udid);
+    final String? userId = await prefs.getString(Values.userID);
 
     final newTodo = TodoItem(
-        category: _todoItem.category!,
-        time: deadline,
-        isComplete: false,
-        taskTitle: _todoItem.taskTitle,
-        taskNote: _todoItem.taskNote,
-        deviceUDID: deviceUdid!);
+      category: _todoItem.category!,
+      time: deadline,
+      isComplete: false,
+      taskTitle: _todoItem.taskTitle,
+      taskNote: _todoItem.taskNote,
+      deviceUDID: deviceUdid!,
+      userId: userId,
+    );
     try {
       await _apiServices.createTodo(newTodo);
       _isEditted = true;
@@ -81,8 +84,10 @@ class TodoDetailViewModel extends ChangeNotifier {
 
     _loading = LoadingState.loading;
     notifyListeners();
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? deviceUdid = prefs.getString(Values.udid);
+
+    final prefs = SharedPreferencesHelper();
+    final String? deviceUdid = await prefs.getString(Values.udid);
+    final String? userId = await prefs.getString(Values.userID);
 
     final newTodo = TodoItem(
       todoId: _todoItem.todoId!,
@@ -92,6 +97,7 @@ class TodoDetailViewModel extends ChangeNotifier {
       taskTitle: _todoItem.taskTitle,
       taskNote: _todoItem.taskNote,
       deviceUDID: deviceUdid!,
+      userId: userId,
     );
 
     try {

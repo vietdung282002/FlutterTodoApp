@@ -1,21 +1,19 @@
 import 'dart:convert';
 import 'package:flutter_todo_app/config/http_config.dart';
+import 'package:flutter_todo_app/config/shared_preferences_helper.dart';
 import 'package:flutter_todo_app/config/values.dart';
-import 'package:flutter_todo_app/model/model_objects/authentication_request.dart';
+import 'package:flutter_todo_app/model/model_objects/authentication_body.dart';
 import 'package:flutter_todo_app/model/model_objects/authentication_response.dart';
 import 'package:flutter_todo_app/model/network/api_urls.dart';
-import 'package:flutter_todo_app/model/model_objects/todo_response.dart';
+import 'package:flutter_todo_app/model/model_objects/todo_item.dart';
 import 'package:http/http.dart' as http;
 
 class ApiServices {
-  Future<AuthenticationResponse> signUp(
-      AuthenticationRequest authRequest) async {
-    final headers = <String, String>{
-      'apikey': Values.apiKey,
-      'Content-Type': 'application/json'
-    };
-    final response = await HttpConfig.post(ApiUrls().signUp(),
-        headers: headers, body: authRequest.toJson());
+  final prefs = SharedPreferencesHelper();
+
+  Future<AuthenticationResponse> signUp(AuthenticationBody authRequest) async {
+    final response =
+        await HttpConfig.post(ApiUrls().signUp(), body: authRequest.toJson());
     if (response.statusCode != 200) {
       throw Exception('Failed to Sign up.');
     } else {
@@ -24,14 +22,11 @@ class ApiServices {
     }
   }
 
-  Future<AuthenticationResponse> login(
-      AuthenticationRequest authRequest) async {
-    final headers = <String, String>{
-      'apikey': Values.apiKey,
-      'Content-Type': 'application/json'
-    };
-    final response = await HttpConfig.post(ApiUrls().login(),
-        headers: headers, body: authRequest.toJson());
+  Future<AuthenticationResponse> login(AuthenticationBody authBody) async {
+    final response = await HttpConfig.post(
+      ApiUrls().login(),
+      body: authBody.toJson(),
+    );
     if (response.statusCode != 200) {
       throw Exception('Failed to Login.');
     } else {
@@ -41,8 +36,15 @@ class ApiServices {
   }
 
   Future<List<TodoItem>> getTodosList(String deviceUDID) async {
-    final response =
-        await HttpConfig.get(ApiUrls().getTodoList(udid: deviceUDID));
+    final String? userToken = await prefs.getString(Values.accessToken);
+    final headers = <String, String>{
+      'Prefer': 'return=minimal',
+      'Authorization': 'Bearer $userToken',
+    };
+    final response = await HttpConfig.get(
+      ApiUrls().getTodoList(udid: deviceUDID),
+      headers: headers,
+    );
     if (response.statusCode == 200) {
       List<dynamic> jsonData = json.decode(response.body);
       return jsonData.map((data) => TodoItem.fromJson(data)).toList();
@@ -52,8 +54,14 @@ class ApiServices {
   }
 
   Future<TodoItem> getTodoItem(int todoId) async {
+    final String? userToken = await prefs.getString(Values.accessToken);
+    final headers = <String, String>{
+      'Prefer': 'return=minimal',
+      'Authorization': 'Bearer $userToken',
+    };
     final response = await HttpConfig.get(
       ApiUrls().getTodoDetail(todoId: todoId),
+      headers: headers,
     );
     if (response.statusCode == 200) {
       List<dynamic> jsonData = json.decode(response.body);
@@ -70,9 +78,10 @@ class ApiServices {
   }
 
   Future<http.Response> createTodo(TodoItem todo) async {
+    final String? userToken = await prefs.getString(Values.accessToken);
     final headers = <String, String>{
-      'Content-Type': 'application/json',
-      'Prefer': 'return=minimal'
+      'Prefer': 'return=minimal',
+      'Authorization': 'Bearer $userToken',
     };
     final response = await HttpConfig.post(ApiUrls().createTodo(),
         headers: headers, body: todo.toJson());
@@ -84,9 +93,10 @@ class ApiServices {
   }
 
   Future<http.Response> updateTodoStatus(int todoId, bool isComplete) async {
+    final String? userToken = await prefs.getString(Values.accessToken);
     final headers = <String, String>{
-      'Content-Type': 'application/json',
-      'Prefer': 'return=minimal'
+      'Prefer': 'return=minimal',
+      'Authorization': 'Bearer $userToken',
     };
     final body = <String, dynamic>{
       'is_complete': isComplete,
@@ -95,6 +105,7 @@ class ApiServices {
         ApiUrls().updateTodoStatus(todoId: todoId),
         headers: headers,
         body: body);
+
     if (response.statusCode != 204) {
       throw Exception('Failed to update Todo.');
     } else {
@@ -103,14 +114,16 @@ class ApiServices {
   }
 
   Future<http.Response> updateTodo(TodoItem todo) async {
+    final String? userToken = await prefs.getString(Values.accessToken);
     final headers = <String, String>{
-      'Content-Type': 'application/json',
-      'Prefer': 'return=minimal'
+      'Prefer': 'return=minimal',
+      'Authorization': 'Bearer $userToken',
     };
     final response = await HttpConfig.patch(
-        ApiUrls().updateTodo(todoId: todo.todoId!),
-        headers: headers,
-        body: todo.toJson());
+      ApiUrls().updateTodo(todoId: todo.todoId!),
+      headers: headers,
+      body: todo.toJson(),
+    );
     if (response.statusCode != 204) {
       throw Exception('Failed to update Todo.');
     } else {
@@ -121,7 +134,12 @@ class ApiServices {
   Future<http.Response> deleteTodo(
     int todoId,
   ) async {
+    final String? userToken = await prefs.getString(Values.accessToken);
+    final headers = <String, String>{
+      'Authorization': 'Bearer $userToken',
+    };
     final response = await HttpConfig.delete(
+      headers: headers,
       ApiUrls().deleteTodo(todoId: todoId),
     );
     if (response.statusCode != 204) {

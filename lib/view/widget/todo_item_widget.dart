@@ -4,9 +4,8 @@ import 'package:flutter_todo_app/view/widget/category_widget.dart';
 import 'package:flutter_todo_app/view/widget/check_box_widget.dart';
 import 'package:flutter_todo_app/config/colors.dart';
 import 'package:flutter_todo_app/view/widget/text_widget.dart';
-import 'package:flutter_todo_app/model/model_objects/todo_response.dart';
-import 'package:flutter_todo_app/view/home_screen/todo_list_view_model.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_todo_app/model/model_objects/todo_item.dart';
+import 'package:flutter_todo_app/view/home_screen/home_view_model.dart';
 import 'package:provider/provider.dart';
 
 class TodoItemWidget extends StatelessWidget {
@@ -29,37 +28,33 @@ class TodoItemWidget extends StatelessWidget {
               children: [
                 TextWidget(
                   text: todoItem.taskTitle,
-                  textStyle: GoogleFonts.inter(
-                    textStyle: TextStyle(
-                      color: todoItem.isComplete
-                          ? textColor.withOpacity(0.5)
-                          : textColor.withOpacity(1),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      decoration: todoItem.isComplete
-                          ? TextDecoration.lineThrough
-                          : TextDecoration.none,
-                    ),
+                  textStyle: TextStyle(
+                    color: todoItem.isComplete
+                        ? textColor.withOpacity(0.5)
+                        : textColor.withOpacity(1),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    decoration: todoItem.isComplete
+                        ? TextDecoration.lineThrough
+                        : TextDecoration.none,
                   ),
                 ),
                 TextWidget(
                   text: todoItem.formatDateTime(),
-                  textStyle: GoogleFonts.inter(
-                    textStyle: TextStyle(
-                      color: textColor.withOpacity(0.7),
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      decoration: todoItem.isComplete
-                          ? TextDecoration.lineThrough
-                          : TextDecoration.none,
-                    ),
+                  textStyle: TextStyle(
+                    color: textColor.withOpacity(0.7),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    decoration: todoItem.isComplete
+                        ? TextDecoration.lineThrough
+                        : TextDecoration.none,
                   ),
                 ),
               ],
             ),
           ),
           const SizedBox(width: 8),
-          Consumer<TodoListViewModel>(
+          Consumer<HomeViewModel>(
             builder: (context, viewmodel, chil) {
               return CheckBoxWidget(
                 todoItem: todoItem,

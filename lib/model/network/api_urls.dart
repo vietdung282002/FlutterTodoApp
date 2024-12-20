@@ -33,7 +33,7 @@ class ApiUrls {
   }
 
   Uri createTodo() {
-    return Uri.parse(Values.baseUrls);
+    return Uri.parse('${Values.baseUrls}/rest/v1/Todo');
   }
 
   Uri updateTodo({required int todoId}) {

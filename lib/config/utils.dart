@@ -3,12 +3,8 @@ import 'package:intl/intl.dart';
 
 class AppUtils {
   String formatTimeTo12Hour(TimeOfDay time) {
-    final int hour =
-        time.hour > 12 ? time.hour - 12 : (time.hour == 0 ? 12 : time.hour);
-    final String period = time.hour >= 12 ? 'PM' : 'AM';
-    final String minute =
-        time.minute.toString().padLeft(2, '0'); // Đảm bảo 2 chữ số
-    return '$hour:$minute $period';
+    final dateTime = DateTime(time.hour, time.minute);
+    return DateFormat('hh:mm a').format(dateTime);
   }
 
   String getCurrentTime() {

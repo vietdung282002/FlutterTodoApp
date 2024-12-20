@@ -3,7 +3,7 @@ import 'package:flutter_todo_app/config/shared_preferences_helper.dart';
 import 'package:flutter_todo_app/config/values.dart';
 import 'package:flutter_todo_app/model/enum/loading_state.dart';
 import 'package:flutter_todo_app/model/enum/logged_in_status.dart';
-import 'package:flutter_todo_app/model/model_objects/authentication_request.dart';
+import 'package:flutter_todo_app/model/model_objects/authentication_body.dart';
 import 'package:flutter_todo_app/model/network/api_services.dart';
 
 class LogInViewModel extends ChangeNotifier {
@@ -19,13 +19,13 @@ class LogInViewModel extends ChangeNotifier {
   String _gmail = "vietdung282002@gmail.com";
   String get gmail => _gmail;
 
-  String _password = "viet1";
+  String _password = "vietdung1";
   String get password => _password;
 
   Future<void> checkUserLogin() async {
     final prefsHelper = SharedPreferencesHelper();
 
-    String? userId = await prefsHelper.getString('userId');
+    String? userId = await prefsHelper.getString(Values.userID);
 
     if (userId != null) {
       _isLoggedIn = LoggedInStatus.loggedIn;
@@ -43,13 +43,13 @@ class LogInViewModel extends ChangeNotifier {
 
     final prefsHelper = SharedPreferencesHelper();
 
-    final authenticationRequest = AuthenticationRequest(
+    final authenticationBody = AuthenticationBody(
       email: gmail,
       password: password,
     );
     try {
       final authenticationResponse =
-          await _apiServices.login(authenticationRequest);
+          await _apiServices.login(authenticationBody);
       prefsHelper.saveString(Values.userID, authenticationResponse.user.id);
       prefsHelper.saveString(
           Values.accessToken, authenticationResponse.accessToken);

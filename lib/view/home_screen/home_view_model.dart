@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_todo_app/config/shared_preferences_helper.dart';
 import 'package:flutter_todo_app/config/values.dart';
 import 'package:flutter_todo_app/model/enum/loading_state.dart';
+import 'package:flutter_todo_app/model/enum/logged_in_status.dart';
 import 'package:flutter_todo_app/model/network/api_services.dart';
-import 'package:flutter_todo_app/model/model_objects/todo_response.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_todo_app/model/model_objects/todo_item.dart';
 
-class TodoListViewModel extends ChangeNotifier {
+class HomeViewModel extends ChangeNotifier {
   final ApiServices _apiServices = ApiServices();
+
+  LoggedInStatus _isLoggedIn = LoggedInStatus.loggedIn;
+  LoggedInStatus get isLoggedIn => _isLoggedIn;
 
   LoadingState _loading = LoadingState.idle;
   LoadingState get loading => _loading;
@@ -23,8 +27,8 @@ class TodoListViewModel extends ChangeNotifier {
   Future<void> fetchTodoList({bool refresh = false}) async {
     if (_loading == LoadingState.loading) return;
 
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? deviceUdid = prefs.getString(Values.udid);
+    final prefs = SharedPreferencesHelper();
+    final String? deviceUdid = await prefs.getString(Values.udid);
 
     if (refresh) {
       _listTodo = [];
@@ -46,8 +50,8 @@ class TodoListViewModel extends ChangeNotifier {
   Future<void> updateTodo() async {
     if (_loading == LoadingState.loading) return;
 
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? deviceUdid = prefs.getString('device_udid');
+    final prefs = SharedPreferencesHelper();
+    final String? deviceUdid = await prefs.getString(Values.udid);
 
     _loading = LoadingState.loading;
 
@@ -87,8 +91,8 @@ class TodoListViewModel extends ChangeNotifier {
     if (_loading == LoadingState.loading) return;
 
     final index = _listTodo.indexWhere((todo) => todo.todoId == todoId);
-
     _loading == LoadingState.loading;
+    notifyListeners();
 
     try {
       await _apiServices.deleteTodo(todoId);
@@ -99,5 +103,19 @@ class TodoListViewModel extends ChangeNotifier {
     } finally {
       notifyListeners();
     }
+  }
+
+  Future<void> signOut() async {
+    if (_loading == LoadingState.loading) return;
+
+    _loading == LoadingState.loading;
+    notifyListeners();
+    final prefs = SharedPreferencesHelper();
+    await prefs.remove(Values.userID);
+    _isLoggedIn = LoggedInStatus.loggedOut;
+    _loading == LoadingState.success;
+
+    _listTodo = [];
+    notifyListeners();
   }
 }

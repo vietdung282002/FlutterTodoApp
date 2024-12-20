@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_app/model/model_objects/todo_response.dart';
+import 'package:flutter_todo_app/model/model_objects/todo_item.dart';
 
 class CheckBoxWidget extends StatelessWidget {
   const CheckBoxWidget({

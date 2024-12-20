@@ -1,14 +1,14 @@
-class AuthenticationRequest {
+class AuthenticationBody {
   final String email;
   final String password;
 
-  AuthenticationRequest({
+  AuthenticationBody({
     required this.email,
     required this.password,
   });
 
-  factory AuthenticationRequest.fromJson(Map<String, dynamic> json) {
-    return AuthenticationRequest(
+  factory AuthenticationBody.fromJson(Map<String, dynamic> json) {
+    return AuthenticationBody(
       email: json['email'],
       password: json['password'],
     );

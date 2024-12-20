@@ -9,7 +9,7 @@ class TodoItem {
   String time;
   bool isComplete;
   String? deviceUDID;
-
+  String? userId;
   // Constructor
   TodoItem({
     required this.category,
@@ -19,6 +19,7 @@ class TodoItem {
     required this.taskTitle,
     required this.taskNote,
     this.deviceUDID,
+    this.userId,
   });
 
   factory TodoItem.fromJson(Map<String, dynamic> json) {
@@ -30,6 +31,7 @@ class TodoItem {
       todoId: json['todo_id'] as int,
       taskNote: json['task_note'] as String,
       deviceUDID: json['udid'] as String,
+      userId: json['user_id'] as String,
     );
   }
 
@@ -42,6 +44,7 @@ class TodoItem {
       time: '',
       isComplete: false,
       deviceUDID: null,
+      userId: null,
     );
   }
 
@@ -53,6 +56,7 @@ class TodoItem {
       "category_id": category?.toInt,
       "time": time,
       "udid": deviceUDID,
+      "user_id": userId,
     };
   }
 
@@ -89,6 +93,7 @@ class TodoItem {
     String? time,
     bool? isComplete,
     String? deviceUDID,
+    String? userId,
   }) {
     return TodoItem(
       todoId: todoId ?? this.todoId,
@@ -98,6 +103,7 @@ class TodoItem {
       time: time ?? this.time,
       isComplete: isComplete ?? this.isComplete,
       deviceUDID: deviceUDID ?? this.deviceUDID,
+      userId: userId ?? this.userId,
     );
   }
 
