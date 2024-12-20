@@ -1,10 +1,17 @@
+# flutter_todo_app
+
+A new Flutter project.
+
+## Getting Started
+
+This project is a starting point for a Flutter application.
+
+A few resources to get you started if this is your first Flutter project:
+
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
 # FlutterTodoApp
-Demo:
-
-![Demo](<screenshots/Simulator Screen Recording - iPhone 16 Pro - 2024-12-12 at 09.28.25.gif>)
-
-<img src="screenshots/Simulator Screenshot - iPhone 16 Pro - 2024-12-12 at 09.29.45.png" width="200">
-<img src="screenshots/Simulator Screenshot - iPhone 16 Pro - 2024-12-12 at 09.29.52.png" width="200">
-<img src="screenshots/Simulator Screenshot - iPhone 16 Pro - 2024-12-12 at 09.29.57.png" width="200">
-<img src="screenshots/Simulator Screenshot - iPhone 16 Pro - 2024-12-12 at 09.30.01.png" width="200">
-<img src="screenshots/Simulator Screenshot - iPhone 16 Pro - 2024-12-12 at 09.30.04.png" width="200">
