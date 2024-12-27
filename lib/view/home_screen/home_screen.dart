@@ -6,25 +6,14 @@ import 'package:flutter_todo_app/config/utils.dart';
 import 'package:flutter_todo_app/model/enum/loading_state.dart';
 import 'package:flutter_todo_app/model/enum/logged_in_status.dart';
 import 'package:flutter_todo_app/view/detail_screen/todo_detail.dart';
-import 'package:flutter_todo_app/view/home_screen/home_view_model.dart';
 import 'package:flutter_todo_app/view/log_in_screen/log_in_screen.dart';
-import 'package:flutter_todo_app/view/widget/button_widget.dart';
-import 'package:flutter_todo_app/config/colors.dart';
-import 'package:flutter_todo_app/view/widget/text_widget.dart';
-import 'package:flutter_todo_app/view/widget/todo_item_widget.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_todo_app/common/colors.dart';
+import 'package:flutter_todo_app/components/text_widget.dart';
+import 'package:flutter_todo_app/components/todo_item_widget.dart';
+import 'package:get/get.dart';
 
-class Home extends StatelessWidget {
-  const Home({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => HomeViewModel(),
-      child: const HomeScreen(),
-    );
-  }
-}
+import '../../components/button_widget.dart';
+import 'home_vm.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -34,10 +23,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  HomeVM homeVM = Get.put(HomeVM());
+
   @override
   void initState() {
     super.initState();
-    Provider.of<HomeViewModel>(context, listen: false).fetchTodoList();
+    homeVM.fetchTodoList();
   }
 
   @override
@@ -93,13 +84,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildLogoutButton(double screenWidth, BuildContext context) {
     return Positioned(
       left: screenWidth * 0.85,
-      top: 16,
+      top: 48,
       child: IconButton(
         icon: const Icon(Icons.logout),
         color: Colors.white,
         iconSize: 30,
         onPressed: () {
-          Provider.of<HomeViewModel>(context, listen: false).signOut();
+          homeVM.signOut();
         },
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
@@ -136,36 +127,35 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               RefreshIndicator(
                 onRefresh: () async {
-                  await Provider.of<HomeViewModel>(context, listen: false)
-                      .fetchTodoList(refresh: true);
+                  await homeVM.fetchTodoList(refresh: true);
                 },
                 child: CustomScrollView(
                   slivers: [
-                    Selector<HomeViewModel, List?>(
-                      selector: (context, viewModel) => viewModel.pendingTodos,
-                      builder: (context, pendingTodos, child) {
-                        return _buildTodoSection(pendingTodos);
+                    GetBuilder(
+                      init: homeVM,
+                      builder: (controller) {
+                        return _buildTodoSection(controller.pendingTodos);
                       },
                     ),
                     SliverToBoxAdapter(
-                      child: Consumer<HomeViewModel>(
-                        builder: (context, viewModel, child) {
-                          if (viewModel.loading != LoadingState.loading &&
-                              viewModel.listTodo.isNotEmpty) {
+                      child: GetBuilder(
+                        init: homeVM,
+                        builder: (controller) {
+                          if (controller.loading != LoadingState.loading &&
+                              controller.listTodo.isNotEmpty) {
                             return _buildSectionTitle(title: "Completed");
                           }
-                          if (viewModel.loading == LoadingState.loading) {
+                          if (controller.loading == LoadingState.loading) {
                             return const SizedBox.shrink();
                           }
                           return const SizedBox.shrink();
                         },
                       ),
                     ),
-                    Selector<HomeViewModel, List?>(
-                      selector: (context, viewModel) =>
-                          viewModel.completedTodos,
-                      builder: (context, completedTodos, child) {
-                        return _buildTodoSection(completedTodos);
+                    GetBuilder(
+                      init: homeVM,
+                      builder: (controller) {
+                        return _buildTodoSection(controller.completedTodos);
                       },
                     ),
                   ],
@@ -184,12 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: const EdgeInsets.only(bottom: 12.0),
       child: ButtonWidget(
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const TodoDetail(todoId: -1),
-            ),
-          );
+          Get.to(() => const TodoDetailScreen(todoId: -1));
         },
         width: screenWidth,
         text: "Add New Task",
@@ -199,15 +184,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildLogInState() {
-    return Consumer<HomeViewModel>(
-      builder: (context, viewModel, child) {
+    return GetBuilder(
+      init: homeVM,
+      builder: (viewModel) {
         WidgetsBinding.instance.addPostFrameCallback(
           (_) {
             if (viewModel.isLoggedIn == LoggedInStatus.loggedOut) {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const LogIn()),
-              );
+              Get.offAll(() => const LogInScreen());
             }
           },
         );
@@ -217,8 +200,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildLoadingState() {
-    return Consumer<HomeViewModel>(
-      builder: (context, viewModel, child) {
+    return GetBuilder(
+      init: homeVM,
+      builder: (viewModel) {
         if (viewModel.loading == LoadingState.loading) {
           return SafeArea(
             child: BackdropFilter(
@@ -254,8 +238,7 @@ class _HomeScreenState extends State<HomeScreen> {
               direction: DismissDirection.endToStart,
               onDismissed: (direction) {
                 // Trigger the deletion in the ViewModel
-                Provider.of<HomeViewModel>(context, listen: false)
-                    .deleteTodo(todo.todoId!);
+                homeVM.deleteTodo(todo.todoId!);
               },
               background: Container(
                 color: Colors.red,
@@ -265,14 +248,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => TodoDetail(
-                        todoId: todo.todoId,
-                      ),
-                    ),
-                  );
+                  Get.to(TodoDetailScreen(todoId: todo.todoId!));
                 },
                 child: Container(
                     decoration: BoxDecoration(

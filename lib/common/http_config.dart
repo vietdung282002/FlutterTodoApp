@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:flutter_todo_app/config/values.dart';
+import 'package:flutter_todo_app/common/values.dart';
 import 'package:http/http.dart' as http;
 
 class HttpConfig {

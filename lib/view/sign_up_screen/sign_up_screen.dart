@@ -2,29 +2,18 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/config/app_text_style.dart';
-import 'package:flutter_todo_app/config/colors.dart';
+import 'package:flutter_todo_app/common/colors.dart';
 import 'package:flutter_todo_app/model/enum/loading_state.dart';
 import 'package:flutter_todo_app/model/enum/logged_in_status.dart';
 import 'package:flutter_todo_app/view/home_screen/home_screen.dart';
-import 'package:flutter_todo_app/view/sign_up_screen/sign_up_view_model.dart';
-import 'package:flutter_todo_app/view/widget/alert_dialog_widget.dart';
-import 'package:flutter_todo_app/view/widget/button_widget.dart';
-import 'package:flutter_todo_app/view/widget/text_button_widget.dart';
-import 'package:flutter_todo_app/view/widget/text_field_widget.dart';
-import 'package:flutter_todo_app/view/widget/text_widget.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_todo_app/components/text_widget.dart';
+import 'package:flutter_todo_app/view/sign_up_screen/signup_vm.dart';
+import 'package:get/get.dart';
 
-class SignUp extends StatelessWidget {
-  const SignUp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider<SignUpViewModel>(
-      create: (_) => SignUpViewModel(),
-      child: const SignUpScreen(),
-    );
-  }
-}
+import '../../components/alert_dialog_widget.dart';
+import '../../components/button_widget.dart';
+import '../../components/text_button_widget.dart';
+import '../../components/text_field_widget.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -34,6 +23,8 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  SignUpVM signUpVM = Get.put(SignUpVM());
+
   final TextEditingController _gmailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -125,17 +116,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
           padding: const EdgeInsets.only(
             top: 12.0,
           ),
-          child: Selector<SignUpViewModel, String?>(
-            selector: (context, viewModel) => viewModel.gmail,
-            builder: (context, gmail, child) {
-              if (gmail != null) {
-                _gmailController.text = gmail;
-              }
+          child: GetBuilder(
+            init: signUpVM,
+            builder: (controller) {
+              var gmail = controller.gmail;
+              _gmailController.text = gmail;
               return TextFieldWidget(
                 maxLines: 1,
                 onChange: (text) {
-                  Provider.of<SignUpViewModel>(context, listen: false)
-                      .setGmail(text);
+                  controller.setGmail(text);
                 },
                 placeholder: "abc@gmail.com",
                 textEditingController: _gmailController,
@@ -160,18 +149,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
           padding: const EdgeInsets.only(
             top: 12.0,
           ),
-          child: Selector<SignUpViewModel, String?>(
-            selector: (context, viewModel) => viewModel.password,
-            builder: (context, password, child) {
-              if (password != null) {
-                _passwordController.text = password;
-              }
+          child: GetBuilder(
+            init: signUpVM,
+            builder: (controller) {
+              var password = controller.password;
+              _passwordController.text = password;
               return TextFieldWidget(
                 obscureText: true,
                 maxLines: 1,
                 onChange: (text) {
-                  Provider.of<SignUpViewModel>(context, listen: false)
-                      .setPassword(text);
+                  controller.setPassword(text);
                 },
                 placeholder: "Password",
                 textEditingController: _passwordController,
@@ -186,8 +173,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Widget _buildSignUpButton(double screenWidth) {
     return Center(
-      child: Consumer<SignUpViewModel>(
-        builder: (context, viewModel, child) {
+      child: GetBuilder(
+        init: signUpVM,
+        builder: (viewModel) {
           return ButtonWidget(
             width: screenWidth * 0.7,
             text: "Sign Up",
@@ -224,7 +212,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           TextButtonWidget(
             text: " Log in",
             onTap: () {
-              Navigator.of(context).pop();
+              Get.back();
             },
             textStyle: const TextStyle(
               fontSize: 15,
@@ -238,8 +226,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Widget _buildSignUpStateWidget() {
-    return Consumer<SignUpViewModel>(
-      builder: (context, viewModel, child) {
+    return GetBuilder(
+      init: signUpVM,
+      builder: (viewModel) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (viewModel.loading == LoadingState.failure &&
               viewModel.isLoggedIn == LoggedInStatus.loggedOut) {
@@ -253,10 +242,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             );
           }
           if (viewModel.isLoggedIn == LoggedInStatus.loggedIn) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const HomeScreen()),
-            );
+            Get.offAll(() => const HomeScreen());
           }
         });
 

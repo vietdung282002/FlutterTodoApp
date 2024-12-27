@@ -1,4 +1,4 @@
-import 'package:flutter_todo_app/config/values.dart';
+import 'package:flutter_todo_app/common/values.dart';
 
 class ApiUrls {
   Uri signUp() {

@@ -2,30 +2,19 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/config/app_text_style.dart';
-import 'package:flutter_todo_app/config/colors.dart';
+import 'package:flutter_todo_app/common/colors.dart';
 import 'package:flutter_todo_app/model/enum/loading_state.dart';
 import 'package:flutter_todo_app/model/enum/logged_in_status.dart';
 import 'package:flutter_todo_app/view/home_screen/home_screen.dart';
-import 'package:flutter_todo_app/view/log_in_screen/log_in_view_model.dart';
 import 'package:flutter_todo_app/view/sign_up_screen/sign_up_screen.dart';
-import 'package:flutter_todo_app/view/widget/alert_dialog_widget.dart';
-import 'package:flutter_todo_app/view/widget/button_widget.dart';
-import 'package:flutter_todo_app/view/widget/text_button_widget.dart';
-import 'package:flutter_todo_app/view/widget/text_field_widget.dart';
-import 'package:flutter_todo_app/view/widget/text_widget.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_todo_app/components/text_widget.dart';
+import 'package:get/get.dart';
 
-class LogIn extends StatelessWidget {
-  const LogIn({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider<LogInViewModel>(
-      create: (_) => LogInViewModel(),
-      child: const LogInScreen(),
-    );
-  }
-}
+import '../../components/alert_dialog_widget.dart';
+import '../../components/button_widget.dart';
+import '../../components/text_button_widget.dart';
+import '../../components/text_field_widget.dart';
+import 'login_vm.dart';
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({super.key});
@@ -35,6 +24,8 @@ class LogInScreen extends StatefulWidget {
 }
 
 class _LogInScreenState extends State<LogInScreen> {
+  LoginVM loginVM = Get.put(LoginVM());
+
   final TextEditingController _gmailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -43,14 +34,15 @@ class _LogInScreenState extends State<LogInScreen> {
 
   @override
   void initState() {
-    Provider.of<LogInViewModel>(context, listen: false).checkUserLogin();
     super.initState();
+    loginVM.checkUserLogin();
   }
 
   @override
   void dispose() {
     _gmailController.dispose();
     _passwordController.dispose();
+    loginVM.dispose();
     super.dispose();
   }
 
@@ -90,31 +82,35 @@ class _LogInScreenState extends State<LogInScreen> {
             top: 48,
           ),
           child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildCaption(),
-                const SizedBox(
-                  height: 40,
-                ),
-                _buildGmailField(),
-                const SizedBox(
-                  height: 20,
-                ),
-                _buildPasswordField(),
-                const SizedBox(
-                  height: 30,
-                ),
-                _buildSignInButton(screenWidth),
-                const SizedBox(
-                  height: 30,
-                ),
-                _buildSignUpRow(context)
-              ],
-            ),
+            child: _buildForm(screenWidth, context),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildForm(double screenWidth, BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildCaption(),
+        const SizedBox(
+          height: 40,
+        ),
+        _buildGmailField(),
+        const SizedBox(
+          height: 20,
+        ),
+        _buildPasswordField(),
+        const SizedBox(
+          height: 30,
+        ),
+        _buildSignInButton(screenWidth),
+        const SizedBox(
+          height: 30,
+        ),
+        _buildSignUpRow(context)
+      ],
     );
   }
 
@@ -136,28 +132,25 @@ class _LogInScreenState extends State<LogInScreen> {
           textStyle: AppTextStyle.blackTitle,
         ),
         Padding(
-          padding: const EdgeInsets.only(
-            top: 12.0,
-          ),
-          child: Selector<LogInViewModel, String?>(
-            selector: (context, viewModel) => viewModel.gmail,
-            builder: (context, gmail, child) {
-              if (gmail != null) {
+            padding: const EdgeInsets.only(
+              top: 12.0,
+            ),
+            child: GetBuilder(
+              init: loginVM,
+              builder: (controller) {
+                var gmail = controller.gmail;
                 _gmailController.text = gmail;
-              }
-              return TextFieldWidget(
-                maxLines: 1,
-                onChange: (text) {
-                  Provider.of<LogInViewModel>(context, listen: false)
-                      .setGmail(text);
-                },
-                placeholder: "abc@gmail.com",
-                textEditingController: _gmailController,
-                error: _gmailValidate ? "Gmail Can't Be Empty" : null,
-              );
-            },
-          ),
-        ),
+                return TextFieldWidget(
+                  maxLines: 1,
+                  onChange: (text) {
+                    controller.setGmail(text);
+                  },
+                  placeholder: "abc@gmail.com",
+                  textEditingController: _gmailController,
+                  error: _gmailValidate ? "Gmail Can't Be Empty" : null,
+                );
+              },
+            )),
       ],
     );
   }
@@ -171,37 +164,34 @@ class _LogInScreenState extends State<LogInScreen> {
           textStyle: AppTextStyle.blackTitle,
         ),
         Padding(
-          padding: const EdgeInsets.only(
-            top: 12.0,
-          ),
-          child: Selector<LogInViewModel, String?>(
-            selector: (context, viewModel) => viewModel.password,
-            builder: (context, password, child) {
-              if (password != null) {
-                _passwordController.text = password;
-              }
-              return TextFieldWidget(
-                obscureText: true,
-                maxLines: 1,
-                onChange: (text) {
-                  Provider.of<LogInViewModel>(context, listen: false)
-                      .setPassword(text);
-                },
-                placeholder: "Password",
-                textEditingController: _passwordController,
-                error: _passwordValidate ? "Password Can't Be Empty" : null,
-              );
-            },
-          ),
-        ),
+            padding: const EdgeInsets.only(
+              top: 12.0,
+            ),
+            child: GetBuilder(
+                init: loginVM,
+                builder: (controller) {
+                  var password = controller.password;
+                  _passwordController.text = password;
+                  return TextFieldWidget(
+                    obscureText: true,
+                    maxLines: 1,
+                    onChange: (text) {
+                      controller.setPassword(text);
+                    },
+                    placeholder: "Password",
+                    textEditingController: _passwordController,
+                    error: _passwordValidate ? "Password Can't Be Empty" : null,
+                  );
+                })),
       ],
     );
   }
 
   Widget _buildSignInButton(double screenWidth) {
     return Center(
-      child: Consumer<LogInViewModel>(
-        builder: (context, viewModel, child) {
+      child: GetBuilder(
+        init: loginVM,
+        builder: (controller) {
           return ButtonWidget(
             width: screenWidth * 0.7,
             text: "Sign in",
@@ -215,7 +205,7 @@ class _LogInScreenState extends State<LogInScreen> {
 
               if (_gmailValidate != false || _passwordValidate != false) {
               } else {
-                viewModel.logIn();
+                controller.logIn();
               }
             },
             textStyle: AppTextStyle.buttonStyle,
@@ -241,12 +231,7 @@ class _LogInScreenState extends State<LogInScreen> {
           TextButtonWidget(
             text: " Sign up",
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SignUp(),
-                ),
-              );
+              Get.to(() => const SignUpScreen());
             },
             textStyle: const TextStyle(
               fontSize: 15,
@@ -260,12 +245,13 @@ class _LogInScreenState extends State<LogInScreen> {
   }
 
   Widget _buildLoginStateWidget() {
-    return Consumer<LogInViewModel>(
-      builder: (context, viewModel, child) {
-        WidgetsBinding.instance.addPostFrameCallback(
-          (_) {
-            if (viewModel.loading == LoadingState.failure &&
-                viewModel.isLoggedIn == LoggedInStatus.loggedOut) {
+    return GetBuilder(
+      init: loginVM,
+      builder: (controller) {
+        if (controller.loading == LoadingState.failure &&
+            controller.isLoggedIn == LoggedInStatus.loggedOut) {
+          WidgetsBinding.instance.addPostFrameCallback(
+            (_) {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
@@ -274,18 +260,17 @@ class _LogInScreenState extends State<LogInScreen> {
                   );
                 },
               );
-            }
-            if (viewModel.isLoggedIn == LoggedInStatus.loggedIn) {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const Home()),
-              );
-            }
-          },
-        );
-        if (viewModel.loading == LoadingState.failure &&
-            viewModel.isLoggedIn == LoggedInStatus.loggedOut) {}
-        if (viewModel.loading == LoadingState.loading) {
+            },
+          );
+        }
+        if (controller.isLoggedIn == LoggedInStatus.loggedIn) {
+          WidgetsBinding.instance.addPostFrameCallback(
+            (_) {
+              Get.offAll(() => const HomeScreen());
+            },
+          );
+        }
+        if (controller.loading == LoadingState.loading) {
           return SafeArea(
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
