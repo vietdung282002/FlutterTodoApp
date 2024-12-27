@@ -186,10 +186,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildLogInState() {
     return GetBuilder(
       init: homeVM,
-      builder: (viewModel) {
+      builder: (controller) {
         WidgetsBinding.instance.addPostFrameCallback(
           (_) {
-            if (viewModel.isLoggedIn == LoggedInStatus.loggedOut) {
+            if (controller.isLoggedIn == LoggedInStatus.loggedOut) {
               Get.offAll(() => const LogInScreen());
             }
           },
@@ -202,8 +202,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildLoadingState() {
     return GetBuilder(
       init: homeVM,
-      builder: (viewModel) {
-        if (viewModel.loading == LoadingState.loading) {
+      builder: (controller) {
+        if (controller.loading == LoadingState.loading) {
           return SafeArea(
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 0.0, sigmaY: 0.0),
@@ -237,7 +237,6 @@ class _HomeScreenState extends State<HomeScreen> {
               key: Key(todo.todoId.toString()), // Ensure the key is unique
               direction: DismissDirection.endToStart,
               onDismissed: (direction) {
-                // Trigger the deletion in the ViewModel
                 homeVM.deleteTodo(todo.todoId!);
               },
               background: Container(

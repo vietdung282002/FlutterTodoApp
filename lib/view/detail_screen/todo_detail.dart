@@ -254,8 +254,8 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
             padding: const EdgeInsets.only(top: 8.0),
             child: GetBuilder(
                 init: todoDetailVM,
-                builder: (viewModel) {
-                  _timeController.text = viewModel.time!;
+                builder: (controller) {
+                  _timeController.text = controller.time!;
                   return TextFieldWidget(
                     error: _timeValidate ? "Value Can't Be Empty" : null,
                     readOnly: true,
@@ -286,8 +286,8 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
             height: 250,
             child: GetBuilder(
               init: todoDetailVM,
-              builder: (viewModel) {
-                _noteController.text = viewModel.todoItem.taskNote!;
+              builder: (controller) {
+                _noteController.text = controller.todoItem.taskNote!;
                 return TextFieldWidget(
                   onChange: (text) {
                     todoDetailVM.setTaskNote(text);
@@ -311,11 +311,11 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
       padding: const EdgeInsets.only(bottom: 24.0, top: 24),
       child: GetBuilder(
         init: todoDetailVM,
-        builder: (viewModel) {
+        builder: (controller) {
           return ButtonWidget(
             onTap: () {
-              viewModel.setTaskTitle(_taskTitleController.text);
-              viewModel.setTaskNote(_noteController.text);
+              controller.setTaskTitle(_taskTitleController.text);
+              controller.setTaskNote(_noteController.text);
               setState(
                 () {
                   _dateValidate = _dateController.text.isEmpty;
@@ -323,7 +323,7 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                   _timeValidate = _timeController.text.isEmpty;
                 },
               );
-              if (viewModel.todoItem.category == null) {
+              if (controller.todoItem.category == null) {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -336,15 +336,15 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
               if (_taskTitleValidate == false &&
                   _timeValidate == false &&
                   _dateValidate == false &&
-                  viewModel.todoItem.category != null) {
+                  controller.todoItem.category != null) {
                 if (widget.todoId == -1) {
-                  viewModel.addTodo(
+                  controller.addTodo(
                       _taskTitleController.text,
                       _noteController.text,
                       AppUtils().formatDateTimeString(
                           _dateController.text, _timeController.text));
                 } else {
-                  viewModel.editTodo(
+                  controller.editTodo(
                       _taskTitleController.text,
                       _noteController.text,
                       AppUtils().formatDateTimeString(
@@ -364,18 +364,18 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
   Widget _buildLoadingState() {
     return GetBuilder(
         init: todoDetailVM,
-        builder: (viewModel) {
+        builder: (controller) {
           WidgetsBinding.instance.addPostFrameCallback(
             (_) {
-              if (viewModel.isEditted == true &&
-                  viewModel.loading == LoadingState.success) {
+              if (controller.isEditted == true &&
+                  controller.loading == LoadingState.success) {
                 homeVM.fetchTodoList();
                 Get.back();
               }
             },
           );
 
-          if (viewModel.loading == LoadingState.loading) {
+          if (controller.loading == LoadingState.loading) {
             return SafeArea(
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
@@ -408,16 +408,16 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
   }) {
     return GetBuilder(
       init: todoDetailVM,
-      builder: (viewModel) {
+      builder: (controller) {
         return CategoryWidget(
           image: Image.asset(category.icon),
           onTap: () {
-            viewModel.setCategory(category);
+            controller.setCategory(category);
           },
           backgroundColor: category.backgroundColor,
-          borderColor: viewModel.todoItem.category == null
+          borderColor: controller.todoItem.category == null
               ? Colors.white
-              : (viewModel.todoItem.category == category
+              : (controller.todoItem.category == category
                   ? Colors.cyan
                   : Colors.white),
           borderWidth: 2.0,

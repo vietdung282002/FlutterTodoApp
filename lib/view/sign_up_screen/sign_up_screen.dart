@@ -175,7 +175,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Center(
       child: GetBuilder(
         init: signUpVM,
-        builder: (viewModel) {
+        builder: (controller) {
           return ButtonWidget(
             width: screenWidth * 0.7,
             text: "Sign Up",
@@ -186,7 +186,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               });
               if (_gmailValidate != false || _passwordValidate != false) {
               } else {
-                viewModel.signUp();
+                controller.signUp();
               }
             },
             textStyle: AppTextStyle.buttonStyle,
@@ -228,10 +228,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget _buildSignUpStateWidget() {
     return GetBuilder(
       init: signUpVM,
-      builder: (viewModel) {
+      builder: (controller) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (viewModel.loading == LoadingState.failure &&
-              viewModel.isLoggedIn == LoggedInStatus.loggedOut) {
+          if (controller.loading == LoadingState.failure &&
+              controller.isLoggedIn == LoggedInStatus.loggedOut) {
             showDialog(
               context: context,
               builder: (BuildContext context) {
@@ -241,12 +241,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
               },
             );
           }
-          if (viewModel.isLoggedIn == LoggedInStatus.loggedIn) {
+          if (controller.isLoggedIn == LoggedInStatus.loggedIn) {
             Get.offAll(() => const HomeScreen());
           }
         });
 
-        if (viewModel.loading == LoadingState.loading) {
+        if (controller.loading == LoadingState.loading) {
           return SafeArea(
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
