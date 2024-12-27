@@ -1,34 +1,21 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_app/config/app_text_style.dart';
-import 'package:flutter_todo_app/config/utils.dart';
+import 'package:flutter_todo_app/common/app_text_style.dart';
 import 'package:flutter_todo_app/model/enum/category.dart';
 import 'package:flutter_todo_app/model/enum/loading_state.dart';
-import 'package:flutter_todo_app/config/colors.dart';
-import 'package:flutter_todo_app/view/widget/alert_dialog_widget.dart';
-import 'package:flutter_todo_app/view/widget/app_bar_widget.dart';
-import 'package:flutter_todo_app/view/widget/button_widget.dart';
-import 'package:flutter_todo_app/view/widget/category_widget.dart';
-import 'package:flutter_todo_app/view/widget/text_field_widget.dart';
-import 'package:flutter_todo_app/view/widget/text_widget.dart';
-import 'package:flutter_todo_app/view/detail_screen/todo_detail_view_model.dart';
-import 'package:flutter_todo_app/view/home_screen/home_view_model.dart';
+import 'package:flutter_todo_app/common/colors.dart';
+import 'package:flutter_todo_app/components/alert_dialog_widget.dart';
+import 'package:flutter_todo_app/components/app_bar_widget.dart';
+import 'package:flutter_todo_app/components/button_widget.dart';
+import 'package:flutter_todo_app/components/category_widget.dart';
+import 'package:flutter_todo_app/components/text_field_widget.dart';
+import 'package:flutter_todo_app/components/text_widget.dart';
+import 'package:flutter_todo_app/view/detail_screen/todo_detail_vm.dart';
+import 'package:flutter_todo_app/view/home_screen/home_vm.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
-class TodoDetail extends StatelessWidget {
-  const TodoDetail({super.key, required this.todoId});
-  final int todoId;
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider<TodoDetailViewModel>(
-      create: (context) => TodoDetailViewModel(),
-      child: TodoDetailScreen(
-        todoId: todoId,
-      ),
-    );
-  }
-}
+import '../../common/utils.dart';
 
 class TodoDetailScreen extends StatefulWidget {
   final int todoId;
@@ -43,6 +30,8 @@ class TodoDetailScreen extends StatefulWidget {
 }
 
 class _TodoDetailScreenState extends State<TodoDetailScreen> {
+  TodoDetailVM todoDetailVM = Get.put(TodoDetailVM());
+  HomeVM homeVM = Get.find<HomeVM>();
   final TextEditingController _taskTitleController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
@@ -68,8 +57,7 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
           selectedDate = picked;
           String formattedDate = DateFormat('dd-MM-yyyy').format(picked);
           _dateController.text = formattedDate;
-          Provider.of<TodoDetailViewModel>(context, listen: false)
-              .setDate(formattedDate);
+          todoDetailVM.setDate(formattedDate);
         },
       );
     }
@@ -92,8 +80,7 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
           selectedTime = picked;
           final String formattedTime = AppUtils().formatTimeTo12Hour(picked);
           _timeController.text = formattedTime;
-          Provider.of<TodoDetailViewModel>(context, listen: false)
-              .setTime(formattedTime);
+          todoDetailVM.setTime(formattedTime);
         },
       );
     }
@@ -101,8 +88,7 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
 
   @override
   void initState() {
-    Provider.of<TodoDetailViewModel>(context, listen: false)
-        .fetchTodoDetail(widget.todoId);
+    todoDetailVM.fetchTodoDetail(widget.todoId);
     super.initState();
   }
 
@@ -127,7 +113,7 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
         backgroundColor: backgroundColor,
         leadingWidget: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            Get.back();
           },
           icon: Image.asset("assets/back_button.png"),
         ),
@@ -180,16 +166,14 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
         _buildTextTitle(text: "Task Title"),
         Padding(
           padding: const EdgeInsets.only(top: 12.0),
-          child: Selector<TodoDetailViewModel, String?>(
-            selector: (context, viewModel) => viewModel.todoItem.taskTitle,
-            builder: (context, taskTitle, child) {
-              if (taskTitle != null) {
-                _taskTitleController.text = taskTitle;
-              }
+          child: GetBuilder(
+            init: todoDetailVM,
+            builder: (controller) {
+              var taskTitle = controller.todoItem.taskTitle;
+              _taskTitleController.text = taskTitle;
               return TextFieldWidget(
                 onChange: (text) {
-                  Provider.of<TodoDetailViewModel>(context, listen: false)
-                      .setTaskTitle(text);
+                  todoDetailVM.setTaskTitle(text);
                 },
                 placeholder: "Task Title",
                 textEditingController: _taskTitleController,
@@ -240,9 +224,10 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
           _buildTextTitle(text: "Date"),
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
-            child: Consumer<TodoDetailViewModel>(
-              builder: (context, viewModel, child) {
-                _dateController.text = viewModel.date!;
+            child: GetBuilder(
+              init: todoDetailVM,
+              builder: (controller) {
+                _dateController.text = controller.date!;
                 return TextFieldWidget(
                   readOnly: true,
                   textEditingController: _dateController,
@@ -268,19 +253,20 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
           _buildTextTitle(text: "Time"),
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
-            child: Consumer<TodoDetailViewModel>(
-                builder: (context, viewModel, child) {
-              _timeController.text = viewModel.time!;
-              return TextFieldWidget(
-                error: _timeValidate ? "Value Can't Be Empty" : null,
-                readOnly: true,
-                textEditingController: _timeController,
-                placeholder: "Time",
-                endIcon: IconButton(
-                    onPressed: () => _selectTime(context),
-                    icon: Image.asset("assets/input_clock.png")),
-              );
-            }),
+            child: GetBuilder(
+                init: todoDetailVM,
+                builder: (controller) {
+                  _timeController.text = controller.time!;
+                  return TextFieldWidget(
+                    error: _timeValidate ? "Value Can't Be Empty" : null,
+                    readOnly: true,
+                    textEditingController: _timeController,
+                    placeholder: "Time",
+                    endIcon: IconButton(
+                        onPressed: () => _selectTime(context),
+                        icon: Image.asset("assets/input_clock.png")),
+                  );
+                }),
           )
         ],
       ),
@@ -299,13 +285,13 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
           padding: const EdgeInsets.only(top: 24),
           child: SizedBox(
             height: 250,
-            child: Consumer<TodoDetailViewModel>(
-              builder: (context, viewModel, child) {
-                _noteController.text = viewModel.todoItem.taskNote!;
+            child: GetBuilder(
+              init: todoDetailVM,
+              builder: (controller) {
+                _noteController.text = controller.todoItem.taskNote!;
                 return TextFieldWidget(
                   onChange: (text) {
-                    Provider.of<TodoDetailViewModel>(context, listen: false)
-                        .setTaskNote(text);
+                    todoDetailVM.setTaskNote(text);
                   },
                   textEditingController: _noteController,
                   placeholder: "Note",
@@ -324,12 +310,13 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
   Widget _buildSaveButton(double screenWidth) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 24.0, top: 24),
-      child: Consumer<TodoDetailViewModel>(
-        builder: (context, viewModel, child) {
+      child: GetBuilder(
+        init: todoDetailVM,
+        builder: (controller) {
           return ButtonWidget(
             onTap: () {
-              viewModel.setTaskTitle(_taskTitleController.text);
-              viewModel.setTaskNote(_noteController.text);
+              controller.setTaskTitle(_taskTitleController.text);
+              controller.setTaskNote(_noteController.text);
               setState(
                 () {
                   _dateValidate = _dateController.text.isEmpty;
@@ -337,7 +324,7 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
                   _timeValidate = _timeController.text.isEmpty;
                 },
               );
-              if (viewModel.todoItem.category == null) {
+              if (controller.todoItem.category == null) {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -350,15 +337,15 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
               if (_taskTitleValidate == false &&
                   _timeValidate == false &&
                   _dateValidate == false &&
-                  viewModel.todoItem.category != null) {
+                  controller.todoItem.category != null) {
                 if (widget.todoId == -1) {
-                  viewModel.addTodo(
+                  controller.addTodo(
                       _taskTitleController.text,
                       _noteController.text,
                       AppUtils().formatDateTimeString(
                           _dateController.text, _timeController.text));
                 } else {
-                  viewModel.editTodo(
+                  controller.editTodo(
                       _taskTitleController.text,
                       _noteController.text,
                       AppUtils().formatDateTimeString(
@@ -376,32 +363,34 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
   }
 
   Widget _buildLoadingState() {
-    return Consumer<TodoDetailViewModel>(builder: (context, viewModel, child) {
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) {
-          if (viewModel.isEditted == true &&
-              viewModel.loading == LoadingState.success) {
-            Provider.of<HomeViewModel>(context, listen: false).updateTodo();
-            Navigator.of(context).maybePop();
-          }
-        },
-      );
+    return GetBuilder(
+        init: todoDetailVM,
+        builder: (controller) {
+          WidgetsBinding.instance.addPostFrameCallback(
+            (_) {
+              if (controller.isEditted == true &&
+                  controller.loading == LoadingState.success) {
+                homeVM.updateTodo();
+                Get.back();
+              }
+            },
+          );
 
-      if (viewModel.loading == LoadingState.loading) {
-        return SafeArea(
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
-            child: Container(
-              color: Colors.transparent,
-              child: const Center(
-                child: CircularProgressIndicator(),
+          if (controller.loading == LoadingState.loading) {
+            return SafeArea(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
+                child: Container(
+                  color: Colors.transparent,
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
               ),
-            ),
-          ),
-        );
-      }
-      return const SizedBox.shrink();
-    });
+            );
+          }
+          return const SizedBox.shrink();
+        });
   }
 
   Widget _buildTextTitle({required String text}) {
@@ -418,17 +407,18 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
   Widget _buildCategoryPicker({
     required ItemCategory category,
   }) {
-    return Consumer<TodoDetailViewModel>(
-      builder: (context, viewModel, child) {
+    return GetBuilder(
+      init: todoDetailVM,
+      builder: (controller) {
         return CategoryWidget(
           image: Image.asset(category.icon),
           onTap: () {
-            viewModel.setCategory(category);
+            controller.setCategory(category);
           },
           backgroundColor: category.backgroundColor,
-          borderColor: viewModel.todoItem.category == null
+          borderColor: controller.todoItem.category == null
               ? Colors.white
-              : (viewModel.todoItem.category == category
+              : (controller.todoItem.category == category
                   ? Colors.cyan
                   : Colors.white),
           borderWidth: 2.0,

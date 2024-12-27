@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/model/enum/category.dart';
-import 'package:flutter_todo_app/view/widget/category_widget.dart';
-import 'package:flutter_todo_app/view/widget/check_box_widget.dart';
-import 'package:flutter_todo_app/config/colors.dart';
-import 'package:flutter_todo_app/view/widget/text_widget.dart';
-import 'package:flutter_todo_app/model/model_objects/todo_item.dart';
-import 'package:flutter_todo_app/view/home_screen/home_view_model.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_todo_app/components/check_box_widget.dart';
+import 'package:flutter_todo_app/common/colors.dart';
+import 'package:flutter_todo_app/components/text_widget.dart';
+import 'package:flutter_todo_app/model/entity/todo.dart';
+import 'package:flutter_todo_app/view/home_screen/home_vm.dart';
+import 'package:get/get.dart';
+
+import 'category_widget.dart';
 
 class TodoItemWidget extends StatelessWidget {
   const TodoItemWidget({super.key, required this.todoItem});
 
-  final TodoItem todoItem;
+  final Todo todoItem;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -54,8 +55,9 @@ class TodoItemWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          Consumer<HomeViewModel>(
-            builder: (context, viewmodel, chil) {
+          GetBuilder(
+            init: Get.find<HomeVM>(),
+            builder: (viewmodel) {
               return CheckBoxWidget(
                 todoItem: todoItem,
                 onTap: () {

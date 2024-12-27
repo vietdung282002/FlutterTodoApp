@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:flutter_todo_app/config/colors.dart';
+import 'package:flutter_todo_app/common/colors.dart';
 
 enum ItemCategory {
   task,
@@ -24,22 +24,22 @@ extension CategoryExtension on ItemCategory {
   String get icon {
     switch (this) {
       case ItemCategory.task:
-        return "assets/category_task.png"; // Task icon
+        return "assets/category_task.png";
       case ItemCategory.event:
-        return "assets/category_event.png"; // Event icon
+        return "assets/category_event.png";
       case ItemCategory.goal:
-        return "assets/category_goal.png"; // Goal icon
+        return "assets/category_goal.png";
     }
   }
 
   Color get backgroundColor {
     switch (this) {
       case ItemCategory.task:
-        return taskBackground; // Task icon
+        return taskBackground;
       case ItemCategory.event:
-        return eventBackground; // Event icon
+        return eventBackground;
       case ItemCategory.goal:
-        return goalBackground; // Goal icon
+        return goalBackground;
     }
   }
 

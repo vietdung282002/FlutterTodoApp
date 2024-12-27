@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_app/model/model_objects/todo_item.dart';
+import 'package:flutter_todo_app/model/entity/todo.dart';
 
 class CheckBoxWidget extends StatelessWidget {
   const CheckBoxWidget({
@@ -8,7 +8,7 @@ class CheckBoxWidget extends StatelessWidget {
     this.onTap,
   });
 
-  final TodoItem todoItem;
+  final Todo todoItem;
   final VoidCallback? onTap;
 
   @override

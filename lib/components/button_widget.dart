@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_app/config/colors.dart';
+import 'package:flutter_todo_app/common/colors.dart';
 
 class ButtonWidget extends StatelessWidget {
   final double width;

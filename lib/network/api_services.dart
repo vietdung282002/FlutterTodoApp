@@ -1,14 +1,20 @@
 import 'dart:convert';
-import 'package:flutter_todo_app/config/http_config.dart';
-import 'package:flutter_todo_app/config/shared_preferences_helper.dart';
-import 'package:flutter_todo_app/config/values.dart';
-import 'package:flutter_todo_app/model/model_objects/authentication_body.dart';
-import 'package:flutter_todo_app/model/model_objects/authentication_response.dart';
-import 'package:flutter_todo_app/model/network/api_urls.dart';
-import 'package:flutter_todo_app/model/model_objects/todo_item.dart';
+import 'package:flutter_todo_app/common/http_config.dart';
+import 'package:flutter_todo_app/common/values.dart';
+import 'package:flutter_todo_app/model/body/authentication_body.dart';
+import 'package:flutter_todo_app/model/response/authentication_response.dart';
+import 'package:flutter_todo_app/network/api_urls.dart';
+import 'package:flutter_todo_app/model/entity/todo.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
-class ApiServices {
+import '../common/shared_preferences_helper.dart';
+
+class ApiServices extends GetxService {
+  Future<ApiServices> init() async {
+    return this;
+  }
+
   final prefs = SharedPreferencesHelper();
 
   Future<AuthenticationResponse> signUp(AuthenticationBody authRequest) async {
@@ -35,7 +41,7 @@ class ApiServices {
     }
   }
 
-  Future<List<TodoItem>> getTodosList(String deviceUDID) async {
+  Future<List<Todo>> getTodosList(String deviceUDID) async {
     final String? userToken = await prefs.getString(Values.accessToken);
     final headers = <String, String>{
       'Prefer': 'return=minimal',
@@ -47,13 +53,13 @@ class ApiServices {
     );
     if (response.statusCode == 200) {
       List<dynamic> jsonData = json.decode(response.body);
-      return jsonData.map((data) => TodoItem.fromJson(data)).toList();
+      return jsonData.map((data) => Todo.fromJson(data)).toList();
     } else {
       throw Exception('Failed to fetch Todo');
     }
   }
 
-  Future<TodoItem> getTodoItem(int todoId) async {
+  Future<Todo> getTodoItem(int todoId) async {
     final String? userToken = await prefs.getString(Values.accessToken);
     final headers = <String, String>{
       'Prefer': 'return=minimal',
@@ -65,8 +71,7 @@ class ApiServices {
     );
     if (response.statusCode == 200) {
       List<dynamic> jsonData = json.decode(response.body);
-      List<TodoItem> todos =
-          jsonData.map((data) => TodoItem.fromJson(data)).toList();
+      List<Todo> todos = jsonData.map((data) => Todo.fromJson(data)).toList();
       if (todos.isNotEmpty) {
         return todos.first;
       } else {
@@ -77,7 +82,7 @@ class ApiServices {
     }
   }
 
-  Future<http.Response> createTodo(TodoItem todo) async {
+  Future<http.Response> createTodo(Todo todo) async {
     final String? userToken = await prefs.getString(Values.accessToken);
     final headers = <String, String>{
       'Prefer': 'return=minimal',
@@ -113,7 +118,7 @@ class ApiServices {
     }
   }
 
-  Future<http.Response> updateTodo(TodoItem todo) async {
+  Future<http.Response> updateTodo(Todo todo) async {
     final String? userToken = await prefs.getString(Values.accessToken);
     final headers = <String, String>{
       'Prefer': 'return=minimal',

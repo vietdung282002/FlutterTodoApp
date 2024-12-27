@@ -1,13 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_todo_app/config/shared_preferences_helper.dart';
-import 'package:flutter_todo_app/config/values.dart';
-import 'package:flutter_todo_app/model/enum/loading_state.dart';
-import 'package:flutter_todo_app/model/enum/logged_in_status.dart';
-import 'package:flutter_todo_app/model/model_objects/authentication_body.dart';
-import 'package:flutter_todo_app/model/network/api_services.dart';
+import 'package:get/get.dart';
 
-class SignUpViewModel extends ChangeNotifier {
-  final ApiServices _apiServices = ApiServices();
+import '../../common/shared_preferences_helper.dart';
+import '../../common/values.dart';
+import '../../model/body/authentication_body.dart';
+import '../../model/enum/loading_state.dart';
+import '../../model/enum/logged_in_status.dart';
+import '../../network/api_services.dart';
+
+class SignUpVM extends GetxController {
+  final ApiServices _apiServices = Get.find();
 
   LoggedInStatus _isLoggedIn = LoggedInStatus.loggedOut;
 
@@ -26,7 +27,7 @@ class SignUpViewModel extends ChangeNotifier {
     if (_loading == LoadingState.loading) return;
 
     _loading = LoadingState.loading;
-    notifyListeners();
+    update();
 
     final prefsHelper = SharedPreferencesHelper();
 
@@ -42,20 +43,20 @@ class SignUpViewModel extends ChangeNotifier {
           Values.accessToken, authenticationResponse.accessToken);
       _loading = LoadingState.success;
       _isLoggedIn = LoggedInStatus.loggedIn;
-      notifyListeners();
+      update();
     } catch (e) {
       _loading = LoadingState.failure;
-      notifyListeners();
+      update();
     } finally {}
   }
 
   void setGmail(String gmail) {
     _gmail = gmail;
-    notifyListeners();
+    update();
   }
 
   void setPassword(String password) {
     _password = password;
-    notifyListeners();
+    update();
   }
 }

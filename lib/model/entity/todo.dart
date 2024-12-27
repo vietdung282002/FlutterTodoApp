@@ -1,7 +1,7 @@
 import 'package:flutter_todo_app/model/enum/category.dart';
 import 'package:intl/intl.dart';
 
-class TodoItem {
+class Todo {
   int? todoId;
   String taskTitle;
   String? taskNote;
@@ -11,7 +11,7 @@ class TodoItem {
   String? deviceUDID;
   String? userId;
   // Constructor
-  TodoItem({
+  Todo({
     required this.category,
     required this.time,
     required this.isComplete,
@@ -22,8 +22,8 @@ class TodoItem {
     this.userId,
   });
 
-  factory TodoItem.fromJson(Map<String, dynamic> json) {
-    return TodoItem(
+  factory Todo.fromJson(Map<String, dynamic> json) {
+    return Todo(
       category: CategoryExtension.setCategory(json['category_id'] as int),
       taskTitle: json['task_title'] as String,
       time: json['time'] as String,
@@ -35,8 +35,8 @@ class TodoItem {
     );
   }
 
-  factory TodoItem.empty() {
-    return TodoItem(
+  factory Todo.empty() {
+    return Todo(
       todoId: null,
       taskTitle: '',
       taskNote: "",
@@ -85,7 +85,7 @@ class TodoItem {
     return DateFormat('hh:mm a').format(parsedDateTime);
   }
 
-  TodoItem copyWith({
+  Todo copyWith({
     int? todoId,
     String? taskTitle,
     String? taskNote,
@@ -95,7 +95,7 @@ class TodoItem {
     String? deviceUDID,
     String? userId,
   }) {
-    return TodoItem(
+    return Todo(
       todoId: todoId ?? this.todoId,
       taskTitle: taskTitle ?? this.taskTitle,
       taskNote: taskNote ?? this.taskNote,

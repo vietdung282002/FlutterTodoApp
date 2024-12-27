@@ -1,16 +1,17 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_todo_app/config/shared_preferences_helper.dart';
-import 'package:flutter_todo_app/config/values.dart';
-import 'package:flutter_todo_app/model/enum/category.dart';
-import 'package:flutter_todo_app/model/enum/loading_state.dart';
-import 'package:flutter_todo_app/model/network/api_services.dart';
-import 'package:flutter_todo_app/model/model_objects/todo_item.dart';
+import 'package:get/get.dart';
 
-class TodoDetailViewModel extends ChangeNotifier {
-  final ApiServices _apiServices = ApiServices();
+import '../../common/shared_preferences_helper.dart';
+import '../../common/values.dart';
+import '../../model/entity/todo.dart';
+import '../../model/enum/category.dart';
+import '../../model/enum/loading_state.dart';
+import '../../network/api_services.dart';
 
-  TodoItem _todoItem = TodoItem.empty();
-  TodoItem get todoItem => _todoItem;
+class TodoDetailVM extends GetxController {
+  final ApiServices _apiServices = Get.find();
+
+  Todo _todoItem = Todo.empty();
+  Todo get todoItem => _todoItem;
 
   LoadingState _loading = LoadingState.idle;
   LoadingState get loading => _loading;
@@ -44,7 +45,7 @@ class TodoDetailViewModel extends ChangeNotifier {
     } catch (e) {
       _loading = LoadingState.failure;
     } finally {
-      notifyListeners();
+      update();
     }
   }
 
@@ -53,13 +54,13 @@ class TodoDetailViewModel extends ChangeNotifier {
     if (_loading == LoadingState.loading) return;
 
     _loading = LoadingState.loading;
-    notifyListeners();
+    update();
 
     final prefs = SharedPreferencesHelper();
     final String? deviceUdid = await prefs.getString(Values.udid);
     final String? userId = await prefs.getString(Values.userID);
 
-    final newTodo = TodoItem(
+    final newTodo = Todo(
       category: _todoItem.category!,
       time: deadline,
       isComplete: false,
@@ -72,7 +73,7 @@ class TodoDetailViewModel extends ChangeNotifier {
       await _apiServices.createTodo(newTodo);
       _isEditted = true;
       _loading = LoadingState.success;
-      notifyListeners();
+      update();
     } catch (e) {
       _loading = LoadingState.failure;
     } finally {}
@@ -83,13 +84,13 @@ class TodoDetailViewModel extends ChangeNotifier {
     if (_loading == LoadingState.loading) return;
 
     _loading = LoadingState.loading;
-    notifyListeners();
+    update();
 
     final prefs = SharedPreferencesHelper();
     final String? deviceUdid = await prefs.getString(Values.udid);
     final String? userId = await prefs.getString(Values.userID);
 
-    final newTodo = TodoItem(
+    final newTodo = Todo(
       todoId: _todoItem.todoId!,
       category: _todoItem.category!,
       time: deadline,
@@ -104,7 +105,7 @@ class TodoDetailViewModel extends ChangeNotifier {
       await _apiServices.updateTodo(newTodo);
       _isEditted = true;
       _loading = LoadingState.success;
-      notifyListeners();
+      update();
     } catch (e) {
       _loading = LoadingState.failure;
     } finally {}
@@ -112,26 +113,26 @@ class TodoDetailViewModel extends ChangeNotifier {
 
   void setTaskTitle(String taskTitle) {
     _todoItem.taskTitle = taskTitle;
-    notifyListeners();
+    update();
   }
 
   void setTaskNote(String taskNote) {
     _todoItem.taskNote = taskNote;
-    notifyListeners();
+    update();
   }
 
   void setDate(String date) {
     _date = date;
-    notifyListeners();
+    update();
   }
 
   void setTime(String time) {
     _time = time;
-    notifyListeners();
+    update();
   }
 
   void setCategory(ItemCategory categoryId) {
     _todoItem.category = categoryId;
-    notifyListeners();
+    update();
   }
 }

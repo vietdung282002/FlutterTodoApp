@@ -1,13 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_todo_app/config/shared_preferences_helper.dart';
-import 'package:flutter_todo_app/config/values.dart';
-import 'package:flutter_todo_app/model/enum/loading_state.dart';
-import 'package:flutter_todo_app/model/enum/logged_in_status.dart';
-import 'package:flutter_todo_app/model/network/api_services.dart';
-import 'package:flutter_todo_app/model/model_objects/todo_item.dart';
+import 'package:flutter_todo_app/network/api_services.dart';
+import 'package:get/get.dart';
 
-class HomeViewModel extends ChangeNotifier {
-  final ApiServices _apiServices = ApiServices();
+import '../../common/shared_preferences_helper.dart';
+import '../../common/values.dart';
+import '../../model/entity/todo.dart';
+import '../../model/enum/loading_state.dart';
+import '../../model/enum/logged_in_status.dart';
+
+class HomeVM extends GetxController {
+  final ApiServices _apiServices = Get.find();
 
   LoggedInStatus _isLoggedIn = LoggedInStatus.loggedIn;
   LoggedInStatus get isLoggedIn => _isLoggedIn;
@@ -15,13 +16,13 @@ class HomeViewModel extends ChangeNotifier {
   LoadingState _loading = LoadingState.idle;
   LoadingState get loading => _loading;
 
-  List<TodoItem> _listTodo = [];
-  List<TodoItem> get listTodo => _listTodo;
+  List<Todo> _listTodo = [];
+  List<Todo> get listTodo => _listTodo;
 
-  List<TodoItem> get pendingTodos =>
+  List<Todo> get pendingTodos =>
       _listTodo.where((todo) => !todo.isComplete).toList();
 
-  List<TodoItem> get completedTodos =>
+  List<Todo> get completedTodos =>
       _listTodo.where((todo) => todo.isComplete).toList();
 
   Future<void> fetchTodoList({bool refresh = false}) async {
@@ -34,7 +35,7 @@ class HomeViewModel extends ChangeNotifier {
       _listTodo = [];
     }
     _loading = LoadingState.loading;
-    notifyListeners();
+    update();
     try {
       final todoListResponse = await _apiServices.getTodosList(deviceUdid!);
       _listTodo.addAll(todoListResponse);
@@ -43,7 +44,7 @@ class HomeViewModel extends ChangeNotifier {
     } catch (e) {
       _loading = LoadingState.failure;
     } finally {
-      notifyListeners();
+      update();
     }
   }
 
@@ -62,7 +63,7 @@ class HomeViewModel extends ChangeNotifier {
     } catch (e) {
       _loading = LoadingState.failure;
     } finally {
-      notifyListeners();
+      update();
     }
   }
 
@@ -73,7 +74,7 @@ class HomeViewModel extends ChangeNotifier {
     if (index == -1) return;
 
     _loading == LoadingState.loading;
-    notifyListeners();
+    update();
 
     try {
       await _apiServices.updateTodoStatus(todoId, status);
@@ -83,7 +84,7 @@ class HomeViewModel extends ChangeNotifier {
     } catch (e) {
       _loading = LoadingState.failure;
     } finally {
-      notifyListeners();
+      update();
     }
   }
 
@@ -92,7 +93,7 @@ class HomeViewModel extends ChangeNotifier {
 
     final index = _listTodo.indexWhere((todo) => todo.todoId == todoId);
     _loading == LoadingState.loading;
-    notifyListeners();
+    update();
 
     try {
       await _apiServices.deleteTodo(todoId);
@@ -101,7 +102,7 @@ class HomeViewModel extends ChangeNotifier {
     } catch (e) {
       _loading = LoadingState.failure;
     } finally {
-      notifyListeners();
+      update();
     }
   }
 
@@ -109,13 +110,13 @@ class HomeViewModel extends ChangeNotifier {
     if (_loading == LoadingState.loading) return;
 
     _loading == LoadingState.loading;
-    notifyListeners();
+    update();
     final prefs = SharedPreferencesHelper();
     await prefs.remove(Values.userID);
     _isLoggedIn = LoggedInStatus.loggedOut;
     _loading == LoadingState.success;
 
     _listTodo = [];
-    notifyListeners();
+    update();
   }
 }

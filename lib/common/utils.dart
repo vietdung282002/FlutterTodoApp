@@ -3,7 +3,9 @@ import 'package:intl/intl.dart';
 
 class AppUtils {
   String formatTimeTo12Hour(TimeOfDay time) {
-    final dateTime = DateTime(time.hour, time.minute);
+    final now = DateTime.now();
+    final dateTime =
+        DateTime(now.year, now.month, now.day, time.hour, time.minute);
     return DateFormat('hh:mm a').format(dateTime);
   }
 
