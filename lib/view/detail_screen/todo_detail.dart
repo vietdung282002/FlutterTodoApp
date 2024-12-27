@@ -370,7 +370,7 @@ class _TodoDetailScreenState extends State<TodoDetailScreen> {
             (_) {
               if (controller.isEditted == true &&
                   controller.loading == LoadingState.success) {
-                homeVM.fetchTodoList();
+                homeVM.updateTodo();
                 Get.back();
               }
             },
