@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_app/config/app_text_style.dart';
-import 'package:flutter_todo_app/config/utils.dart';
+import 'package:flutter_todo_app/common/app_text_style.dart';
 import 'package:flutter_todo_app/model/enum/category.dart';
 import 'package:flutter_todo_app/model/enum/loading_state.dart';
 import 'package:flutter_todo_app/common/colors.dart';
@@ -15,6 +14,8 @@ import 'package:flutter_todo_app/view/detail_screen/todo_detail_vm.dart';
 import 'package:flutter_todo_app/view/home_screen/home_vm.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+
+import '../../common/utils.dart';
 
 class TodoDetailScreen extends StatefulWidget {
   final int todoId;

@@ -1,13 +1,13 @@
 import 'package:get/get.dart';
 
+import '../../common/shared_preferences_helper.dart';
 import '../../common/values.dart';
-import '../../config/shared_preferences_helper.dart';
 import '../../model/body/authentication_body.dart';
 import '../../model/enum/loading_state.dart';
 import '../../model/enum/logged_in_status.dart';
 import '../../network/api_services.dart';
 
-class LoginVM extends GetxController{
+class LoginVM extends GetxController {
   final ApiServices _apiServices = Get.find();
 
   LoggedInStatus _isLoggedIn = LoggedInStatus.unknown;
@@ -50,7 +50,7 @@ class LoginVM extends GetxController{
     );
     try {
       final authenticationResponse =
-      await _apiServices.login(authenticationBody);
+          await _apiServices.login(authenticationBody);
       prefsHelper.saveString(Values.userID, authenticationResponse.user.id);
       prefsHelper.saveString(
           Values.accessToken, authenticationResponse.accessToken);

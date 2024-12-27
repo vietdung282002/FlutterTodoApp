@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter_todo_app/common/http_config.dart';
-import 'package:flutter_todo_app/config/shared_preferences_helper.dart';
 import 'package:flutter_todo_app/common/values.dart';
 import 'package:flutter_todo_app/model/body/authentication_body.dart';
 import 'package:flutter_todo_app/model/response/authentication_response.dart';
@@ -9,8 +8,10 @@ import 'package:flutter_todo_app/model/entity/todo.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import '../common/shared_preferences_helper.dart';
+
 class ApiServices extends GetxService {
-  Future<ApiServices> init() async{
+  Future<ApiServices> init() async {
     return this;
   }
 
@@ -70,8 +71,7 @@ class ApiServices extends GetxService {
     );
     if (response.statusCode == 200) {
       List<dynamic> jsonData = json.decode(response.body);
-      List<Todo> todos =
-          jsonData.map((data) => Todo.fromJson(data)).toList();
+      List<Todo> todos = jsonData.map((data) => Todo.fromJson(data)).toList();
       if (todos.isNotEmpty) {
         return todos.first;
       } else {

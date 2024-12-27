@@ -1,8 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_app/config/app_text_style.dart';
-import 'package:flutter_todo_app/config/utils.dart';
+import 'package:flutter_todo_app/common/app_text_style.dart';
 import 'package:flutter_todo_app/model/enum/loading_state.dart';
 import 'package:flutter_todo_app/model/enum/logged_in_status.dart';
 import 'package:flutter_todo_app/view/detail_screen/todo_detail.dart';
@@ -12,6 +11,7 @@ import 'package:flutter_todo_app/components/text_widget.dart';
 import 'package:flutter_todo_app/components/todo_item_widget.dart';
 import 'package:get/get.dart';
 
+import '../../common/utils.dart';
 import '../../components/button_widget.dart';
 import 'home_vm.dart';
 

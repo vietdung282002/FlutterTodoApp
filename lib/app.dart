@@ -7,8 +7,8 @@ import 'package:flutter_todo_app/network/api_services.dart';
 import 'package:flutter_todo_app/view/splash_screen/splash_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
+import 'common/shared_preferences_helper.dart';
 import 'common/values.dart';
-import 'config/shared_preferences_helper.dart';
 
 Future<void> initServices() async {
   await Get.putAsync(() => ApiServices().init());

@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_app/config/app_text_style.dart';
+import 'package:flutter_todo_app/common/app_text_style.dart';
 import 'package:flutter_todo_app/common/colors.dart';
 import 'package:flutter_todo_app/model/enum/loading_state.dart';
 import 'package:flutter_todo_app/model/enum/logged_in_status.dart';

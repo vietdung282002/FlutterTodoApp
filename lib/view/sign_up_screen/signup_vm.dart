@@ -1,8 +1,7 @@
-
 import 'package:get/get.dart';
 
+import '../../common/shared_preferences_helper.dart';
 import '../../common/values.dart';
-import '../../config/shared_preferences_helper.dart';
 import '../../model/body/authentication_body.dart';
 import '../../model/enum/loading_state.dart';
 import '../../model/enum/logged_in_status.dart';
@@ -28,7 +27,7 @@ class SignUpVM extends GetxController {
     if (_loading == LoadingState.loading) return;
 
     _loading = LoadingState.loading;
-   update();
+    update();
 
     final prefsHelper = SharedPreferencesHelper();
 
@@ -38,26 +37,26 @@ class SignUpVM extends GetxController {
     );
     try {
       final authenticationResponse =
-      await _apiServices.signUp(authenticationRequest);
+          await _apiServices.signUp(authenticationRequest);
       prefsHelper.saveString(Values.userID, authenticationResponse.user.id);
       prefsHelper.saveString(
           Values.accessToken, authenticationResponse.accessToken);
       _loading = LoadingState.success;
       _isLoggedIn = LoggedInStatus.loggedIn;
-     update();
+      update();
     } catch (e) {
       _loading = LoadingState.failure;
-     update();
+      update();
     } finally {}
   }
 
   void setGmail(String gmail) {
     _gmail = gmail;
-   update();
+    update();
   }
 
   void setPassword(String password) {
     _password = password;
-   update();
+    update();
   }
 }

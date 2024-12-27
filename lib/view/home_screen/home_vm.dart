@@ -1,8 +1,8 @@
 import 'package:flutter_todo_app/network/api_services.dart';
 import 'package:get/get.dart';
 
+import '../../common/shared_preferences_helper.dart';
 import '../../common/values.dart';
-import '../../config/shared_preferences_helper.dart';
 import '../../model/entity/todo.dart';
 import '../../model/enum/loading_state.dart';
 import '../../model/enum/logged_in_status.dart';
